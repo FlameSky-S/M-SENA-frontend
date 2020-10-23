@@ -64,9 +64,6 @@
           >
             登录
           </el-button>
-          <router-link to="/register">
-            <div style="margin-top: 20px">注册</div>
-          </router-link>
         </el-form>
       </el-col>
     </el-row>
@@ -151,6 +148,7 @@
     },
     methods: {
       handlePassword() {
+        // 是否显示输入的密码。
         this.passwordType === 'password'
           ? (this.passwordType = '')
           : (this.passwordType = 'password')

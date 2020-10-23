@@ -636,7 +636,6 @@
             link: '',
             color: '#ffd666',
           },
-
           {
             icon: 'balance-scale-left',
             title: '公平的世界',
