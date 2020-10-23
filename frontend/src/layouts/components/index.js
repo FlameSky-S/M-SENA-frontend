@@ -14,7 +14,7 @@ export { default as Logo } from './Logo'
 //本地化头像组件
 export { default as Avatar } from './Avatar'
 //本地化广告组件，如不需要全局搜索ad组件删掉即可
-export { default as Ad } from './Ad'
+// export { default as Ad } from './Ad'
 //本地化AppMain组件
 export { default as AppMain } from './AppMain'
 export { default as TabsBar } from 'zx-layouts/TabsBar'

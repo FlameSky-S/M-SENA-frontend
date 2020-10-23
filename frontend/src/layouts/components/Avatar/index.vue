@@ -35,9 +35,6 @@
           case 'logout':
             this.logout()
             break
-          case 'personalCenter':
-            this.personalCenter()
-            break
           case 'github':
             window.open('https://github.com/chuzhixin/vue-admin-beautiful')
             break
@@ -45,9 +42,6 @@
             window.open('https://gitee.com/chu1204505056/vue-admin-beautiful')
             break
         }
-      },
-      personalCenter() {
-        this.$router.push('/personalCenter/personalCenter')
       },
       logout() {
         this.$baseConfirm(

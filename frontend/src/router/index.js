@@ -16,11 +16,6 @@ export const constantRoutes = [
     component: () => import('@/views/login/index'),
     hidden: true,
   },
-  // {
-  //   path: '/register',
-  //   component: () => import('@/views/register/index'),
-  //   hidden: true,
-  // },
   {
     path: '/401',
     name: '401',
@@ -53,23 +48,37 @@ export const asyncRoutes = [
       },
     ],
   },
-  /* {
-    path: "/test",
+
+  {
+    path: '/dataend',
     component: Layout,
-    redirect: "noRedirect",
+    redirect: 'noRedirect',
+    name: 'Data',
+    meta: {
+      title: '数据端',
+      icon: 'shopping-cart',
+      permissions: ['admin'],
+    },
+
     children: [
       {
-        path: "test",
-        name: "Test",
-        component: () => import("@/views/test/index"),
+        path: 'datasetList',
+        name: 'Dataset List',
+        component: () => import('@/views/dataend/datasetList/index'),
         meta: {
-          title: "test",
-          icon: "marker",
-          permissions: ["admin"],
+          title: '数据管理',
+        },
+      },
+      {
+        path: 'labeling',
+        name: 'Dataset Labeling',
+        // component: () => import('@/views/dataend/datasetList/index'),
+        meta: {
+          title: '数据标注',
         },
       },
     ],
-  }, */
+  },
 
   {
     path: '/vab',
@@ -79,15 +88,15 @@ export const asyncRoutes = [
     alwaysShow: true,
     meta: { title: '组件', icon: 'box-open' },
     children: [
-      {
-        path: 'permissions',
-        name: 'Permission',
-        component: () => import('@/views/vab/permissions/index'),
-        meta: {
-          title: '角色权限',
-          permissions: ['admin', 'editor'],
-        },
-      },
+      // {
+      //   path: 'permissions',
+      //   name: 'Permission',
+      //   component: () => import('@/views/vab/permissions/index'),
+      //   meta: {
+      //     title: '角色权限',
+      //     permissions: ['admin', 'editor'],
+      //   },
+      // },
       {
         path: 'icon',
         component: EmptyLayout,
@@ -128,16 +137,6 @@ export const asyncRoutes = [
         },
       },
       {
-        path: 'map',
-        component: () => import('@/views/vab/map/index'),
-        name: 'Map',
-        meta: {
-          title: '地图',
-          permissions: ['admin'],
-        },
-      },
-
-      {
         path: 'webSocket',
         name: 'WebSocket',
         component: () => import('@/views/vab/webSocket/index'),
@@ -156,70 +155,16 @@ export const asyncRoutes = [
         meta: { title: '常用组件', permissions: ['admin'] },
       },
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/vab/tree/index'),
-        meta: { title: '树', permissions: ['admin'] },
-      },
-      {
         path: 'card',
         name: 'Card',
         component: () => import('@/views/vab/card/index'),
         meta: { title: '卡片', permissions: ['admin'] },
       },
       {
-        path: 'verify',
-        name: 'Verify',
-        component: () => import('@/views/vab/verify/index'),
-        meta: { title: '验证码', permissions: ['admin'] },
-      },
-      {
-        path: 'menu1',
-        component: () => import('@/views/vab/nested/menu1/index'),
-        name: 'Menu1',
-        alwaysShow: true,
-        meta: {
-          title: '嵌套路由 1',
-          permissions: ['admin'],
-        },
-        children: [
-          {
-            path: 'menu1-1',
-            name: 'Menu1-1',
-            alwaysShow: true,
-            meta: { title: '嵌套路由 1-1' },
-            component: () => import('@/views/vab/nested/menu1/menu1-1/index'),
-
-            children: [
-              {
-                path: 'menu1-1-1',
-                name: 'Menu1-1-1',
-                meta: { title: '嵌套路由 1-1-1' },
-                component: () =>
-                  import('@/views/vab/nested/menu1/menu1-1/menu1-1-1/index'),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        path: 'magnifier',
-        name: 'Magnifier',
-        component: () => import('@/views/vab/magnifier/index'),
-        meta: { title: '放大镜', permissions: ['admin'] },
-      },
-      {
         path: 'echarts',
         name: 'Echarts',
         component: () => import('@/views/vab/echarts/index'),
         meta: { title: '图表', permissions: ['admin'] },
-      },
-
-      {
-        path: 'loading',
-        name: 'Loading',
-        component: () => import('@/views/vab/loading/index'),
-        meta: { title: 'loading', permissions: ['admin'] },
       },
       {
         path: 'player',
@@ -234,62 +179,10 @@ export const asyncRoutes = [
         meta: { title: 'markdown编辑器', permissions: ['admin'] },
       },
       {
-        path: 'editor',
-        name: 'Editor',
-        component: () => import('@/views/vab/editor/index'),
-        meta: {
-          title: '富文本编辑器',
-          permissions: ['admin'],
-          badge: 'New',
-        },
-      },
-      {
-        path: 'backToTop',
-        name: 'BackToTop',
-        component: () => import('@/views/vab/backToTop/index'),
-        meta: { title: '返回顶部', permissions: ['admin'] },
-      },
-      {
-        path: 'lodash',
-        name: 'Lodash',
-        component: () => import('@/views/vab/lodash/index'),
-        meta: { title: 'lodash', permissions: ['admin'] },
-      },
-      {
-        path: 'imgComparison',
-        name: 'ImgComparison',
-        component: () => import('@/views/vab/imgComparison/index'),
-        meta: { title: '图像拖拽比对', permissions: ['admin'] },
-      },
-      {
-        path: 'smallComponents',
-        name: 'SmallComponents',
-        component: () => import('@/views/vab/smallComponents/index'),
-        meta: { title: '小组件', permissions: ['admin'] },
-      },
-
-      {
         path: 'upload',
         name: 'Upload',
         component: () => import('@/views/vab/upload/index'),
         meta: { title: '上传', permissions: ['admin'] },
-      },
-      {
-        path: 'log',
-        name: 'Log',
-        component: () => import('@/views/vab/errorLog/index'),
-        meta: { title: '错误日志模拟', permissions: ['admin'] },
-      },
-      {
-        path:
-          'https://github.com/chuzhixin/vue-admin-beautiful?utm_source=gold_browser_extension',
-        name: 'ExternalLink',
-        meta: {
-          title: '外链',
-          target: '_blank',
-          permissions: ['admin', 'editor'],
-          badge: 'New',
-        },
       },
       {
         path: 'more',
@@ -329,59 +222,7 @@ export const asyncRoutes = [
       },
     ],
   },
-  {
-    path: '/mall',
-    component: Layout,
-    redirect: 'noRedirect',
-    name: 'Mall',
-    meta: {
-      title: '商城',
-      icon: 'shopping-cart',
-      permissions: ['admin'],
-    },
 
-    children: [
-      {
-        path: 'pay',
-        name: 'Pay',
-        component: () => import('@/views/mall/pay/index'),
-        meta: {
-          title: '支付',
-          noKeepAlive: true,
-        },
-        children: null,
-      },
-      {
-        path: 'goodsList',
-        name: 'GoodsList',
-        component: () => import('@/views/mall/goodsList/index'),
-        meta: {
-          title: '商品列表',
-        },
-      },
-    ],
-  },
-  {
-    path: '/error',
-    component: EmptyLayout,
-    redirect: 'noRedirect',
-    name: 'Error',
-    meta: { title: '错误页', icon: 'bug' },
-    children: [
-      {
-        path: '401',
-        name: 'Error401',
-        component: () => import('@/views/401'),
-        meta: { title: '401' },
-      },
-      {
-        path: '404',
-        name: 'Error404',
-        component: () => import('@/views/404'),
-        meta: { title: '404' },
-      },
-    ],
-  },
   {
     path: '*',
     redirect: '/404',

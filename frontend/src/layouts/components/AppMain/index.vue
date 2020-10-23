@@ -8,7 +8,7 @@
     <footer v-show="footerCopyright" class="footer-copyright">
       Copyright
       <vab-icon :icon="['fas', 'copyright']"></vab-icon>
-      xxx-项目 {{ fullYear }}
+      THUIAR-M-SENA 项目 {{ fullYear }}
     </footer>
   </section>
 </template>

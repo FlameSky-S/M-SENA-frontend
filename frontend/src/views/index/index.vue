@@ -272,8 +272,6 @@
 <script>
   import VabChart from '@/plugins/echarts'
   import { dependencies, devDependencies } from '../../../package.json'
-  import { getList } from '@/api/changeLog'
-  import { getNoticeList } from '@/api/notice'
   import { getRepos, getStargazers } from '@/api/github'
   export default {
     name: 'Index',
@@ -594,8 +592,41 @@
 
         //更新日志
         reverse: true,
-        activities: [],
-        noticeList: [],
+        activities: [
+          {
+            content:
+              '在github上获得了第一个star，感恩一位名叫Bequiet2014的github用户',
+            timestamp: '2020-03-23',
+          },
+          {
+            content: '增加更换主题功能',
+            timestamp: '2020-04-10',
+          },
+          {
+            content: '大幅精简代码',
+            timestamp: '2020-04-14',
+          },
+        ],
+        noticeList: [
+          {
+            title:
+              '温馨提示：集成版虽功能丰富，但冗余依赖过多，建议开发时使用基础版进行开发。',
+            closable: false,
+            type: 'success',
+          },
+          {
+            title:
+              '作者寄语：感谢Star，感恩相遇，愿世间美好与我们环环相扣，加油！',
+            closable: false,
+            type: 'warning',
+          },
+          {
+            title:
+              '随笔：我一直在寻找开源的真谛，我一直再想什么是开源，我一开始觉得免费就是开源，好像又不是。我理解的开源是：你也开源，我也开源，大家一起贡献，相互帮助。',
+            closable: false,
+            type: 'success',
+          },
+        ],
         //其他信息
         userAgent: navigator.userAgent,
         //卡片图标
@@ -651,9 +682,6 @@
         ],
       }
     },
-    created() {
-      this.fetchData()
-    },
     beforeDestroy() {
       clearInterval(this.timer)
     },
@@ -697,30 +725,6 @@
       handleZrClick(e) {},
       handleChangeTheme() {
         this.$baseEventBus.$emit('theme')
-      },
-      async fetchData() {
-        const { data } = await getList()
-        data.map((item, index) => {
-          if (index === data.length - 1) {
-            item.color = '#0bbd87'
-          }
-        })
-        this.activities = data
-        const res = await getNoticeList()
-        this.noticeList = res.data
-        /* getRepos({
-        token: "1061286824f978ea3cf98b7b8ea26fe27ba7cea1",
-      }).then((res) => {
-        const per_page = Math.ceil(res.data.stargazers_count / 100);
-        alert(per_page);
-        getStargazers({
-          token: "1061286824f978ea3cf98b7b8ea26fe27ba7cea1",
-          page: 1,
-          per_page: res.per_page,
-        }).then((res) => {
-          alert(JSON.stringify(res));
-        });
-      }); */
       },
     },
   }
