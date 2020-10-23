@@ -14,7 +14,7 @@
       </el-col>
       <el-col :xs="20" :sm="12" :md="12" :lg="12" :xl="12">
         <div class="right-panel">
-          <error-log></error-log>
+          <!-- <error-log></error-log> -->
           <full-screen-bar @refresh="refreshRoute"></full-screen-bar>
           <theme-bar class="hidden-xs-only"></theme-bar>
           <vab-icon
@@ -41,7 +41,7 @@
   import {
     Avatar,
     Breadcrumb,
-    ErrorLog,
+    // ErrorLog,
     FullScreenBar,
     ThemeBar,
   } from '@/layouts/components'
@@ -51,7 +51,7 @@
     components: {
       Avatar,
       Breadcrumb,
-      ErrorLog,
+      // ErrorLog,
       FullScreenBar,
       ThemeBar,
     },

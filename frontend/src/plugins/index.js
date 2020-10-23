@@ -6,7 +6,7 @@ import '@/styles/vab.scss'
 import '@/remixIcon'
 import '@/colorfulIcon'
 import '@/config/permission'
-import '@/utils/errorLog'
+// import '@/utils/errorLog'
 import './vabIcon'
 
 import Vab from '@/utils/vab'

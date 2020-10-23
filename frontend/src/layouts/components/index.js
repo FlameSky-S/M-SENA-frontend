@@ -13,8 +13,6 @@ export { default as VabQueryForm } from 'zx-layouts/VabQueryForm/export'
 export { default as Logo } from './Logo'
 //本地化头像组件
 export { default as Avatar } from './Avatar'
-//本地化广告组件，如不需要全局搜索ad组件删掉即可
-// export { default as Ad } from './Ad'
 //本地化AppMain组件
 export { default as AppMain } from './AppMain'
 export { default as TabsBar } from 'zx-layouts/TabsBar'
@@ -22,7 +20,7 @@ export { default as SideBar } from 'zx-layouts/SideBar'
 //本地化Breadcrumb组件
 export { default as Breadcrumb } from './Breadcrumb'
 export { default as FullScreenBar } from 'zx-layouts/FullScreenBar'
-export { default as ErrorLog } from 'zx-layouts/ErrorLog'
+// export { default as ErrorLog } from 'zx-layouts/ErrorLog'
 //本地化ThemeBar组件
 export { default as ThemeBar } from './ThemeBar'
 export { default as TopBar } from 'zx-layouts/TopBar'
