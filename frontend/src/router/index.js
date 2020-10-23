@@ -48,23 +48,21 @@ export const asyncRoutes = [
       },
     ],
   },
-
   {
-    path: '/dataend',
+    path: '/model',
     component: Layout,
     redirect: 'noRedirect',
-    name: 'Data',
+    name: 'Model',
     meta: {
       title: '数据端',
       icon: 'shopping-cart',
       permissions: ['admin'],
     },
-
     children: [
       {
         path: 'datasetList',
         name: 'Dataset List',
-        component: () => import('@/views/dataend/datasetList/index'),
+        component: () => import('@/views/project/dataEnd/datasetList/index'),
         meta: {
           title: '数据管理',
         },
@@ -72,14 +70,91 @@ export const asyncRoutes = [
       {
         path: 'labeling',
         name: 'Dataset Labeling',
-        // component: () => import('@/views/dataend/datasetList/index'),
+        component: () => import('@/views/project/dataEnd/labeling/index'),
         meta: {
           title: '数据标注',
         },
       },
     ],
   },
-
+  {
+    path: '/data',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'Data',
+    meta: {
+      title: '模型端',
+      icon: 'users-cog',
+      permissions: ['admin'],
+    },
+    children: [
+      {
+        path: 'modelList',
+        name: 'Model List',
+        component: () =>
+          import('@/views/project/modelEnd/modelManagement/index'),
+        meta: {
+          title: '模型管理',
+        },
+      },
+      {
+        path: 'modelResults',
+        name: ' Model Results',
+        component: () => import('@/views/project/modelEnd/modelResults/index'),
+        meta: {
+          title: '模型结果',
+        },
+      },
+      {
+        path: 'modelTraining',
+        name: ' Model Training',
+        component: () => import('@/views/project/modelEnd/modelTraining/index'),
+        meta: {
+          title: '模型训练',
+        },
+      },
+    ],
+  },
+  {
+    path: '/presentation',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'Presentation',
+    meta: {
+      title: '展示端',
+      icon: 'box-open',
+      permissions: ['admin'],
+    },
+    children: [
+      {
+        path: 'batchTest',
+        name: 'Batch Test',
+        component: () =>
+          import('@/views/project/presentationEnd/batchTest/index'),
+        meta: {
+          title: '批量测试',
+        },
+      },
+      {
+        path: 'sampleTest',
+        name: 'Sample Test',
+        component: () =>
+          import('@/views/project/presentationEnd/sampleTest/index'),
+        meta: {
+          title: '案例分析',
+        },
+      },
+      {
+        path: 'liveTest',
+        name: ' Live Test',
+        component: () =>
+          import('@/views/project/presentationEnd/liveTest/index'),
+        meta: {
+          title: '实时展示',
+        },
+      },
+    ],
+  },
   {
     path: '/vab',
     component: Layout,
@@ -192,37 +267,6 @@ export const asyncRoutes = [
       },
     ],
   },
-  {
-    path: '/personnelManagement',
-    component: Layout,
-    redirect: 'noRedirect',
-    name: 'PersonnelManagement',
-    meta: { title: '配置', icon: 'users-cog', permissions: ['admin'] },
-    children: [
-      {
-        path: 'userManagement',
-        name: 'UserManagement',
-        component: () =>
-          import('@/views/personnelManagement/userManagement/index'),
-        meta: { title: '用户管理' },
-      },
-      {
-        path: 'roleManagement',
-        name: 'RoleManagement',
-        component: () =>
-          import('@/views/personnelManagement/roleManagement/index'),
-        meta: { title: '角色管理' },
-      },
-      {
-        path: 'menuManagement',
-        name: 'MenuManagement',
-        component: () =>
-          import('@/views/personnelManagement/menuManagement/index'),
-        meta: { title: '菜单管理', badge: 'New' },
-      },
-    ],
-  },
-
   {
     path: '*',
     redirect: '/404',
