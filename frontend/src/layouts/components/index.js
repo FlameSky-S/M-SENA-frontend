@@ -20,7 +20,6 @@ export { default as SideBar } from 'zx-layouts/SideBar'
 //本地化Breadcrumb组件
 export { default as Breadcrumb } from './Breadcrumb'
 export { default as FullScreenBar } from 'zx-layouts/FullScreenBar'
-// export { default as ErrorLog } from 'zx-layouts/ErrorLog'
 //本地化ThemeBar组件
 export { default as ThemeBar } from './ThemeBar'
 export { default as TopBar } from 'zx-layouts/TopBar'

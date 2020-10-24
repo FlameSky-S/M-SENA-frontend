@@ -156,6 +156,35 @@ export const asyncRoutes = [
     ],
   },
   {
+    path: '/wiki',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'Wiki',
+    meta: {
+      title: '系统文档',
+      icon: 'box-open',
+      permissions: ['admin'],
+    },
+    children: [
+      {
+        path: 'docs',
+        name: 'System Docs',
+        component: () => import('@/views/project/Wiki/docs/index'),
+        meta: {
+          title: '模型文档',
+        },
+      },
+      {
+        path: 'more',
+        name: 'More Info',
+        component: () => import('@/views/project/Wiki/more/index'),
+        meta: {
+          title: '更多信息',
+        },
+      },
+    ],
+  },
+  {
     path: '*',
     redirect: '/404',
     hidden: true,
