@@ -272,7 +272,6 @@
 <script>
   import VabChart from '@/plugins/echarts'
   import { dependencies, devDependencies } from '../../../package.json'
-  import { getRepos, getStargazers } from '@/api/github'
   export default {
     name: 'Index',
     components: {
