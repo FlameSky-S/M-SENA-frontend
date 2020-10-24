@@ -14,7 +14,6 @@
       </el-col>
       <el-col :xs="20" :sm="12" :md="12" :lg="12" :xl="12">
         <div class="right-panel">
-          <!-- <error-log></error-log> -->
           <full-screen-bar @refresh="refreshRoute"></full-screen-bar>
           <theme-bar class="hidden-xs-only"></theme-bar>
           <vab-icon
@@ -24,11 +23,6 @@
             @click="refreshRoute"
           ></vab-icon>
           <avatar></avatar>
-          <!--  <vab-icon
-            title="退出系统"
-            :icon="['fas', 'sign-out-alt']"
-            @click="logout"
-          />-->
         </div>
       </el-col>
     </el-row>
@@ -41,7 +35,6 @@
   import {
     Avatar,
     Breadcrumb,
-    // ErrorLog,
     FullScreenBar,
     ThemeBar,
   } from '@/layouts/components'
@@ -51,7 +44,6 @@
     components: {
       Avatar,
       Breadcrumb,
-      // ErrorLog,
       FullScreenBar,
       ThemeBar,
     },
