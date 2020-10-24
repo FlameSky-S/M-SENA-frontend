@@ -182,6 +182,36 @@ export const asyncRoutes = [
           title: '更多信息',
         },
       },
+      {
+        path: 'icon', //TODO: Delete this in release verison.
+        component: EmptyLayout,
+        redirect: 'noRedirect',
+        name: 'Icon',
+        meta: {
+          title: '图标',
+          permissions: ['admin'],
+        },
+        children: [
+          {
+            path: 'awesomeIcon',
+            name: 'AwesomeIcon',
+            component: () => import('@/views/project/Wiki/icon/index'),
+            meta: { title: '常规图标' },
+          },
+          {
+            path: 'remixIcon',
+            name: 'RemixIcon',
+            component: () => import('@/views/project/Wiki/icon/remixIcon'),
+            meta: { title: '小清新图标' },
+          },
+          {
+            path: 'colorfulIcon',
+            name: 'ColorfulIcon',
+            component: () => import('@/views/project/Wiki/icon/colorfulIcon'),
+            meta: { title: '多彩图标' },
+          },
+        ],
+      },
     ],
   },
   {
