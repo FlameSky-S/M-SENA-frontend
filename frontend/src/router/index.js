@@ -41,38 +41,9 @@ export const asyncRoutes = [
         name: 'Index',
         component: () => import('@/views/index/index'),
         meta: {
-          title: '首页',
+          title: 'Home',
           icon: 'home',
           affix: true,
-        },
-      },
-    ],
-  },
-  {
-    path: '/model',
-    component: Layout,
-    redirect: 'noRedirect',
-    name: 'Model',
-    meta: {
-      title: '数据端',
-      icon: 'shopping-cart',
-      permissions: ['admin'],
-    },
-    children: [
-      {
-        path: 'datasetList',
-        name: 'Dataset List',
-        component: () => import('@/views/project/dataEnd/datasetList/index'),
-        meta: {
-          title: '数据管理',
-        },
-      },
-      {
-        path: 'labeling',
-        name: 'Dataset Labeling',
-        component: () => import('@/views/project/dataEnd/labeling/index'),
-        meta: {
-          title: '数据标注',
         },
       },
     ],
@@ -83,7 +54,45 @@ export const asyncRoutes = [
     redirect: 'noRedirect',
     name: 'Data',
     meta: {
-      title: '模型端',
+      title: 'Data End',
+      icon: 'shopping-cart',
+      permissions: ['admin'],
+    },
+    children: [
+      {
+        path: 'datasetList',
+        name: 'Dataset List',
+        component: () => import('@/views/project/dataEnd/datasetList/index'),
+        meta: {
+          title: 'Dataset Management',
+        },
+      },
+      {
+        path: 'datasetDetail',
+        name: 'Dataset Details',
+        component: () => import('@/views/project/dataEnd/datasetDetails/index'),
+        meta: {
+          title: 'Dataset Details',
+        },
+        hidden: true,
+      },
+      {
+        path: 'labeling',
+        name: 'Dataset Labeling',
+        component: () => import('@/views/project/dataEnd/labeling/index'),
+        meta: {
+          title: 'Dataset Labeling',
+        },
+      },
+    ],
+  },
+  {
+    path: '/model',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'Model',
+    meta: {
+      title: 'Model End',
       icon: 'users-cog',
       permissions: ['admin'],
     },
@@ -94,7 +103,7 @@ export const asyncRoutes = [
         component: () =>
           import('@/views/project/modelEnd/modelManagement/index'),
         meta: {
-          title: '模型管理',
+          title: 'Model Management',
         },
       },
       {
@@ -102,7 +111,7 @@ export const asyncRoutes = [
         name: ' Model Results',
         component: () => import('@/views/project/modelEnd/modelResults/index'),
         meta: {
-          title: '模型结果',
+          title: 'Model Results',
         },
       },
       {
@@ -110,7 +119,7 @@ export const asyncRoutes = [
         name: ' Model Training',
         component: () => import('@/views/project/modelEnd/modelTraining/index'),
         meta: {
-          title: '模型训练',
+          title: 'Model Training',
         },
       },
     ],
@@ -121,7 +130,7 @@ export const asyncRoutes = [
     redirect: 'noRedirect',
     name: 'Presentation',
     meta: {
-      title: '展示端',
+      title: 'Presentation End',
       icon: 'box-open',
       permissions: ['admin'],
     },
@@ -132,7 +141,7 @@ export const asyncRoutes = [
         component: () =>
           import('@/views/project/presentationEnd/batchTest/index'),
         meta: {
-          title: '批量测试',
+          title: 'Batch Test',
         },
       },
       {
@@ -141,7 +150,7 @@ export const asyncRoutes = [
         component: () =>
           import('@/views/project/presentationEnd/sampleTest/index'),
         meta: {
-          title: '案例分析',
+          title: 'Case Study',
         },
       },
       {
@@ -150,7 +159,7 @@ export const asyncRoutes = [
         component: () =>
           import('@/views/project/presentationEnd/liveTest/index'),
         meta: {
-          title: '实时展示',
+          title: 'Real Time Presentation',
         },
       },
     ],
@@ -161,7 +170,7 @@ export const asyncRoutes = [
     redirect: 'noRedirect',
     name: 'Wiki',
     meta: {
-      title: '系统文档',
+      title: 'System Documents',
       icon: 'box-open',
       permissions: ['admin'],
     },
@@ -171,7 +180,7 @@ export const asyncRoutes = [
         name: 'System Docs',
         component: () => import('@/views/project/Wiki/docs/index'),
         meta: {
-          title: '模型文档',
+          title: 'System Documents',
         },
       },
       {
@@ -179,7 +188,7 @@ export const asyncRoutes = [
         name: 'More Info',
         component: () => import('@/views/project/Wiki/more/index'),
         meta: {
-          title: '更多信息',
+          title: 'More Info',
         },
       },
       {
@@ -188,7 +197,7 @@ export const asyncRoutes = [
         redirect: 'noRedirect',
         name: 'Icon',
         meta: {
-          title: '图标',
+          title: 'Icons',
           permissions: ['admin'],
         },
         children: [
@@ -196,19 +205,19 @@ export const asyncRoutes = [
             path: 'awesomeIcon',
             name: 'AwesomeIcon',
             component: () => import('@/views/project/Wiki/icon/index'),
-            meta: { title: '常规图标' },
+            meta: { title: 'Normal Icon' },
           },
           {
             path: 'remixIcon',
             name: 'RemixIcon',
             component: () => import('@/views/project/Wiki/icon/remixIcon'),
-            meta: { title: '小清新图标' },
+            meta: { title: 'Remix Icon' },
           },
           {
             path: 'colorfulIcon',
             name: 'ColorfulIcon',
             component: () => import('@/views/project/Wiki/icon/colorfulIcon'),
-            meta: { title: '多彩图标' },
+            meta: { title: 'Colorful Icon' },
           },
         ],
       },

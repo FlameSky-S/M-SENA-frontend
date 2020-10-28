@@ -112,84 +112,6 @@
       },
     },
     created() {
-      // setTimeout(() => {
-      //   this.listLoading = false
-      // }, 500)
-      // this.list = [
-      //   {
-      //     datasetName: 'MOSI',
-      //     capacity: 2199,
-      //     language: 'English',
-      //     unimodalLabel: 'NO',
-      //     labelType: 'Classification',
-      //     description:
-      //       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
-      //   },
-      //   {
-      //     datasetName: 'MOSI',
-      //     capacity: 2199,
-      //     language: 'English',
-      //     unimodalLabel: 'NO',
-      //     labelType: 'Classification',
-      //     description:
-      //       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
-      //   },
-      //   {
-      //     datasetName: 'MOSI',
-      //     capacity: 2199,
-      //     language: 'English',
-      //     unimodalLabel: 'NO',
-      //     labelType: 'Classification',
-      //     description:
-      //       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
-      //   },
-      //   {
-      //     datasetName: 'MOSI',
-      //     capacity: 2199,
-      //     language: 'English',
-      //     unimodalLabel: 'NO',
-      //     labelType: 'Classification',
-      //     description:
-      //       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
-      //   },
-      //   {
-      //     datasetName: 'MOSI',
-      //     capacity: 2199,
-      //     language: 'English',
-      //     unimodalLabel: 'NO',
-      //     labelType: 'Classification',
-      //     description:
-      //       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
-      //   },
-      //   {
-      //     datasetName: 'MOSI',
-      //     capacity: 2199,
-      //     language: 'English',
-      //     unimodalLabel: 'NO',
-      //     labelType: 'Classification',
-      //     description:
-      //       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
-      //   },
-      //   {
-      //     datasetName: 'MOSI',
-      //     capacity: 2199,
-      //     language: 'English',
-      //     unimodalLabel: 'NO',
-      //     labelType: 'Classification',
-      //     description:
-      //       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
-      //   },
-      //   {
-      //     datasetName: 'MOSI',
-      //     capacity: 2199,
-      //     language: 'English',
-      //     unimodalLabel: 'NO',
-      //     labelType: 'Classification',
-      //     description:
-      //       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
-      //   },
-      // ]
-      // this.total = 12
       this.fetchData()
     },
     mounted() {},
@@ -198,7 +120,13 @@
         this.selectRows = val
       },
       showDetails(row, column, event) {
-        // this.$router.push('/')
+        alert(row.datasetName)
+        this.$router.push({
+          path: '/data/datasetDetail',
+          query: {
+            dataset: row.datasetName,
+          },
+        })
       },
       tableSortChange() {},
       handleSizeChange(val) {
@@ -212,8 +140,6 @@
       async fetchData() {
         this.listLoading = true
         const { data, totalCount } = await getDatasetList(this.queryForm)
-        alert(this.queryForm.pageNo)
-        alert(this.queryForm.pageSize)
         this.list = data
         this.total = totalCount
         setTimeout(() => {
