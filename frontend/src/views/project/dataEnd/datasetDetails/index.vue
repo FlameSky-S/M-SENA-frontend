@@ -46,17 +46,22 @@
           <h2 class="detail-info-operation-header">Operations</h2>
           <div class="operation-item">
             <el-button type="primary" class="operation-button" round>
-              主要按钮
+              {{ lockOperation }}
+            </el-button>
+          </div>
+          <div class="operation-item">
+            <el-button type="success" class="operation-button" round>
+              Import
             </el-button>
           </div>
           <div class="operation-item">
             <el-button type="info" class="operation-button" round>
-              信息按钮
+              Rename
             </el-button>
           </div>
           <div class="operation-item">
             <el-button type="danger" class="operation-button" round>
-              危险按钮
+              Delete
             </el-button>
           </div>
         </div>
@@ -77,7 +82,7 @@
         type="selection"
         width="55"
       ></el-table-column>
-      <el-table-column show-overflow-tooltip label="序号" width="95">
+      <el-table-column show-overflow-tooltip label="Index" width="95">
         <template #default="scope">
           {{ scope.$index + 1 }}
         </template>
@@ -85,14 +90,14 @@
       <el-table-column
         show-overflow-tooltip
         prop="title"
-        label="标题"
+        label="Video ID"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        label="作者"
+        label="Clip ID"
         prop="author"
       ></el-table-column>
-      <el-table-column show-overflow-tooltip label="头像">
+      <el-table-column show-overflow-tooltip label="Preface">
         <template #default="{ row }">
           <el-image
             v-if="imgShow"
@@ -103,9 +108,8 @@
       </el-table-column>
       <el-table-column
         show-overflow-tooltip
-        label="点击量"
+        label="Multimodal Label"
         prop="pageViews"
-        sortable
       ></el-table-column>
       <el-table-column show-overflow-tooltip label="状态">
         <template #default="{ row }">
@@ -127,10 +131,10 @@
         prop="datetime"
         width="200"
       ></el-table-column>
-      <el-table-column show-overflow-tooltip label="操作" width="180px">
+      <el-table-column show-overflow-tooltip label="Operations" width="180px">
         <template #default="{ row }">
-          <el-button type="text" @click="handleEdit(row)">编辑</el-button>
-          <el-button type="text" @click="handleDelete(row)">删除</el-button>
+          <el-button type="text" @click="showPreview(row)">Preview</el-button>
+          <el-button type="text" @click="handleDelete(row)">Delete</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -143,14 +147,18 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     ></el-pagination>
+    <preview ref="preview"></preview>
   </div>
 </template>
 
 <script>
   import { getList, doDelete } from '@/api/table'
+  import Preview from './components/Preview'
   export default {
     name: 'DatasetDetails',
-    components: {},
+    components: {
+      Preview,
+    },
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -180,6 +188,7 @@
         datasetDetails: {
           detailInfo: {
             datasetName: null,
+            locked: null,
             labeledCount: null,
             totalCount: null,
             modalities: null,
@@ -195,6 +204,11 @@
     computed: {
       height() {
         return this.$baseTableHeight()
+      },
+      lockOperation() {
+        return this.datasetDetails.detailInfo.locked === 'locked'
+          ? 'UnLock'
+          : 'Lock'
       },
       labeledFraction() {
         return (
@@ -226,11 +240,9 @@
       setSelectRows(val) {
         this.selectRows = val
       },
-      handleAdd() {
-        this.$refs['edit'].showEdit()
-      },
-      handleEdit(row) {
-        this.$refs['edit'].showEdit(row)
+      handleAdd() {},
+      showPreview(row) {
+        this.$refs['preview'].showPreview(row)
       },
       handleDelete(row) {
         if (row.id) {

@@ -1,5 +1,37 @@
 <template>
   <div class="datasetList-container">
+    <vab-query-form>
+      <vab-query-form-left-panel>
+        <el-button icon="el-icon-plus" type="primary" @click="handleAdd">
+          添加
+        </el-button>
+        <el-button icon="el-icon-delete" type="danger" @click="handleDelete">
+          删除
+        </el-button>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel>
+        <el-form
+          ref="form"
+          :model="queryForm"
+          :inline="true"
+          @submit.native.prevent
+        >
+          <el-form-item>
+            <el-input v-model="queryForm.title" placeholder="Dataset Name" />
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              icon="el-icon-search"
+              type="primary"
+              native-type="submit"
+              @click="handleQuery"
+            >
+              Search
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </vab-query-form-right-panel>
+    </vab-query-form>
     <el-table
       ref="datasetTable"
       v-loading="listLoading"
@@ -27,6 +59,20 @@
         label="Dataset Name"
         width="120"
       ></el-table-column>
+      <el-table-column show-overflow-tooltip label="Status" width="120">
+        <template #default="{ row }">
+          <el-tooltip
+            :content="row.status"
+            class="item"
+            effect="dark"
+            placement="top-start"
+          >
+            <el-tag :type="row.status | lockedFilter">
+              {{ row.status }}
+            </el-tag>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="capacity"
@@ -89,6 +135,13 @@
         }
         return statusMap[status]
       },
+      lockedFilter(lockedstatus) {
+        const statusMap = {
+          locked: 'warning',
+          unlocked: 'success',
+        }
+        return statusMap[lockedstatus]
+      },
     },
     data() {
       return {
@@ -128,6 +181,14 @@
           },
         })
       },
+      // TODO: to change here.
+      handleAdd() {
+        this.$router.push({
+          path: '/data/createDataset',
+        })
+      },
+      handleDelete() {},
+      handleQuery() {},
       tableSortChange() {},
       handleSizeChange(val) {
         this.queryForm.pageSize = val

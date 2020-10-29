@@ -7,6 +7,7 @@ const List = [
     language: 'English',
     unimodalLabel: 'NO',
     labelType: 'Classification',
+    status: 'locked',
     description:
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
@@ -16,6 +17,7 @@ const List = [
     language: 'English',
     unimodalLabel: 'NO',
     labelType: 'Classification',
+    status: 'locked',
     description:
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
@@ -25,6 +27,7 @@ const List = [
     language: 'English',
     unimodalLabel: 'NO',
     labelType: 'Classification',
+    status: 'unlocked',
     description:
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
@@ -34,6 +37,7 @@ const List = [
     language: 'English',
     unimodalLabel: 'NO',
     labelType: 'Classification',
+    status: 'locked',
     description:
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
@@ -43,6 +47,7 @@ const List = [
     language: 'English',
     unimodalLabel: 'NO',
     labelType: 'Classification',
+    status: 'locked',
     description:
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
@@ -52,6 +57,7 @@ const List = [
     language: 'English',
     unimodalLabel: 'NO',
     labelType: 'Classification',
+    status: 'locked',
     description:
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
@@ -61,6 +67,7 @@ const List = [
     language: 'English',
     unimodalLabel: 'NO',
     labelType: 'Classification',
+    status: 'locked',
     description:
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
@@ -70,6 +77,7 @@ const List = [
     language: 'English',
     unimodalLabel: 'NO',
     labelType: 'Classification',
+    status: 'locked',
     description:
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
@@ -79,6 +87,7 @@ const List = [
     language: 'English',
     unimodalLabel: 'NO',
     labelType: 'Classification',
+    status: 'locked',
     description:
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
@@ -88,6 +97,7 @@ const List = [
     language: 'English',
     unimodalLabel: 'NO',
     labelType: 'Classification',
+    status: 'locked',
     description:
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
@@ -97,6 +107,7 @@ const List = [
     language: 'English',
     unimodalLabel: 'NO',
     labelType: 'Classification',
+    status: 'locked',
     description:
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
@@ -106,6 +117,7 @@ const List = [
     language: 'English',
     unimodalLabel: 'NO',
     labelType: 'Classification',
+    status: 'locked',
     description:
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
@@ -127,6 +139,29 @@ module.exports = [
         code: 200,
         msg: 'success',
         totalCount: count,
+        data: datasetList,
+      }
+    },
+  },
+  {
+    url: '/dataEnd/getUnlockedDatasetList',
+    type: 'post',
+    response(config) {
+      const { title = '', pageNo = 1, pageSize = 20 } = config.body
+      let mockDatasetList = List.filter((item) => {
+        return !(title && item.title.indexOf(title) < 0)
+      })
+      let mockUnLockedDatasetList = mockDatasetList.filter((item) => {
+        return item.status === 'unlocked'
+      })
+      const datasetList = mockUnLockedDatasetList.filter(
+        (item, index) =>
+          index < pageSize * pageNo && index >= pageSize * (pageNo - 1)
+      )
+      return {
+        code: 200,
+        msg: 'success',
+        totalCount: mockUnLockedDatasetList.length,
         data: datasetList,
       }
     },
