@@ -5,13 +5,13 @@
 
 @charset "utf-8";
 
-@import "./normalize.scss";
-@import "./transition.scss";
-@import "./loading.scss";
-@import "./themes/green.scss";
-@import "./themes/glory.scss";
-@import "./themes/dark.scss";
-$base: ".vab";
+@import './normalize.scss';
+@import './transition.scss';
+@import './loading.scss';
+@import './themes/green.scss';
+@import './themes/glory.scss';
+@import './themes/dark.scss';
+$base: '.vab';
 
 @mixin scrollbar {
   max-height: 88vh;
@@ -143,7 +143,7 @@ html {
       .app-main-container {
         @include base-scrollbar;
 
-        > [class*="-container"] {
+        > [class*='-container'] {
           padding: $base-padding;
           background: $base-color-white;
         }
@@ -175,6 +175,7 @@ html {
 
       th {
         background: #f5f7fa;
+        font-weight: bold;
       }
 
       td,
@@ -185,7 +186,6 @@ html {
 
         .cell {
           font-size: $base-font-size-default;
-          font-weight: normal;
           color: #606266;
 
           .el-image {
