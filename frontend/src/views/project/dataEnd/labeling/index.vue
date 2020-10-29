@@ -118,6 +118,34 @@
           Back
         </el-button>
       </div>
+      <div class="video-upload-container">
+        <el-upload
+          class="video-upload"
+          drag
+          action="https://jsonplaceholder.typicode.com/posts/"
+          multiple
+        >
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">
+            Drag the file here, or
+            <em>click</em>
+            upload
+          </div>
+          <div slot="tip" class="el-upload__tip">
+            Charts for dataset. Support jpg/ png files (No more than 500kb).
+          </div>
+        </el-upload>
+      </div>
+      <div class="translate-verify">
+        <h2 class="header">Translates</h2>
+        <el-input
+          v-model="basicInfo.description"
+          class="input"
+          type="textarea"
+          :rows="2"
+          placeholder="请输入内容"
+        ></el-input>
+      </div>
     </el-card>
     <el-card v-if="showLoading" class="loading-card card">
       <div slot="header" class="clearfix">
@@ -155,7 +183,7 @@
     data() {
       return {
         labelPosition: 'right',
-        currentStep: 1,
+        currentStep: 2,
         basicInfo: {
           datasetName: null,
           labeledCount: null,
@@ -216,9 +244,11 @@
           margin-block-start: 0;
         }
         .chart {
-          // width: 60%;
-          margin-right: 20%;
-          margin-left: 20%;
+          .el-upload-dragger {
+            width: 90%;
+          }
+          margin-right: 5%;
+          margin-left: 5%;
         }
       }
       .description-input {
@@ -232,6 +262,17 @@
           width: 80%;
           // margin-right: 20%;
           margin-left: 10%;
+        }
+      }
+    }
+    .upload-card {
+      .video-upload-container {
+        // display: inline;
+        align-items: center;
+        justify-content: center;
+        margin: 0 25%;
+        .video-upload >>> .el-upload {
+          width: 100%;
         }
       }
     }
