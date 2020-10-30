@@ -68,6 +68,15 @@ export const asyncRoutes = [
         },
       },
       {
+        path: 'createDataset',
+        name: 'Create Dataset',
+        component: () => import('@/views/project/dataEnd/createDataset/index'),
+        meta: {
+          title: 'Create Dataset',
+        },
+        hidden: true,
+      },
+      {
         path: 'datasetDetail',
         name: 'Dataset Details',
         component: () => import('@/views/project/dataEnd/datasetDetails/index'),

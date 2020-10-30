@@ -8,6 +8,14 @@ export function getDatasetList(data) {
   })
 }
 
+export function getUnlockedDatasetList(data) {
+  return request({
+    url: '/dataEnd/getUnlockedDatasetList',
+    method: 'post',
+    data,
+  })
+}
+
 // export function doEdit(data) {
 //   return request({
 //     url: '/table/doEdit',
