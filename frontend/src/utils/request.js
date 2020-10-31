@@ -52,6 +52,9 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   (config) => {
+    console.log(999999)
+    console.log(config)
+    console.log(Vue.prototype.$baseLodash.identity())
     if (store.getters['user/accessToken']) {
       config.headers[tokenName] = store.getters['user/accessToken']
     }

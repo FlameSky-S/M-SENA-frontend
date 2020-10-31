@@ -134,12 +134,7 @@ module.exports = [
     url: '/dataEnd/getDetails',
     type: 'post',
     response(config) {
-      const {
-        datasetName = '',
-        title = '',
-        pageNo = 1,
-        pageSize = 20,
-      } = config.body
+      const { datasetName, pageNo, pageSize, title } = config.body
 
       let mockDatasetDetails = datasetDetails.filter((item) => {
         return !(title && item.title.indexOf(title) < 0)
@@ -151,7 +146,7 @@ module.exports = [
       return {
         code: 200,
         msg: 'success',
-        totalCount: detailList.length,
+        totalCount: datasetDetails.length,
         data: detailList,
       }
     },

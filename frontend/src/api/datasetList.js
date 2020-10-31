@@ -28,6 +28,6 @@ export function deleteDataset(datasetIndexs) {
   return request({
     url: 'dataEnd/deleteDataset',
     method: 'post',
-    datasetIndexs,
+    data: datasetIndexs,
   })
 }

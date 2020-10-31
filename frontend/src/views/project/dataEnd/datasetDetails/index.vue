@@ -113,15 +113,15 @@
         prop="clipID"
         width="160"
       ></el-table-column>
-      <!-- <el-table-column show-overflow-tooltip label="Preface">
+      <el-table-column show-overflow-tooltip label="Preface">
         <template #default="{ row }">
           <el-image
-            v-if="imgShow"
-            :preview-src-list="imageList"
-            :src="row.img"
+            width="120"
+            :preview-src-list="prefaceList"
+            :src="row.preface"
           ></el-image>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column
         show-overflow-tooltip
         label="Multimodal Label"
@@ -188,7 +188,7 @@
 
 <script>
   import { getDetails } from '@/api/datasetDetail'
-  import { getList, doDelete } from '@/api/table'
+  // import { doDelete } from '@/api/table'
   import Preview from './components/Preview'
   export default {
     name: 'DatasetDetails',
@@ -207,14 +207,12 @@
     },
     data() {
       return {
-        imgShow: true,
-        // list: [],
-        imageList: [],
         listLoading: true,
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
         background: true,
         selectRows: '',
+        prefaceList: [],
         elementLoadingText: '正在加载...',
         queryForm: {
           datasetName: null,
@@ -261,7 +259,8 @@
       },
     },
     created() {
-      this.fetchDetails(this.$route.query.dataset)
+      this.queryForm.datasetName = this.$route.query.dataset
+      this.fetchDetails()
       this.datasetDetails.detailInfo.datasetName = 'CMU_MOSI'
       this.datasetDetails.detailInfo.locked = 'locked'
       this.datasetDetails.detailInfo.labeledCount = 2199
@@ -274,11 +273,11 @@
     mounted() {},
     methods: {
       tableSortChange() {
-        const imageList = []
+        const prefaceList = []
         this.$refs.tableSort.tableData.forEach((item, index) => {
-          imageList.push(item.img)
+          prefaceList.push(item.img)
         })
-        this.imageList = imageList
+        this.prefaceList = prefaceList
       },
       setSelectRows(val) {
         this.selectRows = val
@@ -288,43 +287,47 @@
         this.$refs['preview'].showPreview(row)
       },
       handleDelete(row) {
-        if (row.id) {
-          this.$baseConfirm('你确定要删除当前项吗', null, async () => {
-            const { msg } = await doDelete({ ids: row.id })
-            this.$baseMessage(msg, 'success')
-            this.fetchData()
-          })
-        } else {
-          if (this.selectRows.length > 0) {
-            const ids = this.selectRows.map((item) => item.id).join()
-            this.$baseConfirm('你确定要删除选中项吗', null, async () => {
-              const { msg } = await doDelete({ ids: ids })
-              this.$baseMessage(msg, 'success')
-              this.fetchData()
-            })
-          } else {
-            this.$baseMessage('未选中任何行', 'error')
-            return false
-          }
-        }
+        // if (row.id) {
+        //   this.$baseConfirm('你确定要删除当前项吗', null, async () => {
+        //     const { msg } = await doDelete({ ids: row.id })
+        //     this.$baseMessage(msg, 'success')
+        //     this.fetchData()
+        //   })
+        // } else {
+        //   if (this.selectRows.length > 0) {
+        //     const ids = this.selectRows.map((item) => item.id).join()
+        //     this.$baseConfirm('你确定要删除选中项吗', null, async () => {
+        //       const { msg } = await doDelete({ ids: ids })
+        //       this.$baseMessage(msg, 'success')
+        //       this.fetchData()
+        //     })
+        //   } else {
+        //     this.$baseMessage('未选中任何行', 'error')
+        //     return false
+        //   }
+        // }
       },
       handleSizeChange(val) {
         this.queryForm.pageSize = val
-        this.fetchData()
+        this.fetchDetails()
       },
       handleCurrentChange(val) {
         this.queryForm.pageNo = val
-        this.fetchData()
+        this.fetchDetails()
       },
       handleQuery() {
         this.queryForm.pageNo = 1
-        this.fetchData()
+        this.fetchDetails()
       },
-      async fetchDetails(datasetName) {
-        this.queryForm.datasetName = datasetName
+      async fetchDetails() {
         this.listLoading = true
+        // console.log(this.queryForm)
         const { data, totalCount } = await getDetails(this.queryForm)
         this.datasetDetails.instanceList = data
+        const prefaceList = []
+        data.forEach((item, index) => {
+          prefaceList.push(item.img)
+        })
         this.total = totalCount
         setTimeout(() => {
           this.listLoading = false
