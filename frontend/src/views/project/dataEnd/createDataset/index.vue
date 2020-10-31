@@ -19,11 +19,7 @@
       </div>
       <el-row>
         <el-col :span="12">
-          <el-form
-            :model="basicInfo"
-            :label-position="labelPosition"
-            label-width="20%"
-          >
+          <el-form :model="basicInfo" label-width="20%">
             <el-form-item label="Dataset Name">
               <el-input
                 v-model="basicInfo.datasetName"

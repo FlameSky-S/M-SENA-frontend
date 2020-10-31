@@ -2,6 +2,7 @@ const count = 12
 
 const List = [
   {
+    id: 1,
     datasetName: 'MOSI',
     capacity: 2199,
     language: 'English',
@@ -12,6 +13,7 @@ const List = [
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
   {
+    id: 2,
     datasetName: 'MOSI',
     capacity: 2199,
     language: 'English',
@@ -22,6 +24,7 @@ const List = [
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
   {
+    id: 3,
     datasetName: 'MOSI',
     capacity: 2199,
     language: 'English',
@@ -32,6 +35,7 @@ const List = [
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
   {
+    id: 4,
     datasetName: 'MOSI',
     capacity: 2199,
     language: 'English',
@@ -42,6 +46,7 @@ const List = [
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
   {
+    id: 5,
     datasetName: 'MOSI',
     capacity: 2199,
     language: 'English',
@@ -52,6 +57,7 @@ const List = [
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
   {
+    id: 6,
     datasetName: 'MOSI',
     capacity: 2199,
     language: 'English',
@@ -62,6 +68,7 @@ const List = [
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
   {
+    id: 7,
     datasetName: 'MOSI',
     capacity: 2199,
     language: 'English',
@@ -72,6 +79,7 @@ const List = [
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
   {
+    id: 8,
     datasetName: 'MOSI',
     capacity: 2199,
     language: 'English',
@@ -82,6 +90,7 @@ const List = [
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
   {
+    id: 9,
     datasetName: 'MOSI',
     capacity: 2199,
     language: 'English',
@@ -92,6 +101,7 @@ const List = [
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
   {
+    id: 10,
     datasetName: 'MOSI',
     capacity: 2199,
     language: 'English',
@@ -102,6 +112,7 @@ const List = [
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
   {
+    id: 11,
     datasetName: 'MOSI',
     capacity: 2199,
     language: 'English',
@@ -112,6 +123,7 @@ const List = [
       '2199 opinion video clips each annotated with sentiment in the range [-3,3]',
   },
   {
+    id: 12,
     datasetName: 'MOSI',
     capacity: 2199,
     language: 'English',
@@ -124,6 +136,7 @@ const List = [
 ]
 module.exports = [
   {
+    // show all dataset list.
     url: '/dataEnd/getDatasetList',
     type: 'post',
     response(config) {
@@ -144,6 +157,17 @@ module.exports = [
     },
   },
   {
+    url: '/dataEnd/deleteDataset',
+    type: 'post',
+    response(indexs) {
+      return {
+        code: 200,
+        msg: '模拟删除成功',
+      }
+    },
+  },
+  {
+    // show labeling table items.
     url: '/dataEnd/getUnlockedDatasetList',
     type: 'post',
     response(config) {

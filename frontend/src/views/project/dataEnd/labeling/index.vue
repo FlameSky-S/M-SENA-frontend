@@ -69,7 +69,7 @@
         show-overflow-tooltip
         prop="unimodalLabel"
         label="Unimodal Label"
-        width="120"
+        width="130"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
