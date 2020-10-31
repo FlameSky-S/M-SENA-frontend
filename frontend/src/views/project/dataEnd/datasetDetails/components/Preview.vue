@@ -14,7 +14,7 @@
       </el-form-item>
     </el-form> -->
     <el-card shadow="hover">
-      <div slot="header">Preview Video Clips</div>
+      <!-- <div slot="header">Preview Video Clips</div> -->
       <vab-player-hls
         :config="form.videoconfig"
         @player="Player2 = $event"
@@ -54,7 +54,7 @@
     created() {},
     methods: {
       showPreview(row) {
-        this.title = 'Instance Preview'
+        this.title = 'Preview Video Clips'
         // if (!row) {
         //   this.title = '添加'
         // } else {

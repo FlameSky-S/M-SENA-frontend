@@ -33,11 +33,11 @@
       <el-divider direction="vertical" class="top-left-divider"></el-divider>
       <el-col :span="8">
         <div class="chart-container">
-          <img
+          <el-image
             class="detail-chart"
-            src="https://picsum.photos/200/200?random=a9CADE4c-3141-09b9-eFf2-55DDDC4Bf7Ec"
-            alt=""
-          />
+            :preview-src-list="datasetDetails.modelImg"
+            src="https://i.picsum.photos/id/703/200/200.jpg?hmac=6zWxIBRmIf2e0jZTqvKBIwrc7wm-dPkvGky4go6Yyvg"
+          ></el-image>
         </div>
       </el-col>
       <el-divider direction="vertical" class="top-right-divider"></el-divider>
@@ -50,17 +50,32 @@
             </el-button>
           </div>
           <div class="operation-item">
-            <el-button type="success" class="operation-button" round>
+            <el-button
+              type="success"
+              class="operation-button"
+              round
+              :disabled="disabledButton"
+            >
               Import
             </el-button>
           </div>
           <div class="operation-item">
-            <el-button type="info" class="operation-button" round>
+            <el-button
+              type="info"
+              class="operation-button"
+              round
+              :disabled="disabledButton"
+            >
               Rename
             </el-button>
           </div>
           <div class="operation-item">
-            <el-button type="danger" class="operation-button" round>
+            <el-button
+              type="danger"
+              class="operation-button"
+              round
+              :disabled="disabledButton"
+            >
               Delete
             </el-button>
           </div>
@@ -71,33 +86,34 @@
     <el-table
       ref="tableSort"
       v-loading="listLoading"
-      :data="list"
+      :data="datasetDetails.instanceList"
       :element-loading-text="elementLoadingText"
+      style="width: 100%"
       :height="height"
       @selection-change="setSelectRows"
       @sort-change="tableSortChange"
     >
       <el-table-column
+        fixed
         show-overflow-tooltip
         type="selection"
-        width="55"
+        width="60"
       ></el-table-column>
-      <el-table-column show-overflow-tooltip label="Index" width="95">
-        <template #default="scope">
-          {{ scope.$index + 1 }}
-        </template>
-      </el-table-column>
       <el-table-column
+        fixed
         show-overflow-tooltip
-        prop="title"
+        prop="videoID"
         label="Video ID"
+        width="130"
       ></el-table-column>
       <el-table-column
+        fixed
         show-overflow-tooltip
         label="Clip ID"
-        prop="author"
+        prop="clipID"
+        width="160"
       ></el-table-column>
-      <el-table-column show-overflow-tooltip label="Preface">
+      <!-- <el-table-column show-overflow-tooltip label="Preface">
         <template #default="{ row }">
           <el-image
             v-if="imgShow"
@@ -105,13 +121,14 @@
             :src="row.img"
           ></el-image>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         show-overflow-tooltip
         label="Multimodal Label"
-        prop="pageViews"
+        prop="multimodalLabel"
       ></el-table-column>
-      <el-table-column show-overflow-tooltip label="状态">
+
+      <!-- <el-table-column show-overflow-tooltip label="状态">
         <template #default="{ row }">
           <el-tooltip
             :content="row.status"
@@ -124,17 +141,35 @@
             </el-tag>
           </el-tooltip>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         show-overflow-tooltip
-        label="时间"
-        prop="datetime"
+        label="Belonging"
+        prop="belonging"
         width="200"
       ></el-table-column>
-      <el-table-column show-overflow-tooltip label="Operations" width="180px">
+      <el-table-column
+        fixed="right"
+        show-overflow-tooltip
+        label="Operations"
+        width="180px"
+      >
         <template #default="{ row }">
           <el-button type="text" @click="showPreview(row)">Preview</el-button>
-          <el-button type="text" @click="handleDelete(row)">Delete</el-button>
+          <el-button
+            type="text"
+            :disabled="disabledButton"
+            @click="handleEdit(row)"
+          >
+            Edit
+          </el-button>
+          <el-button
+            type="text"
+            :disabled="disabledButton"
+            @click="handleDelete(row)"
+          >
+            Delete
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -152,6 +187,7 @@
 </template>
 
 <script>
+  import { getDetails } from '@/api/datasetDetail'
   import { getList, doDelete } from '@/api/table'
   import Preview from './components/Preview'
   export default {
@@ -172,7 +208,7 @@
     data() {
       return {
         imgShow: true,
-        list: [],
+        // list: [],
         imageList: [],
         listLoading: true,
         layout: 'total, sizes, prev, pager, next, jumper',
@@ -181,6 +217,7 @@
         selectRows: '',
         elementLoadingText: '正在加载...',
         queryForm: {
+          datasetName: null,
           pageNo: 1,
           pageSize: 20,
           title: '',
@@ -196,7 +233,9 @@
             language: null,
             unimodalLabel: null,
           },
-          modelImg: null,
+          modelImg: [
+            'https://i.picsum.photos/id/703/200/200.jpg?hmac=6zWxIBRmIf2e0jZTqvKBIwrc7wm-dPkvGky4go6Yyvg',
+          ],
           instanceList: [],
         },
       }
@@ -210,6 +249,9 @@
           ? 'UnLock'
           : 'Lock'
       },
+      disabledButton() {
+        return this.datasetDetails.detailInfo.locked === 'locked' ? true : false
+      },
       labeledFraction() {
         return (
           this.datasetDetails.detailInfo.labeledCount +
@@ -221,6 +263,7 @@
     created() {
       this.fetchDetails(this.$route.query.dataset)
       this.datasetDetails.detailInfo.datasetName = 'CMU_MOSI'
+      this.datasetDetails.detailInfo.locked = 'locked'
       this.datasetDetails.detailInfo.labeledCount = 2199
       this.datasetDetails.detailInfo.totalCount = 2199
       this.datasetDetails.detailInfo.modalities = '{T, V, A}'
@@ -240,7 +283,7 @@
       setSelectRows(val) {
         this.selectRows = val
       },
-      handleAdd() {},
+      handleEdit() {},
       showPreview(row) {
         this.$refs['preview'].showPreview(row)
       },
@@ -277,23 +320,15 @@
         this.queryForm.pageNo = 1
         this.fetchData()
       },
-      async fetchData() {
+      async fetchDetails(datasetName) {
+        this.queryForm.datasetName = datasetName
         this.listLoading = true
-        const { data, totalCount } = await getList(this.queryForm)
-        this.list = data
-        const imageList = []
-        data.forEach((item, index) => {
-          imageList.push(item.img)
-        })
-        this.imageList = imageList
+        const { data, totalCount } = await getDetails(this.queryForm)
+        this.datasetDetails.instanceList = data
         this.total = totalCount
         setTimeout(() => {
           this.listLoading = false
         }, 500)
-      },
-      fetchDetails(datasetName) {
-        this.fetchData()
-        //TODO: finish this api to get the datasetDetails attribute.
       },
     },
   }
