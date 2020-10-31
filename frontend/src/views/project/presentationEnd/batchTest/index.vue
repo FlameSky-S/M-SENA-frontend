@@ -1,263 +1,328 @@
 <template>
   <div class="batchTest-container">
-    <vab-query-form>
-      <vab-query-form-left-panel>
-        <el-button icon="el-icon-plus" type="primary" @click="handleAdd">
-          添加
-        </el-button>
-        <el-button icon="el-icon-delete" type="danger" @click="handleDelete">
-          删除
-        </el-button>
-        <el-button type="primary" @click="testMessage">baseMessage</el-button>
-        <el-button type="primary" @click="testALert">baseAlert</el-button>
-        <el-button type="primary" @click="testConfirm">baseConfirm</el-button>
-        <el-button type="primary" @click="testNotify">baseNotify</el-button>
-      </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
-        <el-form
-          ref="form"
-          :model="queryForm"
-          :inline="true"
-          @submit.native.prevent
-        >
-          <el-form-item>
-            <el-input v-model="queryForm.title" placeholder="标题" />
-          </el-form-item>
-          <el-form-item>
-            <el-button
-              icon="el-icon-search"
-              type="primary"
-              native-type="submit"
-              @click="handleQuery"
-            >
-              查询
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </vab-query-form-right-panel>
-    </vab-query-form>
-
-    <el-table
-      ref="tableSort"
-      v-loading="listLoading"
-      :data="list"
-      :element-loading-text="elementLoadingText"
-      :height="height"
-      @selection-change="setSelectRows"
-      @sort-change="tableSortChange"
-    >
-      <el-table-column
-        show-overflow-tooltip
-        type="selection"
-        width="55"
-      ></el-table-column>
-      <el-table-column show-overflow-tooltip label="序号" width="95">
-        <template #default="scope">
-          {{ scope.$index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="title"
-        label="标题"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        label="作者"
-        prop="author"
-      ></el-table-column>
-      <el-table-column show-overflow-tooltip label="头像">
-        <template #default="{ row }">
-          <el-image
-            v-if="imgShow"
-            :preview-src-list="imageList"
-            :src="row.img"
-          ></el-image>
-        </template>
-      </el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        label="点击量"
-        prop="pageViews"
-        sortable
-      ></el-table-column>
-      <el-table-column show-overflow-tooltip label="状态">
-        <template #default="{ row }">
-          <el-tooltip
-            :content="row.status"
-            class="item"
-            effect="dark"
-            placement="top-start"
+    <h1 class="batchTest-header">Batch Test</h1>
+    <el-row v-loading="settingsLoading">
+      <el-col :span="8">
+        <div class="test-settings">
+          <h2 class="test-settings-header">Test Settings</h2>
+          <el-form
+            ref="testSettings"
+            :model="testSettings"
+            label-width="160px"
+            label-position="left"
+            style="margin: 5%"
           >
-            <el-tag :type="row.status | statusFilter">
-              {{ row.status }}
-            </el-tag>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        label="时间"
-        prop="datetime"
-        width="200"
-      ></el-table-column>
-      <el-table-column show-overflow-tooltip label="操作" width="180px">
-        <template #default="{ row }">
-          <el-button type="text" @click="handleEdit(row)">编辑</el-button>
-          <el-button type="text" @click="handleDelete(row)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      :background="background"
-      :current-page="queryForm.pageNo"
-      :layout="layout"
-      :page-size="queryForm.pageSize"
-      :total="total"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
-    ></el-pagination>
-    <table-edit ref="edit"></table-edit>
+            <el-form-item label="Dataset:" style="font-weight: 700">
+              <el-select v-model="testSettings.dataset">
+                <el-option
+                  v-for="item in datasetList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Data Mode:" style="font-weight: 700">
+              <el-select v-model="testSettings.mode">
+                <el-option
+                  v-for="item in modeList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Sentiment:" style="font-weight: 700">
+              <el-select v-model="testSettings.sentiment">
+                <el-option
+                  v-for="item in sentimentList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Primary Model:" style="font-weight: 700">
+              <el-select
+                v-model="testSettings.primary"
+                @change="onPrimaryChange"
+              >
+                <el-option
+                  v-for="item in modelList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Other Models:" style="font-weight: 700">
+              <el-select v-model="testSettings.other" multiple collapse-tags>
+                <el-option
+                  v-for="item in otherList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Use Stored Results:" style="font-weight: 700">
+              <el-radio-group v-model="testSettings.useStored">
+                <el-radio-button label="True"></el-radio-button>
+                <el-radio-button label="False"></el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                type="primary"
+                style="font-weight: 700; font-size: 14px"
+                @click="onSubmit"
+              >
+                Start Test
+              </el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+      </el-col>
+      <el-divider direction="vertical" class="divider"></el-divider>
+      <el-col :span="16">
+        <div class="test-results">
+          <h2 class="test-results-header">Test Results</h2>
+          <h3 class="test-info-header" style="text-align: center">
+            {{ header }}
+          </h3>
+          <el-table
+            v-loading="resultLoading"
+            :data="testResults"
+            :cell-style="addStyle"
+            element-loading-text="Testing..."
+            border
+          >
+            <el-table-column
+              v-for="(item, index) in testHeader"
+              :key="index"
+              :prop="item.prop"
+              :label="item.label"
+              align="center"
+            ></el-table-column>
+          </el-table>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
-  import { getList, doDelete } from '@/api/table'
-  import TableEdit from './components/TableEdit'
+  import { getSettings } from '@/api/batchTest'
+  import { getResults } from '@/api/batchTest'
   export default {
     name: 'BatchTest',
     components: {
-      TableEdit,
-    },
-    filters: {
-      statusFilter(status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'gray',
-          deleted: 'danger',
-        }
-        return statusMap[status]
-      },
+      //TableEdit,
     },
     data() {
       return {
-        imgShow: true,
-        list: [],
-        imageList: [],
-        listLoading: true,
-        layout: 'total, sizes, prev, pager, next, jumper',
-        total: 0,
-        background: true,
-        selectRows: '',
-        elementLoadingText: '正在加载...',
-        queryForm: {
-          pageNo: 1,
-          pageSize: 20,
-          title: '',
+        datasetList: [],
+        modeList: [
+          {
+            value: 'train',
+            label: 'Training set',
+          },
+          {
+            value: 'dev',
+            label: 'Dev set',
+          },
+          {
+            value: 'test',
+            label: 'Test set',
+          },
+        ],
+        sentimentList: [],
+        modelList: [],
+        testSettings: {
+          dataset: '01',
+          mode: 'test',
+          sentiment: '0',
+          primary: '001',
+          other: [],
+          useStored: 'True',
         },
+        testResults: [],
+        testHeader: [],
+        header: '',
+        settingsLoading: true,
+        resultLoading: false,
       }
     },
     computed: {
-      height() {
-        return this.$baseTableHeight()
+      otherList: function () {
+        let options = []
+        for (let i in this.modelList) {
+          if (this.modelList[i].value !== this.testSettings.primary) {
+            options.push(this.modelList[i])
+          }
+        }
+        return options
       },
     },
     created() {
-      this.fetchData()
+      this.fetchSettings()
     },
-    beforeDestroy() {},
     mounted() {},
     methods: {
-      tableSortChange() {
-        const imageList = []
-        this.$refs.tableSort.tableData.forEach((item, index) => {
-          imageList.push(item.img)
-        })
-        this.imageList = imageList
-      },
-      setSelectRows(val) {
-        this.selectRows = val
-      },
-      handleAdd() {
-        this.$refs['edit'].showEdit()
-      },
-      handleEdit(row) {
-        this.$refs['edit'].showEdit(row)
-      },
-      handleDelete(row) {
-        if (row.id) {
-          this.$baseConfirm('你确定要删除当前项吗', null, async () => {
-            const { msg } = await doDelete({ ids: row.id })
-            this.$baseMessage(msg, 'success')
-            this.fetchData()
-          })
-        } else {
-          if (this.selectRows.length > 0) {
-            const ids = this.selectRows.map((item) => item.id).join()
-            this.$baseConfirm('你确定要删除选中项吗', null, async () => {
-              const { msg } = await doDelete({ ids: ids })
-              this.$baseMessage(msg, 'success')
-              this.fetchData()
-            })
-          } else {
-            this.$baseMessage('未选中任何行', 'error')
-            return false
+      getLabel(list, value) {
+        for (let i in list) {
+          if (list[i].value === value) {
+            return list[i].label
           }
         }
       },
-      handleSizeChange(val) {
-        this.queryForm.pageSize = val
-        this.fetchData()
-      },
-      handleCurrentChange(val) {
-        this.queryForm.pageNo = val
-        this.fetchData()
-      },
-      handleQuery() {
-        this.queryForm.pageNo = 1
-        this.fetchData()
-      },
-      async fetchData() {
-        this.listLoading = true
-        const { data, totalCount } = await getList(this.queryForm)
-        this.list = data
-        const imageList = []
-        data.forEach((item, index) => {
-          imageList.push(item.img)
-        })
-        this.imageList = imageList
-        this.total = totalCount
-        setTimeout(() => {
-          this.listLoading = false
-        }, 500)
-      },
-      testMessage() {
-        this.$baseMessage('test1', 'success')
-      },
-      testALert() {
-        this.$baseAlert('11')
-        this.$baseAlert('11', '自定义标题', () => {
-          /* 可以写回调; */
-        })
-        this.$baseAlert('11', null, () => {
-          /* 可以写回调; */
-        })
-      },
-      testConfirm() {
-        this.$baseConfirm(
-          '你确定要执行该操作?',
-          null,
-          () => {
-            /* 可以写回调; */
-          },
-          () => {
-            /* 可以写回调; */
+      getLabels(list, values) {
+        let labels = []
+        for (let i in values) {
+          for (let j in list) {
+            if (list[j].value === values[i]) {
+              labels.push(list[j].label)
+            }
           }
-        )
+        }
+        return labels.toString()
       },
-      testNotify() {
-        this.$baseNotify('测试消息提示', 'test', 'success', 'bottom-right')
+      onSubmit() {
+        const h = this.$createElement
+        let confirm = []
+        confirm.push(
+          h(
+            'p',
+            { style: 'font-size: 18px; margin: 1% 0% 3% 0%' },
+            'Proceed with following settings?'
+          )
+        )
+        confirm.push(
+          h('p', { style: 'text-align: center' }, [
+            h('span', { style: 'color: teal; font-weight: 700' }, 'Dataset = '),
+            h(
+              'span',
+              this.getLabel(this.datasetList, this.testSettings.dataset)
+            ),
+          ])
+        )
+        confirm.push(
+          h('p', { style: 'text-align: center' }, [
+            h(
+              'span',
+              { style: 'color: teal; font-weight: 700' },
+              'Data Mode = '
+            ),
+            h('span', this.getLabel(this.modeList, this.testSettings.mode)),
+          ])
+        )
+        confirm.push(
+          h('p', { style: 'text-align: center' }, [
+            h(
+              'span',
+              { style: 'color: teal; font-weight: 700' },
+              'Sentiment = '
+            ),
+            h(
+              'span',
+              this.getLabel(this.sentimentList, this.testSettings.sentiment)
+            ),
+          ])
+        )
+        confirm.push(
+          h('p', { style: 'text-align: center' }, [
+            h(
+              'span',
+              { style: 'color: teal; font-weight: 700' },
+              'Primary Model = '
+            ),
+            h('span', this.getLabel(this.modelList, this.testSettings.primary)),
+          ])
+        )
+        confirm.push(
+          h('p', { style: 'text-align: center' }, [
+            h(
+              'span',
+              { style: 'color: teal; font-weight: 700' },
+              'Other Models = '
+            ),
+            h('span', this.getLabels(this.modelList, this.testSettings.other)),
+          ])
+        )
+        confirm.push(
+          h('p', { style: 'text-align: center' }, [
+            h(
+              'span',
+              { style: 'color: teal; font-weight: 700' },
+              'Use Stored Results = '
+            ),
+            h('span', this.testSettings.useStored),
+          ])
+        )
+        this.$msgbox({
+          // title: 'Confirm',
+          message: h('div', { style: 'text-align: center' }, confirm),
+          confirmButtonText: 'Start Training',
+          showCancelButton: true,
+          // type: 'info',
+          // center: true,
+        }).then(() => {
+          this.fetchResults()
+        })
+      },
+      async fetchSettings() {
+        this.settingsLoading = true
+        let { datasets, sentiment, models } = await getSettings()
+        this.datasetList = datasets
+        this.sentimentList = sentiment
+        this.modelList = models
+        this.settingsLoading = false
+      },
+      async fetchResults() {
+        this.resultLoading = true
+        let { header, result } = await getResults(this.testSettings)
+        this.testHeader = header
+        this.testResults = result
+        this.header =
+          'Test ' +
+          this.getLabel(this.modelList, this.testSettings.primary) +
+          ' on ' +
+          this.getLabel(this.datasetList, this.testSettings.dataset) +
+          ' ' +
+          this.getLabel(this.modeList, this.testSettings.mode)
+        setTimeout(() => {
+          this.resultLoading = false
+        }, 1000)
+      },
+      onPrimaryChange() {
+        this.testSettings.other = []
+      },
+      addStyle({ row, column, rowIndex, columnIndex }) {
+        if (columnIndex == 0) {
+          return 'background: #FAFAFA; font-weight: bold'
+        }
       },
     },
   }
+  // todo:
+  // 最大值加粗
+  // primary model放最后一行
+  // 添加delta行
 </script>
+
+<style lang="scss" scoped>
+  .batchTest-container {
+    margin: 0%;
+    .test-settings {
+      margin: 0% 5%;
+    }
+    .divider {
+      position: absolute;
+      left: 33%;
+      height: 100%;
+    }
+    .test-results {
+      margin: 0% 5%;
+    }
+  }
+</style>
