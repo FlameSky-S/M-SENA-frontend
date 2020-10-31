@@ -24,10 +24,10 @@ export function getUnlockedDatasetList(data) {
 //   })
 // }
 
-// export function doDelete(data) {
-//   return request({
-//     url: '/table/doDelete',
-//     method: 'post',
-//     data,
-//   })
-// }
+export function deleteDataset(datasetIndexs) {
+  return request({
+    url: 'dataEnd/deleteDataset',
+    method: 'post',
+    datasetIndexs,
+  })
+}

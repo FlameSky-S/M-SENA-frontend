@@ -2,14 +2,6 @@
   <div class="datasetList-container">
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button icon="el-icon-plus" type="primary" @click="handleAdd">
-          添加
-        </el-button>
-        <el-button icon="el-icon-delete" type="danger" @click="handleDelete">
-          删除
-        </el-button>
-      </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
         <el-form
           ref="form"
           :model="queryForm"
@@ -30,6 +22,14 @@
             </el-button>
           </el-form-item>
         </el-form>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel>
+        <el-button icon="el-icon-plus" type="primary" @click="handleAdd">
+          Create
+        </el-button>
+        <el-button icon="el-icon-delete" type="danger" @click="handleDelete">
+          Delete
+        </el-button>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
@@ -97,13 +97,13 @@
         show-overflow-tooltip
         prop="unimodalLabel"
         label="Unimodal Label"
-        width="120"
+        width="130"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="labelType"
         label="Label Type"
-        width="120"
+        width="130"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
@@ -124,7 +124,7 @@
 </template>
 
 <script>
-  import { getDatasetList } from '@/api/datasetList'
+  import { getDatasetList, deleteDataset } from '@/api/datasetList'
   export default {
     name: 'DatasetList',
     filters: {
@@ -173,7 +173,7 @@
         this.selectRows = val
       },
       showDetails(row, column, event) {
-        alert(row.datasetName)
+        // alert(row.datasetName)
         this.$router.push({
           path: '/data/datasetDetail',
           query: {
@@ -187,7 +187,21 @@
           path: '/data/createDataset',
         })
       },
-      handleDelete() {},
+      handleDelete() {
+        if (this.selectRows.length > 0) {
+          console.log(this.selectRows)
+          const ids = this.selectRows.map((item) => item.id).join()
+          console.log(ids)
+          this.$baseConfirm('你确定要删除选中项吗', null, async () => {
+            const { msg } = await deleteDataset({ datasetIndexs: ids })
+            this.$baseMessage(msg, 'success')
+            this.fetchData()
+          })
+        } else {
+          this.$baseMessage('未选中任何行', 'error')
+          return false
+        }
+      },
       handleQuery() {},
       tableSortChange() {},
       handleSizeChange(val) {
