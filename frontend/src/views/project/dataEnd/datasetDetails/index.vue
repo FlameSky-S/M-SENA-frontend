@@ -97,26 +97,25 @@
         fixed
         show-overflow-tooltip
         type="selection"
-        width="60"
+        width="80"
       ></el-table-column>
       <el-table-column
         fixed
         show-overflow-tooltip
-        prop="videoID"
         label="Video ID"
-        width="130"
+        prop="videoID"
+        width="160"
       ></el-table-column>
       <el-table-column
         fixed
         show-overflow-tooltip
         label="Clip ID"
         prop="clipID"
-        width="160"
+        width="200"
       ></el-table-column>
-      <el-table-column show-overflow-tooltip label="Preface">
+      <el-table-column show-overflow-tooltip label="Preface" width="140">
         <template #default="{ row }">
           <el-image
-            width="120"
             :preview-src-list="prefaceList"
             :src="row.preface"
           ></el-image>
@@ -124,35 +123,118 @@
       </el-table-column>
       <el-table-column
         show-overflow-tooltip
-        label="Multimodal Label"
+        label="M-Label"
         prop="multimodalLabel"
+        width="140"
       ></el-table-column>
 
-      <!-- <el-table-column show-overflow-tooltip label="状态">
+      <el-table-column show-overflow-tooltip label="M-label-Type" width="140">
         <template #default="{ row }">
           <el-tooltip
-            :content="row.status"
+            :content="row.multimodalLabelType"
             class="item"
             effect="dark"
             placement="top-start"
           >
-            <el-tag :type="row.status | statusFilter">
-              {{ row.status }}
+            <el-tag :type="row.multimodalLabelType | statusFilter">
+              {{ row.multimodalLabelType }}
             </el-tag>
           </el-tooltip>
         </template>
-      </el-table-column> -->
+      </el-table-column>
+      <el-table-column
+        v-if="showUnimodalColumn"
+        show-overflow-tooltip
+        label="T-Label"
+        prop="textLabel"
+        width="140"
+      ></el-table-column>
+
+      <el-table-column
+        v-if="showUnimodalColumn"
+        show-overflow-tooltip
+        label="T-label-Type"
+        width="140"
+      >
+        <template #default="{ row }">
+          <el-tooltip
+            :content="row.textLabelType"
+            class="item"
+            effect="dark"
+            placement="top-start"
+          >
+            <el-tag :type="row.textLabelType | statusFilter">
+              {{ row.textLabelType }}
+            </el-tag>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="showUnimodalColumn"
+        show-overflow-tooltip
+        label="A-Label"
+        prop="audioLabel"
+        width="140"
+      ></el-table-column>
+
+      <el-table-column
+        v-if="showUnimodalColumn"
+        show-overflow-tooltip
+        label="A-label-Type"
+        width="140"
+      >
+        <template #default="{ row }">
+          <el-tooltip
+            :content="row.audioLabelType"
+            class="item"
+            effect="dark"
+            placement="top-start"
+          >
+            <el-tag :type="row.audioLabelType | statusFilter">
+              {{ row.audioLabelType }}
+            </el-tag>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="showUnimodalColumn"
+        show-overflow-tooltip
+        label="V-Label"
+        prop="visionLabel"
+        width="140"
+      ></el-table-column>
+
+      <el-table-column
+        v-if="showUnimodalColumn"
+        show-overflow-tooltip
+        label="V-label-Type"
+        width="140"
+      >
+        <template #default="{ row }">
+          <el-tooltip
+            :content="row.visionLabelType"
+            class="item"
+            effect="dark"
+            placement="top-start"
+          >
+            <el-tag :type="row.visionLabelType | statusFilter">
+              {{ row.visionLabelType }}
+            </el-tag>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+
       <el-table-column
         show-overflow-tooltip
         label="Belonging"
         prop="belonging"
-        width="200"
+        width="140"
       ></el-table-column>
       <el-table-column
         fixed="right"
         show-overflow-tooltip
         label="Operations"
-        width="180px"
+        width="200px"
       >
         <template #default="{ row }">
           <el-button type="text" @click="showPreview(row)">Preview</el-button>
@@ -182,13 +264,12 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     ></el-pagination>
-    <preview ref="preview"></preview>
+    <preview ref="preview" class="video-preview-dialogue"></preview>
   </div>
 </template>
 
 <script>
   import { getDetails } from '@/api/datasetDetail'
-  // import { doDelete } from '@/api/table'
   import Preview from './components/Preview'
   export default {
     name: 'DatasetDetails',
@@ -198,9 +279,10 @@
     filters: {
       statusFilter(status) {
         const statusMap = {
-          published: 'success',
-          draft: 'gray',
-          deleted: 'danger',
+          0: 'success',
+          1: 'gray',
+          2: 'danger',
+          3: 'info',
         }
         return statusMap[status]
       },
@@ -256,6 +338,10 @@
           ' / ' +
           this.datasetDetails.detailInfo.totalCount
         )
+      },
+      showUnimodalColumn() {
+        return false
+        // return this.datasetDetails.instanceList[0].T_label_type ? true : false
       },
     },
     created() {

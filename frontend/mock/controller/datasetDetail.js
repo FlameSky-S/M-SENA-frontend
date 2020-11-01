@@ -5,6 +5,13 @@ const datasetDetails = [
     preface:
       'https://picsum.photos/200/200?random=C5cBcd62-dDd4-CF80-d5fB-2ff9CacC6f89',
     multimodalLabel: -0.5,
+    multimodalLabelType: '0',
+    textLabel: null,
+    testLabelType: null,
+    videoLabel: null,
+    videoLabelType: null,
+    audioLabel: null,
+    audioLabelType: null,
     belonging: 'Train',
   },
   {
@@ -13,6 +20,13 @@ const datasetDetails = [
     preface:
       'https://picsum.photos/200/200?random=bDfa4f7D-DE28-86Ec-bD5a-62CEBF3Db1f7',
     multimodalLabel: -1.2,
+    multimodalLabelType: '1',
+    textLabel: null,
+    testLabelType: null,
+    videoLabel: null,
+    videoLabelType: null,
+    audioLabel: null,
+    audioLabelType: null,
     belonging: 'Train',
   },
   {
@@ -21,6 +35,13 @@ const datasetDetails = [
     preface:
       'https://picsum.photos/200/200?random=8e51a41d-D515-9019-7f6B-ffcfd4BbDbCb',
     multimodalLabel: 1.8,
+    multimodalLabelType: '2',
+    textLabel: null,
+    testLabelType: null,
+    videoLabel: null,
+    videoLabelType: null,
+    audioLabel: null,
+    audioLabelType: null,
     belonging: 'Train',
   },
   {
@@ -29,6 +50,13 @@ const datasetDetails = [
     preface:
       'https://picsum.photos/200/200?random=0f8c9AE6-41Cb-9598-88Dd-c72CBf0a9Fb3',
     multimodalLabel: 0.6,
+    multimodalLabelType: '3',
+    textLabel: null,
+    testLabelType: null,
+    videoLabel: null,
+    videoLabelType: null,
+    audioLabel: null,
+    audioLabelType: null,
     belonging: 'Train',
   },
   {
@@ -37,6 +65,13 @@ const datasetDetails = [
     preface:
       'https://picsum.photos/200/200?random=ecBD33F2-dfc3-Af91-557f-fbe4aF1845b4',
     multimodalLabel: -0.4,
+    multimodalLabelType: '0',
+    textLabel: null,
+    testLabelType: null,
+    videoLabel: null,
+    videoLabelType: null,
+    audioLabel: null,
+    audioLabelType: null,
     belonging: 'Train',
   },
   {
@@ -45,6 +80,13 @@ const datasetDetails = [
     preface:
       'https://picsum.photos/200/200?random=2cffc176-B5Bd-FD7F-fC09-35F66bE754dA',
     multimodalLabel: 2.0,
+    multimodalLabelType: '0',
+    textLabel: null,
+    testLabelType: null,
+    videoLabel: null,
+    videoLabelType: null,
+    audioLabel: null,
+    audioLabelType: null,
     belonging: 'Train',
   },
   {
@@ -53,6 +95,13 @@ const datasetDetails = [
     preface:
       'https://picsum.photos/200/200?random=E9e2fc89-5fe2-32eA-3DEF-B623cfdfEE85',
     multimodalLabel: 0.0,
+    multimodalLabelType: '0',
+    textLabel: null,
+    testLabelType: null,
+    videoLabel: null,
+    videoLabelType: null,
+    audioLabel: null,
+    audioLabelType: null,
     belonging: 'Valid',
   },
   {
@@ -61,6 +110,13 @@ const datasetDetails = [
     preface:
       'https://picsum.photos/200/200?random=90565d79-CEb5-2bcE-76bC-A524bEB521BD',
     multimodalLabel: 1.6,
+    multimodalLabelType: '0',
+    textLabel: null,
+    testLabelType: null,
+    videoLabel: null,
+    videoLabelType: null,
+    audioLabel: null,
+    audioLabelType: null,
     belonging: 'Valid',
   },
   {
@@ -69,6 +125,13 @@ const datasetDetails = [
     preface:
       'https://picsum.photos/200/200?random=6eA6b991-7f0E-9621-CD7E-1594bEF4Ed4d',
     multimodalLabel: 0.4,
+    multimodalLabelType: '0',
+    textLabel: null,
+    testLabelType: null,
+    videoLabel: null,
+    videoLabelType: null,
+    audioLabel: null,
+    audioLabelType: null,
     belonging: 'Valid',
   },
   {
@@ -77,6 +140,13 @@ const datasetDetails = [
     preface:
       'https://picsum.photos/200/200?random=6eA6b991-7f0E-9621-CD7E-1594bEF4Ed4d',
     multimodalLabel: 1.8,
+    multimodalLabelType: '0',
+    textLabel: null,
+    testLabelType: null,
+    videoLabel: null,
+    videoLabelType: null,
+    audioLabel: null,
+    audioLabelType: null,
     belonging: 'Valid',
   },
   {
@@ -85,6 +155,13 @@ const datasetDetails = [
     preface:
       'https://picsum.photos/200/200?random=6eA6b991-7f0E-9621-CD7E-1594bEF4Ed4d',
     multimodalLabel: 1.2,
+    multimodalLabelType: '0',
+    textLabel: null,
+    testLabelType: null,
+    videoLabel: null,
+    videoLabelType: null,
+    audioLabel: null,
+    audioLabelType: null,
     belonging: 'Valid',
   },
   {
@@ -93,6 +170,13 @@ const datasetDetails = [
     preface:
       'https://picsum.photos/200/200?random=6eA6b991-7f0E-9621-CD7E-1594bEF4Ed4d',
     multimodalLabel: 2.2,
+    multimodalLabelType: '0',
+    textLabel: null,
+    testLabelType: null,
+    videoLabel: null,
+    videoLabelType: null,
+    audioLabel: null,
+    audioLabelType: null,
     belonging: 'Valid',
   },
   {
@@ -101,6 +185,13 @@ const datasetDetails = [
     preface:
       'https://picsum.photos/200/200?random=6eA6b991-7f0E-9621-CD7E-1594bEF4Ed4d',
     multimodalLabel: 0.6,
+    multimodalLabelType: '0',
+    textLabel: null,
+    testLabelType: null,
+    videoLabel: null,
+    videoLabelType: null,
+    audioLabel: null,
+    audioLabelType: null,
     belonging: 'Valid',
   },
   {
@@ -109,6 +200,13 @@ const datasetDetails = [
     preface:
       'https://picsum.photos/200/200?random=6eA6b991-7f0E-9621-CD7E-1594bEF4Ed4d',
     multimodalLabel: -1.8,
+    multimodalLabelType: '0',
+    textLabel: null,
+    testLabelType: null,
+    videoLabel: null,
+    videoLabelType: null,
+    audioLabel: null,
+    audioLabelType: null,
     belonging: 'Test',
   },
   {
@@ -117,6 +215,13 @@ const datasetDetails = [
     preface:
       'https://picsum.photos/200/200?random=6eA6b991-7f0E-9621-CD7E-1594bEF4Ed4d',
     multimodalLabel: 0.0,
+    multimodalLabelType: '0',
+    textLabel: null,
+    testLabelType: null,
+    videoLabel: null,
+    videoLabelType: null,
+    audioLabel: null,
+    audioLabelType: null,
     belonging: 'Test',
   },
   {
@@ -125,6 +230,13 @@ const datasetDetails = [
     preface:
       'https://picsum.photos/200/200?random=6eA6b991-7f0E-9621-CD7E-1594bEF4Ed4d',
     multimodalLabel: -2.6,
+    multimodalLabelType: '0',
+    textLabel: null,
+    testLabelType: null,
+    videoLabel: null,
+    videoLabelType: null,
+    audioLabel: null,
+    audioLabelType: null,
     belonging: 'Test',
   },
 ]
