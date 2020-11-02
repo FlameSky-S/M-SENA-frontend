@@ -12,7 +12,7 @@
             label-position="left"
             style="margin: 5%"
           >
-            <el-form-item label="Dataset:" style="font-weight: 700">
+            <el-form-item label="Dataset:" style="font-weight: bold">
               <el-select v-model="testSettings.dataset">
                 <el-option
                   v-for="item in datasetList"
@@ -22,7 +22,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Data Mode:" style="font-weight: 700">
+            <el-form-item label="Data Mode:" style="font-weight: bold">
               <el-select v-model="testSettings.mode">
                 <el-option
                   v-for="item in modeList"
@@ -32,7 +32,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Sentiment:" style="font-weight: 700">
+            <el-form-item label="Sentiment:" style="font-weight: bold">
               <el-select v-model="testSettings.sentiment">
                 <el-option
                   v-for="item in sentimentList"
@@ -42,7 +42,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Primary Model:" style="font-weight: 700">
+            <el-form-item label="Primary Model:" style="font-weight: bold">
               <el-select
                 v-model="testSettings.primary"
                 @change="onPrimaryChange"
@@ -55,7 +55,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Other Models:" style="font-weight: 700">
+            <el-form-item label="Other Models:" style="font-weight: bold">
               <el-select v-model="testSettings.other" multiple collapse-tags>
                 <el-option
                   v-for="item in otherList"
@@ -65,7 +65,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Use Stored Results:" style="font-weight: 700">
+            <el-form-item label="Use Stored Results:" style="font-weight: bold">
               <el-radio-group v-model="testSettings.useStored">
                 <el-radio-button label="True"></el-radio-button>
                 <el-radio-button label="False"></el-radio-button>
@@ -105,6 +105,7 @@
               align="center"
             ></el-table-column>
           </el-table>
+          <p class="test-info-footer" style="text-align: right">{{ footer }}</p>
         </div>
       </el-col>
     </el-row>
@@ -116,9 +117,7 @@
   import { getResults } from '@/api/batchTest'
   export default {
     name: 'BatchTest',
-    components: {
-      //TableEdit,
-    },
+    components: {},
     data() {
       return {
         datasetList: [],
@@ -149,6 +148,7 @@
         testResults: [],
         testHeader: [],
         header: '',
+        footer: '',
         settingsLoading: true,
         resultLoading: false,
       }
@@ -290,6 +290,14 @@
           this.getLabel(this.datasetList, this.testSettings.dataset) +
           ' ' +
           this.getLabel(this.modeList, this.testSettings.mode)
+        if (this.testSettings.useStored === 'True') {
+          this.footer =
+            'Note: Used history results except for ' +
+            this.getLabel(this.modelList, this.testSettings.primary) +
+            '. '
+        } else {
+          this.footer = ''
+        }
         setTimeout(() => {
           this.resultLoading = false
         }, 1000)
@@ -308,6 +316,8 @@
   // 最大值加粗
   // primary model放最后一行
   // 添加delta行
+  // note:
+  // 每当改变dataset时，应向服务器请求sentiment
 </script>
 
 <style lang="scss" scoped>

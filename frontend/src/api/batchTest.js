@@ -2,15 +2,15 @@ import request from '@/utils/request'
 
 export function getSettings() {
   return request({
-    url: '/presentationEnd/getSettings',
+    url: '/presentationEnd/batchSettings',
     method: 'get',
   })
 }
 
 export function getResults(query) {
   return request({
-    url: '/presentationEnd/getResults',
+    url: '/presentationEnd/batchResults',
     method: 'post',
-    query,
+    data: query,
   })
 }

@@ -128,21 +128,20 @@ const testResults = [
 
 module.exports = [
   {
-    url: '/presentationEnd/getSettings',
+    url: '/presentationEnd/batchSettings',
     type: 'get',
     response() {
       return {
         code: 200,
         msg: 'success',
         datasets: datasets,
-        // sets: sets,
         sentiment: sentiment,
         models: models,
       }
     },
   },
   {
-    url: '/presentationEnd/getResults',
+    url: '/presentationEnd/batchResults',
     type: 'post',
     response(query) {
       return {
