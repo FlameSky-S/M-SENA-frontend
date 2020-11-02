@@ -18,39 +18,39 @@
         </el-button>
       </div>
       <el-row>
-        <el-col :span="12">
-          <el-form :model="basicInfo" label-width="20%">
-            <el-form-item label="Dataset Name">
+        <el-col :span="14">
+          <el-form :model="basicInfo" :rules="basicInfoRules" label-width="20%">
+            <el-form-item label="Dataset Name" prop="datasetName">
               <el-input
                 v-model="basicInfo.datasetName"
                 class="text-input"
               ></el-input>
             </el-form-item>
-            <el-form-item label="Total Count">
+            <el-form-item label="Total Count" prop="total">
               <el-input
                 v-model="basicInfo.totalCount"
                 class="text-input"
               ></el-input>
             </el-form-item>
-            <el-form-item label="modalities">
+            <el-form-item label="modalities" prop="modalities">
               <el-radio-group v-model="basicInfo.modalities" class="text-input">
                 <el-radio label="Text, Audio, Visual"></el-radio>
                 <el-radio label="Text only"></el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="Label Type">
+            <el-form-item label="Label Type" prop="labelType">
               <el-radio-group v-model="basicInfo.labelType" class="text-input">
-                <el-radio label="Classification" border></el-radio>
-                <el-radio label="Regression" border></el-radio>
+                <el-radio label="Classification"></el-radio>
+                <el-radio label="Regression"></el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="Language">
+            <el-form-item label="Language" prop="language">
               <el-radio-group v-model="basicInfo.language" class="text-input">
                 <el-radio label="English"></el-radio>
                 <el-radio label="Chinese"></el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="Unimodal Label">
+            <el-form-item label="Unimodal Label" prop="unimodalLabel">
               <el-radio-group
                 v-model="basicInfo.unimodalLabel"
                 class="text-input"
@@ -61,9 +61,9 @@
             </el-form-item>
           </el-form>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="10">
           <div class="chart-upload">
-            <h2 class="header">Chart</h2>
+            <!-- <h2 class="header">Chart</h2> -->
             <el-upload
               class="chart"
               drag
@@ -161,7 +161,50 @@
           unimodalLabel: null,
           description: null,
         },
-        basicInfoRules: {}, //TODO:
+        basicInfoRules: {
+          datasetName: [
+            {
+              required: true,
+              message: 'Please enter your dataset Name',
+              trigger: 'blur',
+            },
+            {
+              max: 18,
+              message: 'You dataset name should no longer than 18 characters.',
+              trigger: 'blur',
+            },
+          ],
+          total: [
+            {
+              required: true,
+              message: 'Please enter the total instance count of your datasets',
+            },
+          ],
+          modalities: [
+            {
+              required: true,
+              message: 'Please select the modalities of your datasets',
+            },
+          ],
+          labelType: [
+            {
+              required: true,
+              message: 'Please select the label type of your datasets',
+            },
+          ],
+          language: [
+            {
+              required: true,
+              message: 'Please select the language of your datasets',
+            },
+          ],
+          unimodalLabel: [
+            {
+              required: true,
+              message: 'Please select the unimodal label of your datasets',
+            },
+          ],
+        }, //TODO:
       }
     },
     computed: {
@@ -176,6 +219,8 @@
     mounted() {},
     methods: {
       handleNext() {
+        // TODO: 增加提交之前的前端验证
+        // reference https://github.com/chuzhixin/vue-admin-beautiful/blob/master/src/views/vab/form/index.vue
         this.currentStep += 1
       },
       handleBack() {
@@ -201,17 +246,14 @@
         display: inline;
         align-items: center;
         justify-content: center;
-        .header {
-          margin-left: 10%;
-          margin-block-start: 0;
-        }
+
         .chart {
-          .el-upload-dragger {
-            width: 90%;
-          }
-          margin-right: 5%;
-          margin-left: 5%;
+          margin: 0 5%;
         }
+        // .chart >>> .el-upload >>> .el-upload-dragger {
+        //   width: 500px;
+        //   height: 250px;
+        // }
       }
       .description-input {
         display: inline;

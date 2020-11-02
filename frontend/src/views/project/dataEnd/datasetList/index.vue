@@ -2,6 +2,14 @@
   <div class="datasetList-container">
     <vab-query-form>
       <vab-query-form-left-panel>
+        <el-button icon="el-icon-plus" type="primary" @click="handleAdd">
+          Create
+        </el-button>
+        <el-button icon="el-icon-delete" type="danger" @click="handleDelete">
+          Delete
+        </el-button>
+      </vab-query-form-left-panel>
+      <!-- <vab-query-form-right-panel>
         <el-form
           ref="form"
           :model="queryForm"
@@ -22,15 +30,7 @@
             </el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
-        <el-button icon="el-icon-plus" type="primary" @click="handleAdd">
-          Create
-        </el-button>
-        <el-button icon="el-icon-delete" type="danger" @click="handleDelete">
-          Delete
-        </el-button>
-      </vab-query-form-right-panel>
+      </vab-query-form-right-panel> -->
     </vab-query-form>
     <el-table
       ref="datasetTable"

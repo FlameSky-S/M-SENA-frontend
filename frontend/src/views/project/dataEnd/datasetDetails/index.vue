@@ -269,7 +269,7 @@
 </template>
 
 <script>
-  import { getDetails } from '@/api/datasetDetail'
+  import { getDetails, getMetaData } from '@/api/datasetDetail'
   import Preview from './components/Preview'
   export default {
     name: 'DatasetDetails',
@@ -316,7 +316,7 @@
           modelImg: [
             'https://i.picsum.photos/id/703/200/200.jpg?hmac=6zWxIBRmIf2e0jZTqvKBIwrc7wm-dPkvGky4go6Yyvg',
           ],
-          instanceList: [],
+          instanceList: null,
         },
       }
     },
@@ -340,21 +340,16 @@
         )
       },
       showUnimodalColumn() {
+        if (this.datasetDetails.instanceList)
+          return this.datasetDetails.instanceList[0].T_label_type ? true : false
         return false
-        // return this.datasetDetails.instanceList[0].T_label_type ? true : false
       },
     },
     created() {
       this.queryForm.datasetName = this.$route.query.dataset
+      // console.log(this.queryForm.datasetName)
       this.fetchDetails()
-      this.datasetDetails.detailInfo.datasetName = 'CMU_MOSI'
-      this.datasetDetails.detailInfo.locked = 'locked'
-      this.datasetDetails.detailInfo.labeledCount = 2199
-      this.datasetDetails.detailInfo.totalCount = 2199
-      this.datasetDetails.detailInfo.modalities = '{T, V, A}'
-      this.datasetDetails.detailInfo.labelType = 'Classification'
-      this.datasetDetails.detailInfo.language = 'English'
-      this.datasetDetails.detailInfo.unimodalLabel = 'No'
+      this.fetchMetadata()
     },
     mounted() {},
     methods: {
@@ -418,6 +413,23 @@
         setTimeout(() => {
           this.listLoading = false
         }, 500)
+      },
+      async fetchMetadata() {
+        const { data } = await getMetaData({
+          datasetName: this.queryForm.datasetName,
+        })
+        this.datasetDetails.detailInfo.datasetName = data.datasetName
+        this.datasetDetails.detailInfo.locked = data.locked
+          ? 'locked'
+          : 'unlocked'
+        this.datasetDetails.detailInfo.labeledCount = data.labeledCount
+        this.datasetDetails.detailInfo.totalCount = data.totalCount
+        this.datasetDetails.detailInfo.modalities = data.modalities
+        this.datasetDetails.detailInfo.labelType = data.labelType
+        this.datasetDetails.detailInfo.language = data.language
+        this.datasetDetails.detailInfo.unimodalLabel = data.unimodalLabel
+          ? 'Yes'
+          : 'No'
       },
     },
   }

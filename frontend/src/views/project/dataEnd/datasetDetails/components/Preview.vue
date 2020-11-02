@@ -9,10 +9,10 @@
       <div slot="header">{{ form.clipInfo.clipID }}</div>
       <el-row>
         <el-col :span="16">
-          <vab-player-hls
+          <vab-player-mp4
             :config="form.videoconfig"
-            @player="Player2 = $event"
-          ></vab-player-hls>
+            @player="Player1 = $event"
+          />
         </el-col>
         <el-divider direction="vertical" class="preview-divider"></el-divider>
         <el-col :span="8">
@@ -75,11 +75,12 @@
 </template>
 
 <script>
-  import { VabPlayerMp4, VabPlayerHls } from '@/plugins/vabPlayer.js'
+  import { VabPlayerMp4 } from '@/plugins/vabPlayer.js'
   export default {
     name: 'Preview',
     components: {
-      VabPlayerHls,
+      // VabPlayerHls,
+      VabPlayerMp4,
     },
     data() {
       return {
@@ -96,10 +97,17 @@
             A_label_type: null,
             V_label_type: null,
           },
+          // videoconfig: {
+          //   id: 'mse2',
+          //   url:
+          //     'https://cdn.jsdelivr.net/gh/chuzhixin/videos@master/video.m3u8',
+          //   volume: 1,
+          //   // autostart: false,
+          // },
           videoconfig: {
-            id: 'mse2',
+            id: 'mse1',
             url:
-              'https://cdn.jsdelivr.net/gh/chuzhixin/videos@master/video.m3u8',
+              'https://cdn.jsdelivr.net/gh/chuzhixin/videos@master/video.mp4',
             volume: 1,
             autoplay: false,
           },
@@ -132,6 +140,7 @@
       close() {
         // this.$refs['form'].resetFields()
         // this.form = this.$options.data().form
+        // console.log($event)
         this.dialogFormVisible = false
         this.$emit('fetch-data')
       },

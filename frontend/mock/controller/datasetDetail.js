@@ -1,3 +1,14 @@
+const datasetMetaData = {
+  datasetName: 'MOSI',
+  locked: true,
+  labeledCount: 2199,
+  totalCount: 2199,
+  modalities: '{T, A, V}',
+  labelType: 'Classification',
+  language: 'English',
+  unimodalLabel: false,
+}
+
 const datasetDetails = [
   {
     videoID: '03bSnISJMiM',
@@ -260,6 +271,19 @@ module.exports = [
         msg: 'success',
         totalCount: datasetDetails.length,
         data: detailList,
+      }
+    },
+  },
+  {
+    url: '/dataEnd/getMetaData',
+    type: 'post',
+    response(config) {
+      const { datasetName } = config.body
+
+      return {
+        code: 200,
+        msg: 'success',
+        data: datasetMetaData,
       }
     },
   },

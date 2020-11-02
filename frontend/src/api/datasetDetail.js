@@ -7,3 +7,11 @@ export function getDetails(data) {
     data,
   })
 }
+
+export function getMetaData(data) {
+  return request({
+    url: '/dataEnd/getMetaData',
+    method: 'post',
+    data,
+  })
+}
