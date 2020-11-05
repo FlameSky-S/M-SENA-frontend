@@ -1,90 +1,484 @@
 <template>
   <div class="liveTest-container">
-    <el-divider content-position="left">
-      视频地址采用cdn加速服务，开发时需部署到到本地，使用方法可查看群文档
-    </el-divider>
-    <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
-        <el-card shadow="hover">
-          <div slot="header">播放传统MP4</div>
-          <vab-player-mp4 :config="config1" @player="Player1 = $event" />
-        </el-card>
+    <h1 class="LiveTest-header">Live Demo</h1>
+    <el-row v-loading="settingsLoading">
+      <el-col :span="6">
+        <div class="test-settings">
+          <h3>Camera Settings:</h3>
+          <el-form
+            ref="cam-settings"
+            :model="camSettings"
+            label-width="120px"
+            label-position="left"
+            style="margin: 5%"
+          >
+            <el-form-item label="Video Device:" style="font-weight: bold">
+              <el-select
+                v-model="camSettings.cam"
+                no-data-text="No device found"
+              >
+                <el-option
+                  v-for="item in camList"
+                  :key="item.deviceId"
+                  :label="item.label"
+                  :value="item.deviceId"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Audio Device:" style="font-weight: bold">
+              <el-select
+                v-model="camSettings.mic"
+                no-data-text="No device found"
+              >
+                <el-option
+                  v-for="item in micList"
+                  :key="item.deviceId"
+                  :label="item.label"
+                  :value="item.deviceId"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                type="primary"
+                style="font-weight: 700; width: 110px"
+                :disabled="streaming"
+                @click="initCam"
+              >
+                <vab-icon :icon="['fas', 'check']"></vab-icon>
+                Confirm
+              </el-button>
+              <el-button
+                type="danger"
+                plain
+                :disabled="!streaming"
+                @click="stopCam"
+              >
+                Shutdown
+              </el-button>
+            </el-form-item>
+          </el-form>
+          <el-divider direction="horizontal"></el-divider>
+          <h3>Test Settings:</h3>
+          <el-form
+            ref="test-settings"
+            :model="testSettings"
+            label-width="120px"
+            label-position="left"
+            style="margin: 5%"
+          >
+            <el-form-item label="Primary Model:" style="font-weight: bold">
+              <el-select
+                v-model="testSettings.primary"
+                @change="onPrimaryChange"
+              >
+                <el-option
+                  v-for="item in modelList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Other Models:" style="font-weight: bold">
+              <el-select v-model="testSettings.other" multiple collapse-tags>
+                <el-option
+                  v-for="item in otherList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+          <el-divider direction="horizontal"></el-divider>
+          <h3>Transcript:</h3>
+          <el-input
+            v-model="textArea"
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 4 }"
+            resize="none"
+            :disabled="transcriptDisabled"
+          ></el-input>
+          <p style="text-align: right">
+            <el-button
+              type="primary"
+              :disabled="transcriptDisabled"
+              @click="transcriptConfirm"
+            >
+              <vab-icon :icon="['fas', 'check']"></vab-icon>
+              Confirm
+            </el-button>
+            <el-button :disabled="transcriptDisabled" @click="transcriptReset">
+              Reset
+            </el-button>
+          </p>
+        </div>
       </el-col>
-      <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
-        <el-card shadow="hover">
-          <div slot="header">播放m3u8，且不暴露视频地址</div>
-          <vab-player-hls
-            :config="config2"
-            @player="Player2 = $event"
-          ></vab-player-hls>
-        </el-card>
+      <el-divider direction="vertical" class="left-divider"></el-divider>
+      <el-col :span="10">
+        <div class="cam-view">
+          <h3>Camera View:</h3>
+          <video
+            ref="cameraView"
+            width="100%"
+            poster="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
+            autoplay
+            controls
+          ></video>
+          <p class="cam-buttons">
+            <el-button
+              ref="recordBtn"
+              type="primary"
+              plain
+              class="cam-button"
+              :disabled="!streaming"
+              @click="recording == false ? startBtn() : stopCam()"
+            >
+              <vab-icon
+                v-if="!recording"
+                :icon="['fas', 'dot-circle']"
+              ></vab-icon>
+              <vab-icon v-else :icon="['fas', 'stop']"></vab-icon>
+              {{ recording == false ? 'Record' : 'Stop' }}
+            </el-button>
+            <el-button
+              ref="playbackBtn"
+              type="primary"
+              plain
+              class="cam-button"
+              :disabled="streaming || recording || blob == null"
+              @click="playing == false ? startPlayback() : stopPlayback()"
+            >
+              <vab-icon v-if="!playing" :icon="['fas', 'play']"></vab-icon>
+              <vab-icon v-else :icon="['fas', 'stop']"></vab-icon>
+              {{ playing == false ? 'Playback' : 'Stop' }}
+            </el-button>
+            <el-button
+              type="primary"
+              class="cam-button"
+              :disabled="streaming || recording || blob == null"
+              @click="onSubmit"
+            >
+              <vab-icon :icon="['fas', 'check']"></vab-icon>
+              Analyze
+            </el-button>
+          </p>
+          <!-- <a ref="downloadButton" class="button">download</a> -->
+        </div>
       </el-col>
-
-      <vab-upload
-        ref="vabUpload"
-        url="/upload"
-        name="file"
-        :limit="50"
-        :size="2"
-      ></vab-upload>
-      <el-button type="primary" @click="handleShow({ key: 'value' })">
-        模拟上传
-      </el-button>
-      <!--<el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
-        <el-card shadow="hover">
-          <div slot="header">播放flv，且不暴露视频地址</div>
-          <vab-player-flv
-            :config="config3"
-            @player="Player3 = $event"
-          ></vab-player-flv>
-        </el-card>
-      </el-col>-->
+      <el-divider direction="vertical" class="right-divider"></el-divider>
+      <el-col :span="8">
+        <div v-loading="resultLoading" class="test-results">
+          <h3>Results:</h3>
+          <el-table
+            v-loading="resultLoading"
+            :data="testResults"
+            :cell-style="addStyle"
+            element-loading-text="Analyzing..."
+            border
+          >
+            <el-table-column
+              key="model"
+              prop="model"
+              label="Model"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              key="predict"
+              prop="predict"
+              label="Predict"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              key="positive"
+              prop="positive"
+              label="Positive"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              key="neutural"
+              prop="neutural"
+              label="Neutural"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              key="negative"
+              prop="negative"
+              label="Negative"
+              align="center"
+            ></el-table-column>
+          </el-table>
+        </div>
+      </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-  import { VabPlayerMp4, VabPlayerHls } from '@/plugins/vabPlayer.js'
-  import VabUpload from '@/components/VabUpload'
-
+  import { getSettings } from '@/api/liveTest'
+  import { getResults } from '@/api/liveTest'
+  import { getTranscript } from '@/api/liveTest'
   export default {
     name: 'LiveTest',
-    components: {
-      VabPlayerMp4,
-      VabPlayerHls,
-      VabUpload,
-    },
+    components: {},
     data() {
       return {
-        config1: {
-          id: 'mse1',
-          url: 'https://cdn.jsdelivr.net/gh/chuzhixin/videos@master/video.mp4',
-          volume: 1,
-          autoplay: false,
+        deviceList: [],
+        modelList: [],
+        camSettings: {
+          cam: '',
+          mic: '',
         },
-        Player1: null,
-        config2: {
-          id: 'mse2',
-          url: 'https://cdn.jsdelivr.net/gh/chuzhixin/videos@master/video.m3u8',
-          volume: 1,
-          autoplay: false,
+        testSettings: {
+          primary: '001',
+          other: [],
+          v_url: '',
+          transcript: '',
         },
-        Player2: null,
-        config3: {
-          id: 'mse3',
-          url: 'https://cdn.jsdelivr.net/gh/chuzhixin/videos@master/video.flv',
-          volume: 1,
-          autoplay: false,
+        textArea: '',
+        testResults: [],
+        settingsLoading: false,
+        resultLoading: false,
+        streaming: false,
+        recording: false,
+        playing: false,
+        constraints: {
+          video: {
+            deviceId: {
+              exact: '',
+            },
+            width: {
+              min: 800,
+              ideal: 1280,
+              max: 1920,
+            },
+            height: {
+              min: 600,
+              ideal: 720,
+              max: 1080,
+            },
+            facingMode: 'user',
+          },
+          audio: {
+            deviceId: {
+              exact: '',
+            },
+          },
         },
-        Player3: null,
+        stream: null,
+        transcriptDisabled: true,
+        recorder: null,
+        recData: [],
+        blob: null,
+        rec_url: '',
       }
     },
-    created() {},
+    computed: {
+      camList: function () {
+        let cams = this.deviceList.filter(
+          (device) => device.kind === 'videoinput'
+        )
+        return cams
+      },
+      micList: function () {
+        let mics = this.deviceList.filter(
+          (device) => device.kind === 'audioinput'
+        )
+        return mics
+      },
+      otherList: function () {
+        let options = this.modelList.filter(
+          (model) => model.value !== this.testSettings.primary
+        )
+        return options
+      },
+    },
+    created() {
+      this.fetchSettings()
+    },
     mounted() {},
     methods: {
-      handleShow(data) {
-        this.$refs['vabUpload'].handleShow(data)
+      async fetchSettings() {
+        this.settingsLoading = true
+        if (
+          'mediaDevices' in navigator &&
+          'getUserMedia' in navigator.mediaDevices
+        ) {
+          this.deviceList = await navigator.mediaDevices.enumerateDevices() // check for devices
+          if (this.camList.length == 0 || this.camList[0].deviceId == '') {
+            // no device found or no permission
+            try {
+              await navigator.mediaDevices.getUserMedia({
+                // ask for permission
+                video: true,
+              })
+            } catch (err) {
+              console.log('Video Error')
+            }
+          }
+          if (this.micList.length == 0 || this.camList[0].deviceId == '') {
+            // no device found or no permission
+            try {
+              await navigator.mediaDevices.getUserMedia({
+                // ask for permission
+                audio: true,
+              })
+            } catch {
+              console.log('Audio Error')
+            }
+          }
+          this.deviceList = await navigator.mediaDevices.enumerateDevices() // check for devices again
+          console.log(this.deviceList)
+        } else {
+          alert('MediaDevices unavailable, make sure you have https enabled')
+        }
+
+        let { models } = await getSettings()
+        this.modelList = models
+        this.settingsLoading = false
+      },
+      initCam() {
+        if (this.camSettings.cam !== '' && this.camSettings.mic !== '') {
+          if (
+            'mediaDevices' in navigator &&
+            navigator.mediaDevices.getUserMedia
+          ) {
+            this.constraints.video.deviceId.exact = this.camSettings.cam
+            this.constraints.audio.deviceId.exact = this.camSettings.mic
+            this.startStream(this.constraints)
+            this.streaming = true
+          }
+        }
+      },
+      async startStream(constraints) {
+        this.stream = await navigator.mediaDevices.getUserMedia(constraints)
+        this.$refs['cameraView'].srcObject = this.stream
+        this.$refs['cameraView'].controls = false
+        this.$refs['cameraView'].volume = 0
+      },
+      stopCam() {
+        this.stream.getTracks().forEach((track) => track.stop())
+        this.$refs['cameraView'].srcObject = null
+        this.$refs['cameraView'].src = this.rec_url
+        this.$refs['cameraView'].onended = () => (this.playing = false)
+        this.playing = true
+        this.$refs['cameraView'].controls = true
+        this.$refs['cameraView'].volume = 1
+        this.streaming = false
+        this.recording = false
+      },
+      // wait(delayInMS) {
+      //   return new Promise((resolve) => setTimeout(resolve, delayInMS))
+      // },
+      startRecording() {
+        if (this.streaming == true && this.stream.active) {
+          if (this.recorder == null) {
+            this.blob = null
+            this.recorder = new MediaRecorder(this.stream)
+            this.recorder.ondataavailable = (event) =>
+              this.recData.push(event.data)
+            this.recorder.start()
+            this.recording = true
+            let stopped = new Promise((resolve, reject) => {
+              this.recorder.onstop = resolve
+              this.recorder.onerror = (event) => reject(event.name)
+            })
+            // let recorded = this.wait(20000).then(
+            //   () => this.recorder.state == 'recording' && this.recorder.stop()
+            // )
+            return Promise.all([stopped])
+          }
+        }
+      },
+      startBtn() {
+        this.playing = false
+        this.startRecording().then((recordedChunks) => {
+          this.blob = new Blob(this.recData, { type: 'video/mp4' })
+          this.recData = []
+          this.recorder = null
+          this.rec_url = URL.createObjectURL(this.blob)
+          this.fetchTranscript()
+          // this.$refs.downloadButton.href = this.rec_url
+          // this.$refs.downloadButton.download = 'RecordedVideo.mp4'
+          this.stopCam()
+        })
+      },
+      startPlayback() {
+        this.$refs['cameraView'].play()
+        this.$refs['cameraView'].onended = () => (this.playing = false)
+        this.playing = true
+      },
+      stopPlayback() {
+        this.$refs['cameraView'].currentTime = 0
+        this.$refs['cameraView'].pause()
+        this.playing = false
+      },
+      async onSubmit() {
+        this.resultLoading = true
+        let { result } = await getResults(this.testSettings)
+        this.testResults = result
+        this.resultLoading = false
+      },
+      async fetchTranscript() {
+        let { transcript } = await getTranscript(this.rec_url)
+        this.testSettings.transcript = transcript
+        this.textArea = this.testSettings.transcript
+        this.transcriptDisabled = false
+      },
+      transcriptConfirm() {
+        this.testSettings.transcript = this.textArea
+      },
+      transcriptReset() {
+        this.textArea = this.testSettings.transcript
+      },
+      addStyle({ row, column, rowIndex, columnIndex }) {
+        if (columnIndex == 0) {
+          return 'background: #FAFAFA; font-weight: bold'
+        }
+      },
+      onPrimaryChange() {
+        this.testSettings.other = []
       },
     },
   }
+  // ref: https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_Recording_API/Recording_a_media_element
+  // todo:
+  // 最大值加粗
+  // primary model放最后一行
+  // 添加delta行
 </script>
+
+<style lang="scss" scoped>
+  .liveTest-container {
+    margin: 0%;
+    .test-settings {
+      margin: 0% 3%;
+    }
+    .left-divider {
+      position: absolute;
+      left: 25%;
+      height: 100%;
+    }
+    .cam-view {
+      margin: 0% 5%;
+      .cam-buttons {
+        text-align: center;
+        .cam-button {
+          font-weight: 700;
+          font-size: 14px;
+          margin: 0% 5%;
+          width: 22%;
+        }
+      }
+    }
+    .right-divider {
+      position: absolute;
+      left: 67%;
+      height: 100%;
+    }
+    .test-results {
+      margin: 0% 8%;
+    }
+  }
+</style>

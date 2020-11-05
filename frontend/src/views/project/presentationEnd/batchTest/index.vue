@@ -155,12 +155,9 @@
     },
     computed: {
       otherList: function () {
-        let options = []
-        for (let i in this.modelList) {
-          if (this.modelList[i].value !== this.testSettings.primary) {
-            options.push(this.modelList[i])
-          }
-        }
+        let options = this.modelList.filter(
+          (model) => model.value !== this.testSettings.primary
+        )
         return options
       },
     },

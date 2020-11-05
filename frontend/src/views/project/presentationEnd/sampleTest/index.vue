@@ -77,15 +77,16 @@
         <el-carousel-item v-for="(item, key) in testResult" :key="key">
           <h2 style="text-align: center">Case {{ key + 1 }}</h2>
           <div style="margin: 0% 20%">
-            <vab-player-mp4
+            <video
               v-if="currIdx == key"
-              :config="item.videoCfg"
-              @player="Player1 = $event"
-            ></vab-player-mp4>
+              :src="item.v_url"
+              width="100%"
+              controls
+            ></video>
             <el-image
               v-else
               :key="key"
-              :src="'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'"
+              src="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
             ></el-image>
           </div>
           <div style="margin: 0% 25%">
@@ -129,7 +130,7 @@
   export default {
     name: 'SampleTest',
     components: {
-      VabPlayerMp4,
+      //VabPlayerMp4,
     },
     data() {
       return {

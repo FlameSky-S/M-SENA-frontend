@@ -70,12 +70,7 @@ const result = {
     neutural: '9.1%',
     positive: '88.9%',
   },
-  videoCfg: {
-    id: '0001',
-    url: 'https://cdn.jsdelivr.net/gh/chuzhixin/videos@master/video.mp4',
-    volume: 1,
-    autoplay: false,
-  },
+  v_url: 'https://cdn.jsdelivr.net/gh/chuzhixin/videos@master/video.mp4',
 }
 
 module.exports = [
