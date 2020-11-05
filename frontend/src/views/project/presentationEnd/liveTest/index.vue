@@ -1,8 +1,17 @@
 <template>
-  <div class="liveTest-container">
+  <div ref="container" class="liveTest-container">
+    <el-alert
+      v-for="alert in alertList"
+      :key="alert.id"
+      :title="alert.msg"
+      type="error"
+      center
+      show-icon
+      @close="alertClose"
+    ></el-alert>
     <h1 class="LiveTest-header">Live Demo</h1>
     <el-row v-loading="settingsLoading">
-      <el-col :span="6">
+      <el-col :offset="col1Offset" :xs="14" :sm="11" :md="9" :lg="6" :xl="6">
         <div class="test-settings">
           <h3>Camera Settings:</h3>
           <el-form
@@ -41,7 +50,12 @@
             <el-form-item>
               <el-button
                 type="primary"
-                style="font-weight: 700; width: 110px"
+                style="
+                  font-weight: 700;
+                  width: 50%;
+                  padding-left: 0;
+                  padding-right: 0;
+                "
                 :disabled="streaming"
                 @click="initCam"
               >
@@ -51,6 +65,7 @@
               <el-button
                 type="danger"
                 plain
+                style="width: 40%; padding-left: 0; padding-right: 0"
                 :disabled="!streaming"
                 @click="stopCam"
               >
@@ -58,7 +73,10 @@
               </el-button>
             </el-form-item>
           </el-form>
-          <el-divider direction="horizontal"></el-divider>
+          <el-divider
+            class="hidden-md-and-down"
+            direction="horizontal"
+          ></el-divider>
           <h3>Test Settings:</h3>
           <el-form
             ref="test-settings"
@@ -91,7 +109,10 @@
               </el-select>
             </el-form-item>
           </el-form>
-          <el-divider direction="horizontal"></el-divider>
+          <el-divider
+            class="hidden-md-and-down"
+            direction="horizontal"
+          ></el-divider>
           <h3>Transcript:</h3>
           <el-input
             v-model="textArea"
@@ -115,14 +136,17 @@
           </p>
         </div>
       </el-col>
-      <el-divider direction="vertical" class="left-divider"></el-divider>
-      <el-col :span="10">
+      <el-divider
+        direction="vertical"
+        class="left-divider hidden-md-and-down"
+      ></el-divider>
+      <el-col :xs="24" :sm="24" :md="24" :lg="10" :xl="10">
         <div class="cam-view">
           <h3>Camera View:</h3>
           <video
             ref="cameraView"
             width="100%"
-            poster="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
+            poster="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1604575385384&di=fc0d7111bbc20e2212e7b7745ee88168&imgtype=0&src=http%3A%2F%2Fdl.ppt123.net%2Fpptbj%2F201603%2F2016030410313030.jpg"
             autoplay
             controls
           ></video>
@@ -130,10 +154,11 @@
             <el-button
               ref="recordBtn"
               type="primary"
+              style="padding-left: 0; padding-right: 0"
               plain
               class="cam-button"
               :disabled="!streaming"
-              @click="recording == false ? startBtn() : stopCam()"
+              @click="recording == false ? RecordBtn() : stopCam()"
             >
               <vab-icon
                 v-if="!recording"
@@ -145,6 +170,7 @@
             <el-button
               ref="playbackBtn"
               type="primary"
+              style="padding-left: 0; padding-right: 0"
               plain
               class="cam-button"
               :disabled="streaming || recording || blob == null"
@@ -157,6 +183,7 @@
             <el-button
               type="primary"
               class="cam-button"
+              style="padding-left: 0; padding-right: 0"
               :disabled="streaming || recording || blob == null"
               @click="onSubmit"
             >
@@ -167,10 +194,14 @@
           <!-- <a ref="downloadButton" class="button">download</a> -->
         </div>
       </el-col>
-      <el-divider direction="vertical" class="right-divider"></el-divider>
-      <el-col :span="8">
+      <el-divider
+        direction="vertical"
+        class="right-divider hidden-md-and-down"
+      ></el-divider>
+      <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8">
         <div v-loading="resultLoading" class="test-results">
           <h3>Results:</h3>
+          <h3 style="text-align: center">{{ resultHeader }}</h3>
           <el-table
             v-loading="resultLoading"
             :data="testResults"
@@ -179,30 +210,35 @@
             border
           >
             <el-table-column
+              v-if="resultShow"
               key="model"
               prop="model"
               label="Model"
               align="center"
             ></el-table-column>
             <el-table-column
+              v-if="resultShow"
               key="predict"
               prop="predict"
               label="Predict"
               align="center"
             ></el-table-column>
             <el-table-column
+              v-if="resultShow"
               key="positive"
               prop="positive"
               label="Positive"
               align="center"
             ></el-table-column>
             <el-table-column
+              v-if="resultShow"
               key="neutural"
               prop="neutural"
               label="Neutural"
               align="center"
             ></el-table-column>
             <el-table-column
+              v-if="resultShow"
               key="negative"
               prop="negative"
               label="Negative"
@@ -272,6 +308,12 @@
         recData: [],
         blob: null,
         rec_url: '',
+        alertList: [],
+        errId: 0,
+        resultHeader: '',
+        resultShow: false,
+        screenWidth: 0,
+        col1Offset: 0,
       }
     },
     computed: {
@@ -294,11 +336,57 @@
         return options
       },
     },
+    watch: {
+      camList: function (newValue) {
+        if (newValue != []) {
+          this.camSettings.cam = newValue[0].deviceId
+        }
+      },
+      micList: function (newValue) {
+        if (newValue != [] && newValue != null) {
+          this.camSettings.mic = newValue[0].deviceId
+        }
+      },
+      alertList: function (newValue) {
+        if (newValue.length > 2) {
+          newValue.shift()
+          this.alertList = newValue
+        }
+      },
+      screenWidth: function (newValue) {
+        if (newValue >= 1920) {
+          //xl
+          this.col1Offset = 0
+        } else if (newValue >= 1200) {
+          //lg
+          this.col1Offset = 0
+        } else if (newValue >= 992) {
+          //md
+          this.col1Offset = 6
+        } else if (newValue >= 768) {
+          //sm
+          this.col1Offset = 6
+        } else {
+          //xs
+          this.col1Offset = 6
+        }
+      },
+    },
     created() {
       this.fetchSettings()
     },
-    mounted() {},
+    mounted() {
+      this.screenWidth = document.body.clientWidth
+      window.onresize = () => {
+        let that = this
+        that.screenWidth = document.body.clientWidth
+        // console.log(that.screenWidth)
+      }
+    },
     methods: {
+      alertClose() {
+        // delete from alertList
+      },
       async fetchSettings() {
         this.settingsLoading = true
         if (
@@ -309,32 +397,44 @@
           if (this.camList.length == 0 || this.camList[0].deviceId == '') {
             // no device found or no permission
             try {
-              await navigator.mediaDevices.getUserMedia({
+              let test = await navigator.mediaDevices.getUserMedia({
                 // ask for permission
                 video: true,
               })
+              test.getTracks().forEach((track) => track.stop())
             } catch (err) {
-              console.log('Video Error')
+              this.$refs.container
+              this.alertList.push({
+                id: ++this.errId,
+                msg: 'Video: ' + err.message,
+              })
             }
           }
-          if (this.micList.length == 0 || this.camList[0].deviceId == '') {
+          if (this.micList.length == 0 || this.micList[0].deviceId == '') {
             // no device found or no permission
             try {
-              await navigator.mediaDevices.getUserMedia({
+              let test = await navigator.mediaDevices.getUserMedia({
                 // ask for permission
                 audio: true,
               })
-            } catch {
-              console.log('Audio Error')
+              this.stream.getTracks().forEach((track) => track.stop())
+            } catch (err) {
+              this.alertList.push({
+                id: ++this.errId,
+                msg: 'Audio: ' + err.message,
+              })
             }
           }
           this.deviceList = await navigator.mediaDevices.enumerateDevices() // check for devices again
-          console.log(this.deviceList)
+          // console.log(this.deviceList)
         } else {
-          alert('MediaDevices unavailable, make sure you have https enabled')
+          this.alertList.push({
+            id: ++this.errId,
+            msg: 'MediaDevices unavailable, make sure you have https enabled',
+          })
         }
-
         let { models } = await getSettings()
+
         this.modelList = models
         this.settingsLoading = false
       },
@@ -347,15 +447,29 @@
             this.constraints.video.deviceId.exact = this.camSettings.cam
             this.constraints.audio.deviceId.exact = this.camSettings.mic
             this.startStream(this.constraints)
-            this.streaming = true
+          } else {
+            this.alertList.push({
+              id: ++this.errId,
+              msg: 'MediaDevices unavailable, make sure you have https enabled',
+            })
           }
+        } else {
         }
       },
       async startStream(constraints) {
-        this.stream = await navigator.mediaDevices.getUserMedia(constraints)
+        try {
+          this.stream = await navigator.mediaDevices.getUserMedia(constraints)
+        } catch (err) {
+          this.alertList.push({
+            id: ++this.errId,
+            msg: err.message,
+          })
+          return
+        }
         this.$refs['cameraView'].srcObject = this.stream
         this.$refs['cameraView'].controls = false
         this.$refs['cameraView'].volume = 0
+        this.streaming = true
       },
       stopCam() {
         this.stream.getTracks().forEach((track) => track.stop())
@@ -389,9 +503,14 @@
             // )
             return Promise.all([stopped])
           }
+        } else {
+          this.alertList.push({
+            id: ++this.errId,
+            msg: 'Stream not active',
+          })
         }
       },
-      startBtn() {
+      RecordBtn() {
         this.playing = false
         this.startRecording().then((recordedChunks) => {
           this.blob = new Blob(this.recData, { type: 'video/mp4' })
@@ -418,6 +537,11 @@
         this.resultLoading = true
         let { result } = await getResults(this.testSettings)
         this.testResults = result
+        this.resultHeader =
+          'Test ' +
+          this.getLabel(this.modelList, this.testSettings.primary) +
+          ' on Recorded Video'
+        this.resultShow = true
         this.resultLoading = false
       },
       async fetchTranscript() {
@@ -440,6 +564,13 @@
       onPrimaryChange() {
         this.testSettings.other = []
       },
+      getLabel(list, value) {
+        for (let i in list) {
+          if (list[i].value === value) {
+            return list[i].label
+          }
+        }
+      },
     },
   }
   // ref: https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_Recording_API/Recording_a_media_element
@@ -447,6 +578,8 @@
   // 最大值加粗
   // primary model放最后一行
   // 添加delta行
+  // 增加el-alert显示错误信息  Done!
+  // 分辨率适配，设置max-width和overflow: auto    Done!
 </script>
 
 <style lang="scss" scoped>
@@ -474,7 +607,7 @@
     }
     .right-divider {
       position: absolute;
-      left: 67%;
+      left: 66%;
       height: 100%;
     }
     .test-results {

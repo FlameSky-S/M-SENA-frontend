@@ -66,6 +66,7 @@ const result = {
   c_id: '0003',
   label: 'Positive',
   prediction: {
+    predict: 'Positive',
     negative: '2.0%',
     neutural: '9.1%',
     positive: '88.9%',
