@@ -26,7 +26,7 @@ export function getUnlockedDatasetList(data) {
 
 export function deleteDataset(datasetIndexs) {
   return request({
-    url: 'dataEnd/deleteDataset',
+    url: '/dataEnd/deleteDataset',
     method: 'post',
     data: datasetIndexs,
   })

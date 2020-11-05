@@ -120,13 +120,18 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     ></el-pagination>
+    <create-page ref="createPage"></create-page>
   </div>
 </template>
 
 <script>
   import { getDatasetList, deleteDataset } from '@/api/datasetList'
+  import CreatePage from './components/CreatePage'
   export default {
     name: 'DatasetList',
+    components: {
+      CreatePage,
+    },
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -183,9 +188,12 @@
       },
       // TODO: to change here.
       handleAdd() {
-        this.$router.push({
-          path: '/data/createDataset',
-        })
+        this.$refs['createPage'].showCreatePage()
+        console.log(process.env.NODE_ENV)
+        // TODO: this is an optional function. Which will be used in peroid 2.
+        // this.$router.push({
+        //   path: '/data/createDataset',
+        // })
       },
       handleDelete() {
         if (this.selectRows.length > 0) {
