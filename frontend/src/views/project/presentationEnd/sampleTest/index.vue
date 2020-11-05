@@ -3,55 +3,59 @@
     <h1>Case Study</h1>
     <el-row v-loading="settingsLoading">
       <el-form :inline="true" :model="testSettings" class="test-settings">
-        <el-form-item label="Model:" class="settings-item">
-          <el-select v-model="testSettings.model" style="width: 180px">
-            <el-option
-              v-for="item in modelList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Dataset:" class="settings-item">
-          <el-select v-model="testSettings.dataset" style="width: 180px">
-            <el-option
-              v-for="item in datasetList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Data Mode:" class="settings-item">
-          <el-select v-model="testSettings.mode" style="width: 150px">
-            <el-option
-              v-for="item in modeList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Sentiment:" class="settings-item">
-          <el-select v-model="testSettings.sentiment" style="width: 150px">
-            <el-option
-              v-for="item in sentimentList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item class="settings-item">
-          <el-button
-            type="primary"
-            style="font-weight: bold; font-size: 14px; padding: 9px 25px"
-            @click="onSubmit"
-          >
-            Go!
-          </el-button>
-        </el-form-item>
+        <span>
+          <el-form-item label="Model:" class="settings-item">
+            <el-select v-model="testSettings.model" style="width: 180px">
+              <el-option
+                v-for="item in modelList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Dataset:" class="settings-item">
+            <el-select v-model="testSettings.dataset" style="width: 180px">
+              <el-option
+                v-for="item in datasetList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </span>
+        <span>
+          <el-form-item label="Data Mode:" class="settings-item">
+            <el-select v-model="testSettings.mode" style="width: 150px">
+              <el-option
+                v-for="item in modeList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="Sentiment:" class="settings-item">
+            <el-select v-model="testSettings.sentiment" style="width: 150px">
+              <el-option
+                v-for="item in sentimentList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item class="settings-item">
+            <el-button
+              type="primary"
+              style="font-weight: bold; font-size: 14px; padding: 9px 25px"
+              @click="onSubmit"
+            >
+              Go!
+            </el-button>
+          </el-form-item>
+        </span>
       </el-form>
     </el-row>
     <el-divider direction="horizontal"></el-divider>
@@ -69,9 +73,9 @@
     >
       <el-carousel
         :interval="0"
-        type="card"
+        :type="carouselType"
         trigger="click"
-        height="500px"
+        :height="carouselHeight"
         @change="onChange"
       >
         <el-carousel-item v-for="(item, key) in testResult" :key="key">
@@ -86,7 +90,7 @@
             <el-image
               v-else
               :key="key"
-              src="https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg"
+              src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1604575385384&di=fc0d7111bbc20e2212e7b7745ee88168&imgtype=0&src=http%3A%2F%2Fdl.ppt123.net%2Fpptbj%2F201603%2F2016030410313030.jpg"
             ></el-image>
           </div>
           <div style="margin: 0% 25%">
@@ -100,22 +104,27 @@
                 {{ item.c_id }}
               </p>
               <p>
-                <strong>Data Label:</strong>
+                <strong>Label:</strong>
                 {{ item.label }}
               </p>
             </el-col>
             <el-col :span="12">
-              <p><strong>Prediction:</strong></p>
-              <p style="text-align: center">
+              <p style="margin-left: 20%">
                 Positive: {{ item.prediction.positive }}
               </p>
-              <p style="text-align: center">
+              <p style="margin-left: 20%">
                 Neutural: {{ item.prediction.neutural }}
               </p>
-              <p style="text-align: center">
+              <p style="margin-left: 20%">
                 Negative: {{ item.prediction.negative }}
               </p>
             </el-col>
+            <p
+              v-if="currIdx == key"
+              style="text-align: center; font-size: 20px"
+            >
+              {{ item.prediction.predict == item.label ? 'Correct!' : 'Wrong' }}
+            </p>
           </div>
         </el-carousel-item>
       </el-carousel>
@@ -162,13 +171,54 @@
         placehoder: true,
         testResult: null,
         currIdx: 0,
+        screenWidth: 0,
+        carouselType: 'card',
+        carouselHeight: '500px',
       }
     },
-    computed: {},
+    computed: {
+      // carouselHeight: function () {
+      //   let height = this.screenWidth * 0.27
+      //   height = height.toString() + 'px'
+      //   return height
+      // },
+    },
+    watch: {
+      screenWidth: function (newValue) {
+        if (newValue >= 1920) {
+          //xl
+          this.carouselType = 'card'
+          this.carouselHeight = '520px'
+        } else if (newValue >= 1200) {
+          //lg
+          this.carouselType = 'card'
+          this.carouselHeight = '480px'
+        } else if (newValue >= 992) {
+          //md
+          this.carouselType = ''
+          this.carouselHeight = '570px'
+        } else if (newValue >= 768) {
+          //sm
+          this.carouselType = ''
+          this.carouselHeight = '530px'
+        } else {
+          //xs
+          this.carouselType = ''
+          this.carouselHeight = '470px'
+        }
+      },
+    },
     created() {
       this.fetchSettings()
     },
-    mounted() {},
+    mounted() {
+      this.screenWidth = document.body.clientWidth
+      window.onresize = () => {
+        let that = this
+        that.screenWidth = document.body.clientWidth
+        console.log(that.screenWidth)
+      }
+    },
     methods: {
       onSubmit() {
         this.fetchResults()
@@ -198,7 +248,8 @@
 
   // todo:
   //   优化幻灯片内部布局
-  //   优化多分辨率适配
+  //   优化显示效果，字体颜色、加粗显示预测结果
+  //   优化多分辨率适配 Done!
 </script>
 
 <style lang="scss" scoped>

@@ -1,14 +1,14 @@
 <template>
   <div class="batchTest-container">
     <h1 class="batchTest-header">Batch Test</h1>
-    <el-row v-loading="settingsLoading">
-      <el-col :span="8">
+    <el-row v-loading="settingsLoading" :gutter="15">
+      <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8">
         <div class="test-settings">
           <h2 class="test-settings-header">Test Settings</h2>
           <el-form
             ref="testSettings"
             :model="testSettings"
-            label-width="160px"
+            label-width="150px"
             label-position="left"
             style="margin: 5%"
           >
@@ -83,8 +83,11 @@
           </el-form>
         </div>
       </el-col>
-      <el-divider direction="vertical" class="divider"></el-divider>
-      <el-col :span="16">
+      <el-divider
+        direction="vertical"
+        class="divider hidden-md-and-down"
+      ></el-divider>
+      <el-col :xs="24" :sm="24" :md="24" :lg="16" :xl="16">
         <div class="test-results">
           <h2 class="test-results-header">Test Results</h2>
           <h3 class="test-info-header" style="text-align: center">
@@ -310,6 +313,7 @@
     },
   }
   // todo:
+  // 响应式布局 Done!
   // 最大值加粗
   // primary model放最后一行
   // 添加delta行
@@ -325,7 +329,7 @@
     }
     .divider {
       position: absolute;
-      left: 33%;
+      left: 32%;
       height: 100%;
     }
     .test-results {
