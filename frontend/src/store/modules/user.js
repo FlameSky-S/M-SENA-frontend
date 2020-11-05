@@ -4,7 +4,7 @@
  */
 
 import Vue from 'vue'
-import { getUserInfo, login, logout } from '@/api/user'
+import { getUserInfo, login } from '@/api/user'
 import {
   getAccessToken,
   removeAccessToken,

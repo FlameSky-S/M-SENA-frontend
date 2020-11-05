@@ -1,7 +1,5 @@
 const accessTokens = {
   admin: 'admin-accessToken',
-  editor: 'editor-accessToken',
-  test: 'test-accessToken',
 }
 
 module.exports = [
@@ -69,16 +67,6 @@ module.exports = [
             'https://i.gtimg.cn/club/item/face/img/8/15918_100.gif',
           ],
         },
-      }
-    },
-  },
-  {
-    url: '/logout',
-    type: 'post',
-    response() {
-      return {
-        code: 200,
-        msg: 'success',
       }
     },
   },

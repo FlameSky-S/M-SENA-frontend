@@ -12,26 +12,6 @@ import { publicPath, routerMode } from '@/config/settings'
 Vue.use(VueRouter)
 export const constantRoutes = [
   {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true,
-  },
-  {
-    path: '/401',
-    name: '401',
-    component: () => import('@/views/401'),
-    hidden: true,
-  },
-  {
-    path: '/404',
-    name: '404',
-    component: () => import('@/views/404'),
-    hidden: true,
-  },
-]
-
-export const asyncRoutes = [
-  {
     path: '/',
     component: Layout,
     redirect: 'index',
@@ -200,37 +180,19 @@ export const asyncRoutes = [
           title: 'More Info',
         },
       },
-      {
-        path: 'icon', //TODO: Delete this in release verison.
-        component: EmptyLayout,
-        redirect: 'noRedirect',
-        name: 'Icon',
-        meta: {
-          title: 'Icons',
-          permissions: ['admin'],
-        },
-        children: [
-          {
-            path: 'awesomeIcon',
-            name: 'AwesomeIcon',
-            component: () => import('@/views/project/Wiki/icon/index'),
-            meta: { title: 'Normal Icon' },
-          },
-          {
-            path: 'remixIcon',
-            name: 'RemixIcon',
-            component: () => import('@/views/project/Wiki/icon/remixIcon'),
-            meta: { title: 'Remix Icon' },
-          },
-          {
-            path: 'colorfulIcon',
-            name: 'ColorfulIcon',
-            component: () => import('@/views/project/Wiki/icon/colorfulIcon'),
-            meta: { title: 'Colorful Icon' },
-          },
-        ],
-      },
     ],
+  },
+  {
+    path: '/401',
+    name: '401',
+    component: () => import('@/views/401'),
+    hidden: true,
+  },
+  {
+    path: '/404',
+    name: '404',
+    component: () => import('@/views/404'),
+    hidden: true,
   },
   {
     path: '*',
@@ -238,6 +200,8 @@ export const asyncRoutes = [
     hidden: true,
   },
 ]
+
+export const asyncRoutes = []
 
 const router = new VueRouter({
   base: publicPath,
