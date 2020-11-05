@@ -12,7 +12,6 @@
     <el-dropdown-menu slot="dropdown">
       <el-dropdown-item command="github">github地址</el-dropdown-item>
       <el-dropdown-item command="gitee" divided>码云地址</el-dropdown-item>
-      <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
 </template>
@@ -42,21 +41,6 @@
             window.open('https://gitee.com/chu1204505056/vue-admin-beautiful')
             break
         }
-      },
-      logout() {
-        this.$baseConfirm(
-          '您确定要退出' + this.$baseTitle + '吗?',
-          null,
-          async () => {
-            await this.$store.dispatch('user/logout')
-            if (recordRoute) {
-              const fullPath = this.$route.fullPath
-              this.$router.push(`/login?redirect=${fullPath}`)
-            } else {
-              this.$router.push('/login')
-            }
-          }
-        )
       },
     },
   }
