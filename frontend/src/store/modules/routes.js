@@ -13,26 +13,32 @@ const getters = {
 }
 const mutations = {
   setRoutes(state, routes) {
+    console.log('src/store/modules/routes.js/mutations/setRoutes')
     state.routes = constantRoutes.concat(routes)
   },
   setAllRoutes(state, routes) {
+    console.log('src/store/modules/routes.js/mutations/setAllRoutes')
     state.routes = constantRoutes.concat(routes)
   },
   setPartialRoutes(state, routes) {
+    console.log('src/store/modules/routes.js/mutations/setPartialRoutes')
     state.partialRoutes = constantRoutes.concat(routes)
   },
 }
 const actions = {
   async setRoutes({ commit }, permissions) {
+    console.log('src/store/modules/routes.js/actions/setRoutes')
     //开源版只过滤动态路由permissions，admin不再默认拥有全部权限
     const finallyAsyncRoutes = await filterAsyncRoutes(
       [...asyncRoutes],
       permissions
     )
     commit('setRoutes', finallyAsyncRoutes)
+    console.log(finallyAsyncRoutes)
     return finallyAsyncRoutes
   },
   async setAllRoutes({ commit }) {
+    console.log('src/store/modules/routes.js/actions/setAllRoutes')
     let { data } = await getRouterList()
     data.push({ path: '*', redirect: '/404', hidden: true })
     let accessRoutes = convertRouter(data)
@@ -40,6 +46,7 @@ const actions = {
     return accessRoutes
   },
   setPartialRoutes({ commit }, accessRoutes) {
+    console.log('src/store/modules/routes.js/actions/setPartialRoutes')
     commit('setPartialRoutes', accessRoutes)
     return accessRoutes
   },

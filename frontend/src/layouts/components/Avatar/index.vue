@@ -31,9 +31,6 @@
     methods: {
       handleCommand(command) {
         switch (command) {
-          case 'logout':
-            this.logout()
-            break
           case 'github':
             window.open('https://github.com/FlameSky-S/M-SENA-frontend')
             break

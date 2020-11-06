@@ -5,6 +5,7 @@
  * @returns {*}
  */
 export function convertRouter(asyncRoutes) {
+  console.log('src/utils/handleRoutes.js/convertRouter')
   return asyncRoutes.map((route) => {
     if (route.component) {
       if (route.component === 'Layout') {
@@ -34,6 +35,7 @@ export function convertRouter(asyncRoutes) {
  * @returns {boolean|*}
  */
 function hasPermission(permissions, route) {
+  console.log('src/utils/handleRoutes.js/hasPermission')
   if (route.meta && route.meta.permissions) {
     return permissions.some((role) => route.meta.permissions.includes(role))
   } else {
@@ -49,6 +51,7 @@ function hasPermission(permissions, route) {
  * @returns {[]}
  */
 export function filterAsyncRoutes(routes, permissions) {
+  console.log('src/utils/handleRoutes.js/filterAsyncRoutes')
   const finallyRoutes = []
   routes.forEach((route) => {
     const item = { ...route }
