@@ -1,10 +1,10 @@
 <template>
   <el-dropdown @command="handleCommand">
     <span class="avatar-dropdown">
-      <!--<el-avatar class="user-avatar" :src="avatar"></el-avatar>-->
-      <img class="user-avatar" :src="avatar" alt="" />
-      <div class="user-name">
-        {{ username }}
+      <!--<el-avatar class="avatar" :src="avatar"></el-avatar>-->
+      <img class="avatar" :src="avatar" alt="" />
+      <div class="base-repo">
+        repo
         <i class="el-icon-arrow-down el-icon--right"></i>
       </div>
     </span>
@@ -22,11 +22,10 @@
 
   export default {
     name: 'Avatar',
-    computed: {
-      ...mapGetters({
-        avatar: 'user/avatar',
-        username: 'user/username',
-      }),
+    data() {
+      return {
+        avatar: 'https://i.gtimg.cn/club/item/face/img/2/15922_100.gif',
+      }
     },
     methods: {
       handleCommand(command) {
@@ -52,14 +51,14 @@
     height: 50px;
     padding: 0;
 
-    .user-avatar {
+    .avatar {
       width: 40px;
       height: 40px;
       cursor: pointer;
       border-radius: 50%;
     }
 
-    .user-name {
+    .base-repo {
       position: relative;
       margin-left: 5px;
       margin-left: 5px;
