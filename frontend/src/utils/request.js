@@ -9,7 +9,6 @@ import {
   requestTimeout,
   successCode,
   tokenName,
-  loginInterception,
 } from '@/config/settings'
 import store from '@/store'
 import qs from 'qs'
@@ -28,10 +27,7 @@ const handleCode = (code, msg) => {
   switch (code) {
     case invalidCode:
       Vue.prototype.$baseMessage(msg || `后端接口${code}异常`, 'error')
-      store.dispatch('user/resetAccessToken').catch(() => {})
-      if (loginInterception) {
-        location.reload()
-      }
+      location.reload()
       break
     case noPermissionCode:
       router.push({ path: '/401' }).catch(() => {})
@@ -52,9 +48,6 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   (config) => {
-    if (store.getters['user/accessToken']) {
-      config.headers[tokenName] = store.getters['user/accessToken']
-    }
     //这里会过滤所有为空、0、false的key，如果不需要请自行注释
     if (config.data)
       config.data = Vue.prototype.$baseLodash.pickBy(

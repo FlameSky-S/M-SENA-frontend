@@ -1,10 +1,10 @@
 <template>
   <el-dropdown @command="handleCommand">
     <span class="avatar-dropdown">
-      <!--<el-avatar class="user-avatar" :src="avatar"></el-avatar>-->
-      <img class="user-avatar" :src="avatar" alt="" />
-      <div class="user-name">
-        {{ username }}
+      <!--<el-avatar class="avatar" :src="avatar"></el-avatar>-->
+      <img class="avatar" :src="avatar" alt="" />
+      <div class="base-repo">
+        repo
         <i class="el-icon-arrow-down el-icon--right"></i>
       </div>
     </span>
@@ -12,7 +12,6 @@
     <el-dropdown-menu slot="dropdown">
       <el-dropdown-item command="github">github地址</el-dropdown-item>
       <el-dropdown-item command="gitee" divided>码云地址</el-dropdown-item>
-      <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
 </template>
@@ -23,18 +22,14 @@
 
   export default {
     name: 'Avatar',
-    computed: {
-      ...mapGetters({
-        avatar: 'user/avatar',
-        username: 'user/username',
-      }),
+    data() {
+      return {
+        avatar: 'https://i.gtimg.cn/club/item/face/img/2/15922_100.gif',
+      }
     },
     methods: {
       handleCommand(command) {
         switch (command) {
-          case 'logout':
-            this.logout()
-            break
           case 'github':
             window.open('https://github.com/FlameSky-S/M-SENA-frontend')
             break
@@ -42,21 +37,6 @@
             window.open('https://gitee.com/chu1204505056/vue-admin-beautiful')
             break
         }
-      },
-      logout() {
-        this.$baseConfirm(
-          '您确定要退出' + this.$baseTitle + '吗?',
-          null,
-          async () => {
-            await this.$store.dispatch('user/logout')
-            if (recordRoute) {
-              const fullPath = this.$route.fullPath
-              this.$router.push(`/login?redirect=${fullPath}`)
-            } else {
-              this.$router.push('/login')
-            }
-          }
-        )
       },
     },
   }
@@ -71,14 +51,14 @@
     height: 50px;
     padding: 0;
 
-    .user-avatar {
+    .avatar {
       width: 40px;
       height: 40px;
       cursor: pointer;
       border-radius: 50%;
     }
 
-    .user-name {
+    .base-repo {
       position: relative;
       margin-left: 5px;
       margin-left: 5px;
