@@ -362,13 +362,13 @@
           this.col1Offset = 0
         } else if (newValue >= 992) {
           //md
-          this.col1Offset = 6
+          this.col1Offset = 1
         } else if (newValue >= 768) {
           //sm
-          this.col1Offset = 6
+          this.col1Offset = 1
         } else {
           //xs
-          this.col1Offset = 6
+          this.col1Offset = 1
         }
       },
     },
@@ -417,7 +417,7 @@
                 // ask for permission
                 audio: true,
               })
-              this.stream.getTracks().forEach((track) => track.stop())
+              test.getTracks().forEach((track) => track.stop())
             } catch (err) {
               this.alertList.push({
                 id: ++this.errId,
