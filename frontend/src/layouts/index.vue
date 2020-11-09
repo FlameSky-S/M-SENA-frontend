@@ -55,6 +55,7 @@
   import { AppMain, NavBar, SideBar, TabsBar, TopBar } from './components'
   import { mapActions, mapGetters } from 'vuex'
   import { tokenName } from '@/config/settings'
+  import { doTest } from '@/api/test'
   export default {
     name: 'Layout',
     components: {
@@ -80,6 +81,10 @@
           mobile: this.device === 'mobile',
         }
       },
+    },
+    created() {
+      let temp_response = doTest()
+      // console.log(temp_response)
     },
     beforeMount() {
       window.addEventListener('resize', this.handleResize)
