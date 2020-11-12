@@ -123,8 +123,8 @@
 
 <style lang="scss" scoped>
   .Wiki-container {
-    width: 1000px;
-    height: 1500px;
+    width: 960px;
+    height: 1440px;
     padding: 50px;
     margin: 0 auto;
     font: 14px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
@@ -434,8 +434,6 @@
     width: 60%; /* Full width */
     height: 64%; /* Full height */
     padding-top: 100px; /* Location of the box */
-    // overflow: auto; /* Enable scroll if needed */
-    // background-color: #ffffff; /* Fallback color */
     background-color: #ffffffe6; /* Black w/ opacity */
   }
 

@@ -48,7 +48,12 @@
         type="selection"
         width="55"
       ></el-table-column>
-      <el-table-column show-overflow-tooltip label="Index" width="60">
+      <el-table-column
+        show-overflow-tooltip
+        label="Index"
+        width="60"
+        align="center"
+      >
         <template #default="scope">
           {{ scope.$index + 1 }}
         </template>
@@ -59,7 +64,12 @@
         label="Dataset Name"
         width="120"
       ></el-table-column>
-      <el-table-column show-overflow-tooltip label="Status" width="120">
+      <el-table-column
+        show-overflow-tooltip
+        label="Status"
+        width="120"
+        align="center"
+      >
         <template #default="{ row }">
           <el-tooltip
             :content="row.status"
@@ -78,8 +88,14 @@
         prop="capacity"
         label="Sample Capacity"
         width="140"
+        align="center"
       ></el-table-column>
-      <el-table-column show-overflow-tooltip label="Language" width="120">
+      <el-table-column
+        show-overflow-tooltip
+        label="Language"
+        width="120"
+        align="center"
+      >
         <template #default="{ row }">
           <el-tooltip
             :content="row.language"
@@ -98,17 +114,20 @@
         prop="unimodalLabel"
         label="Unimodal Label"
         width="130"
+        align="center"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="labelType"
         label="Label Type"
         width="130"
+        align="center"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="description"
         label="Description"
+        align="center"
       ></el-table-column>
     </el-table>
     <el-pagination
