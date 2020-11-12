@@ -16,15 +16,6 @@
     />
     <meta name="author" content="<%= VUE_APP_AUTHOR %>" />
     <link rel="stylesheet" href="<%= BASE_URL %>static/css/loading.css" />
-    <script>
-      var _hmt = _hmt || []
-      ;(function () {
-        var hm = document.createElement('script')
-        hm.src = 'https://hm.baidu.com/hm.js?7174bade1219f9cc272e7978f9523fc8'
-        var s = document.getElementsByTagName('script')[0]
-        s.parentNode.insertBefore(hm, s)
-      })()
-    </script>
   </head>
   <body>
     <noscript>
@@ -47,6 +38,27 @@
     <script>
       ;/^http(s*):\/\//.test(location.href) ||
         alert('基于vue-admin-beautiful开发的项目需要部署到服务器下访问')
+    </script>
+    <script>
+      var metas = document.getElementsByTagName('meta')
+      var i
+      if (navigator.userAgent.match(/iPhone/i)) {
+        for (i = 0; i < metas.length; i++) {
+          if (metas[i].name == 'viewport') {
+            metas[i].content =
+              'width=device-width, minimum-scale=1.0, maximum-scale=1.0'
+          }
+        }
+        document.addEventListener('gesturestart', gestureStart, false)
+      }
+      function gestureStart() {
+        for (i = 0; i < metas.length; i++) {
+          if (metas[i].name == 'viewport') {
+            metas[i].content =
+              'width=device-width, minimum-scale=0.25, maximum-scale=1.6'
+          }
+        }
+      }
     </script>
   </body>
 </html>

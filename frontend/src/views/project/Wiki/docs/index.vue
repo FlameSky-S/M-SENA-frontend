@@ -1,206 +1,90 @@
 <template>
   <div class="Wiki-container">
-    <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="16">
-        <el-button type="primary" @click="dialogVisible = !dialogVisible">
-          element全部文档点这里
-        </el-button>
-        <el-dialog
-          :fullscreen="true"
-          title="element文档"
-          :visible.sync="dialogVisible"
-        >
-          <iframe
-            class="element-iframe"
-            src="https://element.eleme.cn/#/zh-CN/component/installation"
-            frameborder="0"
-          ></iframe>
-        </el-dialog>
-        <el-divider content-position="left">
-          Tag 标签
+    <header>
+      <h1>MELD: Multimodal EmotionLines Dataset</h1>
+      <p>A dataset for Emotion Recognition in Multiparty Conversations</p>
+      <p class="view">
+        <a href="https://github.com/declare-lab/MELD/">
+          View the Project on GitHub
+        </a>
+      </p>
+      <p class="view">
+        <a href="https://arxiv.org/pdf/1810.02508.pdf">Download the paper</a>
+      </p>
+      <ul>
+        <li>
           <a
-            target="_blank"
-            href="https://element.eleme.cn/#/zh-CN/component/tag"
+            href="http://web.eecs.umich.edu/~mihalcea/downloads/MELD.Raw.tar.gz"
           >
-            文档
+            Download
+            <strong>Raw Data</strong>
           </a>
-        </el-divider>
-        <el-tag>标签一</el-tag>
-        <el-tag type="success">标签二</el-tag>
-        <el-tag type="info">标签三</el-tag>
-        <el-tag type="warning">标签四</el-tag>
-        <el-tag type="danger">标签五</el-tag>
-        <el-tag effect="dark">标签一</el-tag>
-        <el-tag effect="dark" type="success">标签二</el-tag>
-        <el-tag effect="dark" type="info">标签三</el-tag>
-        <el-tag effect="dark" type="warning">标签四</el-tag>
-        <el-tag effect="dark" type="danger">标签五</el-tag>
+        </li>
+        <li>
+          <a
+            href="http://web.eecs.umich.edu/~mihalcea/downloads/MELD.Features.Models.tar.gz"
+          >
+            Download
+            <strong>Features</strong>
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/declare-lab/MELD/">
+            Fork On
+            <strong>GitHub</strong>
+          </a>
+        </li>
+      </ul>
+    </header>
+    <section>
+      <p>
+        Multimodal EmotionLines Dataset (MELD) has been created by enhancing and
+        extending EmotionLines dataset. MELD contains the same dialogue
+        instances available in EmotionLines, but it also encompasses audio and
+        visual modality along with text. MELD has more than 1400 dialogues and
+        13000 utterances from Friends TV series. Multiple speakers participated
+        in the dialogues. Each utterance in a dialogue has been labeled by any
+        of these seven emotions -- Anger, Disgust, Sadness, Joy, Neutral,
+        Surprise and Fear. MELD also has sentiment (positive, negative and
+        neutral) annotation for each utterance.
+      </p>
+      <p>
+        <br />
+      </p>
 
-        <el-divider content-position="left">
-          进度条
-          <a
-            target="_blank"
-            href="https://element.eleme.cn/#/zh-CN/component/progress"
-          >
-            文档
-          </a>
-        </el-divider>
-        <el-progress :percentage="50"></el-progress>
-        <el-progress :percentage="100" status="success"></el-progress>
-        <el-progress :percentage="100" status="warning"></el-progress>
-        <el-progress :percentage="50" status="exception"></el-progress>
-        <el-progress
-          :text-inside="true"
-          :stroke-width="26"
-          :percentage="70"
-        ></el-progress>
-        <el-progress
-          :text-inside="true"
-          :stroke-width="24"
-          :percentage="100"
-          status="success"
-        ></el-progress>
-        <el-progress
-          :text-inside="true"
-          :stroke-width="22"
-          :percentage="80"
-          status="warning"
-        ></el-progress>
-        <el-progress
-          :text-inside="true"
-          :stroke-width="20"
-          :percentage="50"
-          status="exception"
-        ></el-progress>
-        <el-progress type="circle" :percentage="0"></el-progress>
-        <el-progress type="circle" :percentage="25"></el-progress>
-        <el-progress
-          type="circle"
-          :percentage="100"
-          status="success"
-        ></el-progress>
-        <el-progress
-          type="circle"
-          :percentage="70"
-          status="warning"
-        ></el-progress>
-        <el-progress
-          type="circle"
-          :percentage="50"
-          status="exception"
-        ></el-progress>
+      <h2>Example dialogue</h2>
+      <!-- <img src="emotion_shift.jpeg" alt="Example">-->
+      <img
+        id="myImg"
+        src="https://affective-meld.github.io/emotion_shift.jpeg"
+        alt="Example dialogue"
+        style="width: 100%; max-width: 500px"
+      />
 
-        <el-divider content-position="left">
-          按钮
-          <a
-            target="_blank"
-            href="https://element.eleme.cn/#/zh-CN/component/button"
-          >
-            文档
-          </a>
-        </el-divider>
-        <el-button>默认按钮</el-button>
-        <el-button type="primary">主要按钮</el-button>
-        <el-button type="success">成功按钮</el-button>
-        <el-button type="info">信息按钮</el-button>
-        <el-button type="warning">警告按钮</el-button>
-        <el-button type="danger">危险按钮</el-button>
-        <el-button plain>朴素按钮</el-button>
-        <el-button type="primary" plain>主要按钮</el-button>
-        <el-button type="success" plain>成功按钮</el-button>
-        <el-button type="info" plain>信息按钮</el-button>
-        <el-button type="warning" plain>警告按钮</el-button>
-        <el-button type="danger" plain>危险按钮</el-button>
-        <el-button round>圆角按钮</el-button>
-        <el-button type="primary" round>主要按钮</el-button>
-        <el-button type="success" round>成功按钮</el-button>
-        <el-button type="info" round>信息按钮</el-button>
-        <el-button type="warning" round>警告按钮</el-button>
-        <el-button type="danger" round>危险按钮</el-button>
-        <el-button icon="el-icon-search" circle></el-button>
-        <el-button type="primary" icon="el-icon-edit" circle></el-button>
-        <el-button type="success" icon="el-icon-check" circle></el-button>
-        <el-button type="info" icon="el-icon-message" circle></el-button>
-        <el-button type="warning" icon="el-icon-star-off" circle></el-button>
-        <el-button type="danger" icon="el-icon-delete" circle></el-button>
-        <el-button disabled>默认按钮</el-button>
-        <el-button type="primary" disabled>主要按钮</el-button>
-        <el-button type="success" disabled>成功按钮</el-button>
-        <el-button type="info" disabled>信息按钮</el-button>
-        <el-button type="warning" disabled>警告按钮</el-button>
-        <el-button type="danger" disabled>危险按钮</el-button>
-        <el-button type="primary" icon="el-icon-edit"></el-button>
-        <el-button type="primary" icon="el-icon-share"></el-button>
-        <el-button type="primary" icon="el-icon-delete"></el-button>
-        <el-button type="primary" icon="el-icon-search">搜索</el-button>
-        <el-button type="primary">
-          上传
-          <i class="el-icon-upload el-icon--right"></i>
-        </el-button>
-        <el-button type="primary" :loading="true">加载中</el-button>
-
-        <el-divider content-position="left">
-          文字链接
-          <a
-            target="_blank"
-            href="https://element.eleme.cn/#/zh-CN/component/link"
-          >
-            文档
-          </a>
-        </el-divider>
-        <el-link href="https://element.eleme.io" target="_blank">
-          默认链接
-        </el-link>
-        <el-link type="primary">主要链接</el-link>
-        <el-link type="success">成功链接</el-link>
-        <el-link type="warning">警告链接</el-link>
-        <el-link type="danger">危险链接</el-link>
-        <el-link type="info">信息链接</el-link>
-        <el-link disabled>默认链接</el-link>
-        <el-link type="primary" disabled>主要链接</el-link>
-        <el-link type="success" disabled>成功链接</el-link>
-        <el-link type="warning" disabled>警告链接</el-link>
-        <el-link type="danger" disabled>危险链接</el-link>
-        <el-link type="info" disabled>信息链接</el-link>
-        <el-link :underline="false">无下划线</el-link>
-        <el-link>有下划线</el-link>
-        <el-divider content-position="left">
-          头像
-          <a
-            target="_blank"
-            href="https://element.eleme.cn/#/zh-CN/component/avatar"
-          >
-            文档
-          </a>
-        </el-divider>
-        <el-avatar icon="el-icon-user-solid"></el-avatar>
-        <el-divider content-position="left">
-          页头
-          <a
-            target="_blank"
-            href="https://element.eleme.cn/#/zh-CN/component/page-header"
-          >
-            文档
-          </a>
-        </el-divider>
-        <el-page-header content="详情页面"></el-page-header>
-        <el-divider content-position="left">
-          面包屑
-          <a
-            target="_blank"
-            href="https://element.eleme.cn/#/zh-CN/component/breadcrumb"
-          >
-            文档
-          </a>
-        </el-divider>
-        <el-breadcrumb separator="/">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
-          <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-          <el-breadcrumb-item>活动详情</el-breadcrumb-item>
-        </el-breadcrumb>
-      </el-col>
-    </el-row>
+      <!-- The Modal -->
+      <div id="myModal" class="modal">
+        <span class="close">&times;</span>
+        <img id="img01" class="modal-content" />
+        <div id="caption"></div>
+      </div>
+      <br />
+      <br />
+      <h2>Dataset statistics</h2>
+      <!--  <img src="sc1.png" alt="Stat1">
+        <img src="sc2.png" alt="Stat2">
+        <br>
+        <img src="sc3.png" alt="Stat3">-->
+      <img src="https://affective-meld.github.io/sc4.png" alt="Stat4" />
+      <h2>Citation</h2>
+      <p>
+        Please cite the following papers if you use this dataset in your work.
+      </p>
+      <br />
+      <pre>S. Poria, D. Hazarika, N. Majumder, G. Naik, R. Mihalcea,<br>E. Cambria. MELD: A Multimodal Multi-Party Dataset<br>for Emotion Recognition in Conversation. (2018)
+        </pre>
+      <pre>Chen, S.Y., Hsu, C.C., Kuo, C.C. and Ku, L.W.<br>EmotionLines: An Emotion Corpus of Multi-Party<br>Conversations. arXiv preprint arXiv:1802.08379 (2018).
+        </pre>
+    </section>
   </div>
 </template>
 
@@ -209,46 +93,410 @@
     name: 'Wiki',
     components: {},
     data() {
-      return {
-        dialogVisible: false,
-      }
+      return {}
     },
     created() {},
-    mounted() {},
+    mounted() {
+      // Get the modal
+      var modal = document.getElementById('myModal')
+      // Get the image and insert it inside the modal - use its "alt" text as a caption
+
+      var modalImg = document.getElementById('img01')
+      var captionText = document.getElementById('caption')
+      var img = document.getElementById('myImg')
+      img.onclick = function () {
+        modal.style.display = 'block'
+        modalImg.src = this.src
+        captionText.innerHTML = this.alt
+      }
+      // Get the <span> element that closes the modal
+      var span = document.getElementsByClassName('close')[0]
+
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function () {
+        modal.style.display = 'none'
+      }
+    },
     methods: {},
   }
 </script>
 
 <style lang="scss" scoped>
-  .element-container {
-    ::v-deep {
-      .el-dialog__wrapper {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        bottom: 20px;
-        left: 20px;
-      }
+  .Wiki-container {
+    width: 1000px;
+    height: 1500px;
+    padding: 50px;
+    margin: 0 auto;
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+      Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial,
+      sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    font-weight: 400;
+    color: #595959;
+  }
 
-      .el-tag,
-      .el-button,
-      .el-link {
-        margin: 5px;
-      }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0 0 20px;
+    color: #222;
+  }
 
-      .el-progress {
-        margin: 20px;
-      }
+  p,
+  ul,
+  ol,
+  table,
+  pre,
+  dl {
+    margin: 0 0 20px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    line-height: 1.1;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 500;
+  }
+
+  h2 {
+    font-weight: 500;
+    color: #393939;
+  }
+
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 500;
+    color: #494949;
+  }
+
+  a {
+    color: #39c;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #069;
+  }
+
+  a small {
+    display: block;
+    margin-top: -0.3em;
+    font-size: 11px;
+    color: #777;
+  }
+
+  a:hover small {
+    color: #777;
+  }
+
+  blockquote {
+    padding: 0 0 0 20px;
+    margin: 0;
+    font-style: italic;
+    border-left: 1px solid #e5e5e5;
+  }
+
+  code,
+  pre {
+    font-family: Monaco, Bitstream Vera Sans Mono, Lucida Console, Terminal,
+      Consolas, Liberation Mono, DejaVu Sans Mono, Courier New, monospace;
+    color: #333;
+  }
+
+  pre {
+    padding: 8px 15px;
+    overflow-x: auto;
+    background: #f8f8f8;
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    padding: 5px 10px;
+    text-align: left;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  dt {
+    font-weight: 500;
+    color: #444;
+  }
+
+  th {
+    color: #444;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  header {
+    position: fixed;
+    float: left;
+    width: 270px;
+    -webkit-font-smoothing: subpixel-antialiased;
+  }
+
+  header ul {
+    width: 270px;
+    height: 40px;
+    padding: 0;
+    list-style: none;
+    background: #f4f4f4;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+  }
+
+  header li {
+    float: left;
+    width: 89px;
+    height: 40px;
+    border-right: 1px solid #e0e0e0;
+  }
+
+  header li:first-child a {
+    border-radius: 5px 0 0 5px;
+  }
+
+  header li:last-child a {
+    border-radius: 0 5px 5px 0;
+  }
+
+  header ul a {
+    display: block;
+    height: 34px;
+    padding-top: 6px;
+    font-size: 11px;
+    line-height: 1;
+    color: #999;
+    text-align: center;
+  }
+
+  header ul a:hover {
+    color: #999;
+  }
+
+  header ul a:active {
+    background-color: #f0f0f0;
+  }
+
+  strong {
+    font-weight: 500;
+    color: #222;
+  }
+
+  header ul li + li + li {
+    width: 89px;
+    border-right: none;
+  }
+
+  header ul a strong {
+    display: block;
+    font-size: 14px;
+    color: #222;
+  }
+
+  section {
+    float: right;
+    width: 500px;
+    padding-bottom: 50px;
+  }
+
+  small {
+    font-size: 11px;
+  }
+
+  hr {
+    height: 1px;
+    margin: 0 0 20px;
+    background: #e5e5e5;
+    border: 0;
+  }
+
+  @media print, screen and (max-width: 1400px) {
+    div.Wiki-container {
+      width: auto;
+      height: 1900px;
+      margin: 0;
+      font: 14px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol';
+      font-weight: 400;
+      color: #595959;
     }
 
-    .element-iframe {
+    header,
+    section,
+    footer {
+      position: static;
+      float: none;
+      width: auto;
+    }
+
+    header {
+      padding-right: 320px;
+    }
+
+    section {
+      padding: 20px 0;
+      margin: 0 0 20px;
+      border: 1px solid #e5e5e5;
+      border-width: 1px 0;
+    }
+
+    header a small {
+      display: inline;
+    }
+
+    header ul {
       position: absolute;
-      top: 55px;
-      right: 0;
-      bottom: 0;
-      left: 0;
+      top: 52px;
+      right: 50px;
+    }
+  }
+
+  @media print, screen and (max-width: 720px) {
+    body {
+      word-wrap: break-word;
+    }
+
+    header {
+      padding: 0;
+    }
+
+    header ul,
+    header p.view {
+      position: static;
+    }
+
+    pre,
+    code {
+      word-wrap: normal;
+    }
+  }
+
+  @media print, screen and (max-width: 480px) {
+    body {
+      padding: 15px;
+    }
+
+    header ul {
+      width: 99%;
+    }
+
+    header li,
+    header ul li + li + li {
+      width: 33%;
+    }
+  }
+
+  @media print {
+    body {
+      padding: 0.4in;
+      font-size: 12pt;
+      color: #444;
+    }
+  }
+
+  /* Style the Image Used to Trigger the Modal */
+  #myImg {
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+  }
+
+  #myImg:hover {
+    opacity: 0.7;
+  }
+
+  /* The Modal (background) */
+  .modal {
+    position: fixed; /* Stay in place */
+    top: 18%;
+    left: 20%;
+    z-index: 1; /* Sit on top */
+    display: none; /* Hidden by default */
+    width: 60%; /* Full width */
+    height: 64%; /* Full height */
+    padding-top: 100px; /* Location of the box */
+    // overflow: auto; /* Enable scroll if needed */
+    // background-color: #ffffff; /* Fallback color */
+    background-color: #ffffffe6; /* Black w/ opacity */
+  }
+
+  /* Modal Content (Image) */
+  .modal-content {
+    display: block;
+    width: 100%;
+    max-width: 1700px;
+    margin: auto;
+  }
+
+  /* Caption of Modal Image (Image Text) - Same Width as the Image */
+  #caption {
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    height: 150px;
+    padding: 10px 0;
+    margin: auto;
+    color: #ccc;
+    text-align: center;
+  }
+
+  /* Add Animation - Zoom in the Modal */
+  .modal-content,
+  #caption {
+    animation-name: zoom;
+    animation-duration: 0.6s;
+  }
+
+  @keyframes zoom {
+    from {
+      transform: scale(0);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  /* The Close Button */
+  .close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    font-size: 40px;
+    font-weight: bold;
+    color: #000000;
+    transition: 0.3s;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  /* 100% Image Width on Smaller Screens */
+  @media only screen and (max-width: 700px) {
+    .modal-content {
       width: 100%;
-      height: 89vh;
     }
   }
 </style>
