@@ -37,7 +37,7 @@
       v-loading="listLoading"
       :data="list"
       :element-loading-text="elementLoadingText"
-      :height="428"
+      :height="fullHeight * 0.7"
       stripe
       @selection-change="setSelectRows"
       @row-dblclick="showDetails"
@@ -61,15 +61,10 @@
       <el-table-column
         show-overflow-tooltip
         prop="datasetName"
-        label="Dataset Name"
-        width="120"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        label="Status"
-        width="120"
+        label="Dataset"
         align="center"
-      >
+      ></el-table-column>
+      <el-table-column show-overflow-tooltip label="Status" align="center">
         <template #default="{ row }">
           <el-tooltip
             :content="row.status"
@@ -86,16 +81,10 @@
       <el-table-column
         show-overflow-tooltip
         prop="capacity"
-        label="Sample Capacity"
-        width="140"
+        label="Capacity"
         align="center"
       ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        label="Language"
-        width="120"
-        align="center"
-      >
+      <el-table-column show-overflow-tooltip label="Language" align="center">
         <template #default="{ row }">
           <el-tooltip
             :content="row.language"
@@ -112,15 +101,13 @@
       <el-table-column
         show-overflow-tooltip
         prop="unimodalLabel"
-        label="Unimodal Label"
-        width="130"
+        label="Uni-Label"
         align="center"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="labelType"
         label="Label Type"
-        width="130"
         align="center"
       ></el-table-column>
       <el-table-column
@@ -128,6 +115,7 @@
         prop="description"
         label="Description"
         align="center"
+        :width="tableWidth()"
       ></el-table-column>
     </el-table>
     <el-pagination
@@ -169,6 +157,8 @@
     },
     data() {
       return {
+        fullWidth: document.documentElement.clientWidth,
+        fullHeight: document.documentElement.clientHeight,
         list: [],
         listLoading: true,
         layout: 'total, sizes, prev, pager, next, jumper',
@@ -193,6 +183,15 @@
     },
     mounted() {},
     methods: {
+      tableWidth() {
+        if (this.fullWidth > 1500) {
+          return 640 + 'px'
+        } else if (this.fullWidth > 1200) {
+          return 400 + 'px'
+        } else {
+          return 'auto'
+        }
+      },
       setSelectRows(val) {
         this.selectRows = val
       },

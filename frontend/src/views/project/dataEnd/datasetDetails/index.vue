@@ -160,7 +160,7 @@
         show-overflow-tooltip
         label="T-Label"
         prop="textLabel"
-        width="140"
+        width="auto"
         align="center"
       ></el-table-column>
 
@@ -168,7 +168,7 @@
         v-if="showUnimodalColumn"
         show-overflow-tooltip
         label="T-label-Type"
-        width="140"
+        width="auto"
         align="center"
       >
         <template #default="{ row }">
@@ -189,7 +189,7 @@
         show-overflow-tooltip
         label="A-Label"
         prop="audioLabel"
-        width="140"
+        width="auto"
         align="center"
       ></el-table-column>
 
@@ -197,7 +197,7 @@
         v-if="showUnimodalColumn"
         show-overflow-tooltip
         label="A-label-Type"
-        width="140"
+        width="auto"
         align="center"
       >
         <template #default="{ row }">
@@ -218,7 +218,7 @@
         show-overflow-tooltip
         label="V-Label"
         prop="visionLabel"
-        width="140"
+        width="auto"
         align="center"
       ></el-table-column>
 
@@ -226,7 +226,7 @@
         v-if="showUnimodalColumn"
         show-overflow-tooltip
         label="V-label-Type"
-        width="140"
+        width="auto"
         align="center"
       >
         <template #default="{ row }">

@@ -30,11 +30,16 @@
       v-loading="listLoading"
       :data="list"
       :element-loading-text="elementLoadingText"
-      :height="428"
+      :height="fullHeight * 0.7"
       stripe
       @sort-change="tableSortChange"
     >
-      <el-table-column show-overflow-tooltip label="Index" width="60">
+      <el-table-column
+        show-overflow-tooltip
+        label="Index"
+        width="auto"
+        align="center"
+      >
         <template #default="scope">
           {{ scope.$index + 1 }}
         </template>
@@ -42,16 +47,23 @@
       <el-table-column
         show-overflow-tooltip
         prop="datasetName"
-        label="Dataset Name"
-        width="120"
+        label="Dataset"
+        width="auto"
+        align="center"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="capacity"
-        label="Sample Capacity"
-        width="140"
+        label="Capacity"
+        width="auto"
+        align="center"
       ></el-table-column>
-      <el-table-column show-overflow-tooltip label="Language" width="120">
+      <el-table-column
+        show-overflow-tooltip
+        label="Language"
+        width="auto"
+        align="center"
+      >
         <template #default="{ row }">
           <el-tooltip
             :content="row.language"
@@ -68,21 +80,30 @@
       <el-table-column
         show-overflow-tooltip
         prop="unimodalLabel"
-        label="Unimodal Label"
-        width="130"
+        label="Uni-Label"
+        width="auto"
+        align="center"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="labelType"
         label="Label Type"
-        width="120"
+        width="auto"
+        align="center"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
         prop="description"
         label="Description"
+        :width="descriptionWidth()"
+        align="center"
       ></el-table-column>
-      <el-table-column show-overflow-tooltip label="Operations" width="180px">
+      <el-table-column
+        show-overflow-tooltip
+        label="Operations"
+        :width="operationWidth()"
+        align="center"
+      >
         <template #default="{ row }">
           <el-button type="text" @click="startLabeling(row)">
             Auto Labeling
@@ -120,6 +141,8 @@
     },
     data() {
       return {
+        fullWidth: document.documentElement.clientWidth,
+        fullHeight: document.documentElement.clientHeight,
         list: [],
         listLoading: true,
         layout: 'total, sizes, prev, pager, next, jumper',
@@ -138,6 +161,24 @@
       this.fetchUnlockedData()
     },
     methods: {
+      operationWidth() {
+        if (this.fullWidth > 1500) {
+          return 240 + 'px'
+        } else if (this.fullWidth > 1200) {
+          return 150 + 'px'
+        } else {
+          return 'auto'
+        }
+      },
+      descriptionWidth() {
+        if (this.fullWidth > 1500) {
+          return 640 + 'px'
+        } else if (this.fullWidth > 1200) {
+          return 380 + 'px'
+        } else {
+          return 'auto'
+        }
+      },
       handleQuery() {},
       tableSortChange() {},
       handleSizeChange(val) {
