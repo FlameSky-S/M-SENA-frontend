@@ -123,7 +123,7 @@
               v-if="currIdx == key"
               style="text-align: center; font-size: 20px"
             >
-              {{ item.prediction.predict == item.label ? 'Correct!' : 'Wrong' }}
+              {{ item.prediction.predict == item.label ? 'Correct' : 'Wrong' }}
             </p>
           </div>
         </el-carousel-item>
@@ -216,7 +216,7 @@
       window.onresize = () => {
         let that = this
         that.screenWidth = document.body.clientWidth
-        console.log(that.screenWidth)
+        // console.log(that.screenWidth)
       }
     },
     methods: {
