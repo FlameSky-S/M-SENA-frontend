@@ -1,6 +1,6 @@
 <template>
   <div class="batchTest-container">
-    <h1 class="batchTest-header">Batch Test</h1>
+    <h1 style="margin-left: 1%">Batch Test</h1>
     <el-row v-loading="settingsLoading" :gutter="15">
       <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8">
         <div class="test-settings">
@@ -16,9 +16,9 @@
               <el-select v-model="testSettings.dataset">
                 <el-option
                   v-for="item in datasetList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item.name"
+                  :label="item.name"
+                  :value="item.name"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -26,19 +26,9 @@
               <el-select v-model="testSettings.mode">
                 <el-option
                   v-for="item in modeList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Sentiment:" style="font-weight: bold">
-              <el-select v-model="testSettings.sentiment">
-                <el-option
-                  v-for="item in sentimentList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -49,9 +39,9 @@
               >
                 <el-option
                   v-for="item in modelList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -59,9 +49,9 @@
               <el-select v-model="testSettings.other" multiple collapse-tags>
                 <el-option
                   v-for="item in otherList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -116,35 +106,20 @@
 </template>
 
 <script>
-  import { getSettings } from '@/api/batchTest'
-  import { getResults } from '@/api/batchTest'
+  import { getAllSettings } from '@/api/getSettings'
+  import { batchResults } from '@/api/testEnd'
   export default {
     name: 'BatchTest',
     components: {},
     data() {
       return {
         datasetList: [],
-        modeList: [
-          {
-            value: 'train',
-            label: 'Training set',
-          },
-          {
-            value: 'dev',
-            label: 'Dev set',
-          },
-          {
-            value: 'test',
-            label: 'Test set',
-          },
-        ],
-        sentimentList: [],
+        modeList: ['Train', 'Valid', 'Test'],
         modelList: [],
         testSettings: {
-          dataset: '01',
-          mode: 'test',
-          sentiment: '0',
-          primary: '001',
+          dataset: '',
+          mode: 'Test',
+          primary: '',
           other: [],
           useStored: 'True',
         },
@@ -159,7 +134,7 @@
     computed: {
       otherList: function () {
         let options = this.modelList.filter(
-          (model) => model.value !== this.testSettings.primary
+          (model) => model !== this.testSettings.primary
         )
         return options
       },
@@ -169,24 +144,24 @@
     },
     mounted() {},
     methods: {
-      getLabel(list, value) {
-        for (let i in list) {
-          if (list[i].value === value) {
-            return list[i].label
-          }
-        }
-      },
-      getLabels(list, values) {
-        let labels = []
-        for (let i in values) {
-          for (let j in list) {
-            if (list[j].value === values[i]) {
-              labels.push(list[j].label)
-            }
-          }
-        }
-        return labels.toString()
-      },
+      // getLabel(list, value) {
+      //   for (let i in list) {
+      //     if (list[i].value === value) {
+      //       return list[i].label
+      //     }
+      //   }
+      // },
+      // getLabels(list, values) {
+      //   let labels = []
+      //   for (let i in values) {
+      //     for (let j in list) {
+      //       if (list[j].value === values[i]) {
+      //         labels.push(list[j].label)
+      //       }
+      //     }
+      //   }
+      //   return labels.toString()
+      // },
       onSubmit() {
         const h = this.$createElement
         let confirm = []
@@ -200,10 +175,7 @@
         confirm.push(
           h('p', { style: 'text-align: center' }, [
             h('span', { style: 'color: teal; font-weight: 700' }, 'Dataset = '),
-            h(
-              'span',
-              this.getLabel(this.datasetList, this.testSettings.dataset)
-            ),
+            h('span', this.testSettings.dataset),
           ])
         )
         confirm.push(
@@ -213,20 +185,7 @@
               { style: 'color: teal; font-weight: 700' },
               'Data Mode = '
             ),
-            h('span', this.getLabel(this.modeList, this.testSettings.mode)),
-          ])
-        )
-        confirm.push(
-          h('p', { style: 'text-align: center' }, [
-            h(
-              'span',
-              { style: 'color: teal; font-weight: 700' },
-              'Sentiment = '
-            ),
-            h(
-              'span',
-              this.getLabel(this.sentimentList, this.testSettings.sentiment)
-            ),
+            h('span', this.testSettings.mode),
           ])
         )
         confirm.push(
@@ -236,7 +195,7 @@
               { style: 'color: teal; font-weight: 700' },
               'Primary Model = '
             ),
-            h('span', this.getLabel(this.modelList, this.testSettings.primary)),
+            h('span', this.testSettings.primary),
           ])
         )
         confirm.push(
@@ -246,7 +205,7 @@
               { style: 'color: teal; font-weight: 700' },
               'Other Models = '
             ),
-            h('span', this.getLabels(this.modelList, this.testSettings.other)),
+            h('span', this.testSettings.other.join(', ')),
           ])
         )
         confirm.push(
@@ -272,35 +231,36 @@
       },
       async fetchSettings() {
         this.settingsLoading = true
-        let { datasets, sentiment, models } = await getSettings()
+        let { datasets, models } = await getAllSettings()
+        console.log(datasets)
         this.datasetList = datasets
-        this.sentimentList = sentiment
         this.modelList = models
+        this.testSettings.dataset = this.datasetList[0].name
+        this.testSettings.primary = this.modelList[0]
         this.settingsLoading = false
       },
       async fetchResults() {
         this.resultLoading = true
-        let { header, result } = await getResults(this.testSettings)
+        let { header, result } = await batchResults(this.testSettings)
         this.testHeader = header
         this.testResults = result
         this.header =
           'Test ' +
-          this.getLabel(this.modelList, this.testSettings.primary) +
+          this.testSettings.primary +
           ' on ' +
-          this.getLabel(this.datasetList, this.testSettings.dataset) +
+          this.testSettings.dataset +
           ' ' +
-          this.getLabel(this.modeList, this.testSettings.mode)
+          this.testSettings.mode +
+          ' set'
         if (this.testSettings.useStored === 'True') {
           this.footer =
             'Note: Used history results except for ' +
-            this.getLabel(this.modelList, this.testSettings.primary) +
+            this.testSettings.primary +
             '. '
         } else {
           this.footer = ''
         }
-        setTimeout(() => {
-          this.resultLoading = false
-        }, 1000)
+        this.resultLoading = false
       },
       onPrimaryChange() {
         this.testSettings.other = []
@@ -317,8 +277,6 @@
   // 最大值加粗
   // primary model放最后一行
   // 添加delta行
-  // note:
-  // 每当改变dataset时，应向服务器请求sentiment
 </script>
 
 <style lang="scss" scoped>

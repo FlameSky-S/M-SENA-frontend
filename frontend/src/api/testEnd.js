@@ -1,13 +1,22 @@
 import request from '@/utils/request'
 
-export function getSettings() {
+export function batchResults(query) {
   return request({
-    url: '/presentationEnd/liveSettings',
-    method: 'get',
+    url: '/presentationEnd/batchResults',
+    method: 'post',
+    data: query,
   })
 }
 
-export function getResults(query) {
+export function sampleResults(query) {
+  return request({
+    url: '/presentationEnd/sampleResults',
+    method: 'post',
+    data: query,
+  })
+}
+
+export function liveResults(query) {
   return request({
     url: '/presentationEnd/liveResults',
     method: 'post',

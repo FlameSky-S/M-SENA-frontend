@@ -8,18 +8,18 @@ export function getModelList(data) {
   })
 }
 
-export function trainSettings() {
+export function delModel(data) {
   return request({
-    url: '/model/trainSettings',
-    method: 'get',
+    url: '/model/delModel',
+    method: 'post',
+    data,
   })
 }
 
-export function startTraining(data) {
+export function addModel() {
   return request({
-    url: '/model/startTraining',
-    method: 'post',
-    data,
+    url: '/model/addModel',
+    method: 'get',
   })
 }
 
@@ -31,9 +31,9 @@ export function getTrainResults(data) {
   })
 }
 
-export function delModel(data) {
+export function startTraining(data) {
   return request({
-    url: '/model/delModel',
+    url: '/model/startTraining',
     method: 'post',
     data,
   })

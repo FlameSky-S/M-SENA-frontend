@@ -1,6 +1,6 @@
 <template>
   <div ref="container" class="liveTest-container">
-    <el-alert
+    <!-- <el-alert
       v-for="alert in alertList"
       :key="alert.id"
       :title="alert.msg"
@@ -8,8 +8,8 @@
       center
       show-icon
       @close="alertClose"
-    ></el-alert>
-    <h1 class="LiveTest-header">Live Demo</h1>
+    ></el-alert> -->
+    <h1>Live Demo</h1>
     <el-row v-loading="settingsLoading">
       <el-col :offset="col1Offset" :xs="14" :sm="11" :md="9" :lg="6" :xl="6">
         <div class="test-settings">
@@ -92,9 +92,9 @@
               >
                 <el-option
                   v-for="item in modelList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -102,9 +102,9 @@
               <el-select v-model="testSettings.other" multiple collapse-tags>
                 <el-option
                   v-for="item in otherList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -252,9 +252,8 @@
 </template>
 
 <script>
-  import { getSettings } from '@/api/liveTest'
-  import { getResults } from '@/api/liveTest'
-  import { getTranscript } from '@/api/liveTest'
+  import { getAllSettings } from '@/api/getSettings'
+  import { liveResults, getTranscript } from '@/api/testEnd'
   export default {
     name: 'LiveTest',
     components: {},
@@ -267,7 +266,7 @@
           mic: '',
         },
         testSettings: {
-          primary: '001',
+          primary: '',
           other: [],
           v_url: '',
           transcript: '',
@@ -308,7 +307,7 @@
         recData: [],
         blob: null,
         rec_url: '',
-        alertList: [],
+        // alertList: [],
         errId: 0,
         resultHeader: '',
         resultShow: false,
@@ -331,7 +330,7 @@
       },
       otherList: function () {
         let options = this.modelList.filter(
-          (model) => model.value !== this.testSettings.primary
+          (model) => model !== this.testSettings.primary
         )
         return options
       },
@@ -347,12 +346,12 @@
           this.camSettings.mic = newValue[0].deviceId
         }
       },
-      alertList: function (newValue) {
-        if (newValue.length > 2) {
-          newValue.shift()
-          this.alertList = newValue
-        }
-      },
+      // alertList: function (newValue) {
+      //   if (newValue.length > 2) {
+      //     newValue.shift()
+      //     this.alertList = newValue
+      //   }
+      // },
       screenWidth: function (newValue) {
         if (newValue >= 1920) {
           //xl
@@ -384,9 +383,9 @@
       }
     },
     methods: {
-      alertClose() {
-        // delete from alertList
-      },
+      // alertClose() {
+      //   // delete from alertList
+      // },
       async fetchSettings() {
         this.settingsLoading = true
         if (
@@ -403,10 +402,14 @@
               })
               test.getTracks().forEach((track) => track.stop())
             } catch (err) {
-              this.$refs.container
-              this.alertList.push({
-                id: ++this.errId,
-                msg: 'Video: ' + err.message,
+              // this.$refs.container
+              // this.alertList.push({
+              //   id: ++this.errId,
+              //   msg: 'Video: ' + err.message,
+              // })
+              this.$message({
+                message: 'Video: ' + err.message,
+                type: 'error',
               })
             }
           }
@@ -419,23 +422,33 @@
               })
               test.getTracks().forEach((track) => track.stop())
             } catch (err) {
-              this.alertList.push({
-                id: ++this.errId,
-                msg: 'Audio: ' + err.message,
+              // this.alertList.push({
+              //   id: ++this.errId,
+              //   msg: 'Audio: ' + err.message,
+              // })
+              this.$message({
+                message: 'Audio: ' + err.message,
+                type: 'error',
               })
             }
           }
           this.deviceList = await navigator.mediaDevices.enumerateDevices() // check for devices again
           // console.log(this.deviceList)
         } else {
-          this.alertList.push({
-            id: ++this.errId,
-            msg: 'MediaDevices unavailable, make sure you have https enabled',
+          // this.alertList.push({
+          //   id: ++this.errId,
+          //   msg: 'MediaDevices unavailable, make sure you have https enabled',
+          // })
+          this.$message({
+            message:
+              'MediaDevices unavailable, make sure you have https enabled',
+            type: 'error',
           })
         }
-        let { models } = await getSettings()
+        let { models } = await getAllSettings()
 
         this.modelList = models
+        this.testSettings.primary = this.modelList[0]
         this.settingsLoading = false
       },
       initCam() {
@@ -448,9 +461,14 @@
             this.constraints.audio.deviceId.exact = this.camSettings.mic
             this.startStream(this.constraints)
           } else {
-            this.alertList.push({
-              id: ++this.errId,
-              msg: 'MediaDevices unavailable, make sure you have https enabled',
+            // this.alertList.push({
+            //   id: ++this.errId,
+            //   msg: 'MediaDevices unavailable, make sure you have https enabled',
+            // })
+            this.$message({
+              message:
+                'MediaDevices unavailable, make sure you have https enabled',
+              type: 'error',
             })
           }
         } else {
@@ -460,9 +478,13 @@
         try {
           this.stream = await navigator.mediaDevices.getUserMedia(constraints)
         } catch (err) {
-          this.alertList.push({
-            id: ++this.errId,
-            msg: err.message,
+          // this.alertList.push({
+          //   id: ++this.errId,
+          //   msg: err.message,
+          // })
+          this.$message({
+            message: err.message,
+            type: 'error',
           })
           return
         }
@@ -504,9 +526,13 @@
             return Promise.all([stopped])
           }
         } else {
-          this.alertList.push({
-            id: ++this.errId,
-            msg: 'Stream not active',
+          // this.alertList.push({
+          //   id: ++this.errId,
+          //   msg: 'Stream not active',
+          // })
+          this.$message({
+            message: 'Stream not active',
+            type: 'error',
           })
         }
       },
@@ -535,7 +561,7 @@
       },
       async onSubmit() {
         this.resultLoading = true
-        let { result } = await getResults(this.testSettings)
+        let { result } = await liveResults(this.testSettings)
         this.testResults = result
         this.resultHeader =
           'Test ' +

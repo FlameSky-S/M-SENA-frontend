@@ -1,17 +1,32 @@
 const resultList = []
 
-resultset = {
+resultset1 = {
   id: '00001',
   model: 'TFN',
   dataset: 'CH-SIMS',
   mode: 'tune',
   date: '2020-09-30 14:32:27',
-  description:
-    'This is the description of the train result with TFN on CH-SIMS',
+  description: 'Notes TFN CH-SIMS',
+  args:
+    'asdfzvcadsfqewravasdfzvcadsfqewravasdfzvcadsfqewravasdfzvcadsfqewravasdfzvcadsfqewrav',
 }
 
-for (let i = 1; i < 100; ++i) {
-  resultList.push(resultset)
+resultset2 = {
+  id: '00002',
+  model: 'MFN',
+  dataset: 'MOSEI',
+  mode: 'tune',
+  date: '2020-09-30 14:32:27',
+  description: 'Notes MFN MOSEI',
+  args:
+    'asdfzvcadsfqewravasdfzvcadsfqewravasdfzvcadsfqewravasdfzvcadsfqewravasdfzvcadsfqewrav',
+}
+
+for (let i = 1; i < 20; ++i) {
+  resultList.push(resultset1)
+}
+for (let i = 1; i < 20; ++i) {
+  resultList.push(resultset2)
 }
 
 module.exports = [

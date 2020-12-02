@@ -1,6 +1,6 @@
 <template>
   <div class="sampleTest-container">
-    <h1>Case Study</h1>
+    <h1 style="margin-left: 1%">Case Study</h1>
     <el-row v-loading="settingsLoading">
       <el-form :inline="true" :model="testSettings" class="test-settings">
         <span>
@@ -8,9 +8,9 @@
             <el-select v-model="testSettings.model" style="width: 180px">
               <el-option
                 v-for="item in modelList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                :key="item"
+                :label="item"
+                :value="item"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -18,9 +18,9 @@
             <el-select v-model="testSettings.dataset" style="width: 180px">
               <el-option
                 v-for="item in datasetList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                :key="item.name"
+                :label="item.name"
+                :value="item.name"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -30,9 +30,9 @@
             <el-select v-model="testSettings.mode" style="width: 150px">
               <el-option
                 v-for="item in modeList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                :key="item"
+                :label="item"
+                :value="item"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -40,9 +40,9 @@
             <el-select v-model="testSettings.sentiment" style="width: 150px">
               <el-option
                 v-for="item in sentimentList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                :key="item"
+                :label="item"
+                :value="item"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -133,8 +133,8 @@
 </template>
 
 <script>
-  import { getSettings } from '@/api/sampleTest'
-  import { getResults } from '@/api/sampleTest'
+  import { getAllSettings } from '@/api/getSettings'
+  import { sampleResults } from '@/api/testEnd'
   import { VabPlayerMp4 } from '@/plugins/vabPlayer.js'
   export default {
     name: 'SampleTest',
@@ -144,27 +144,14 @@
     data() {
       return {
         datasetList: [],
-        modeList: [
-          {
-            value: 'train',
-            label: 'Training set',
-          },
-          {
-            value: 'dev',
-            label: 'Dev set',
-          },
-          {
-            value: 'test',
-            label: 'Test set',
-          },
-        ],
-        sentimentList: [],
+        modeList: ['Train', 'Valid', 'Test'],
+        // sentimentList: [],
         modelList: [],
         testSettings: {
-          dataset: '01',
-          mode: 'test',
-          sentiment: '0',
-          model: '001',
+          dataset: '',
+          mode: 'Test',
+          sentiment: 'All',
+          model: '',
         },
         settingsLoading: true,
         resultLoading: false,
@@ -182,6 +169,17 @@
       //   height = height.toString() + 'px'
       //   return height
       // },
+      sentimentList: function () {
+        let x = []
+        for (let i in this.datasetList) {
+          if (this.datasetList[i].name == this.testSettings.dataset) {
+            x = this.datasetList[i].sentiment
+            break
+          }
+        }
+        x.unshift('All')
+        return x
+      },
     },
     watch: {
       screenWidth: function (newValue) {
@@ -225,20 +223,19 @@
       },
       async fetchSettings() {
         this.settingsLoading = true
-        let { datasets, sentiment, models } = await getSettings()
+        let { datasets, models } = await getAllSettings()
         this.datasetList = datasets
-        this.sentimentList = sentiment
         this.modelList = models
+        this.testSettings.dataset = this.datasetList[0].name
+        this.testSettings.model = this.modelList[0]
         this.settingsLoading = false
       },
       async fetchResults() {
         this.resultLoading = true
-        let { result } = await getResults(this.testSettings)
+        let { result } = await sampleResults(this.testSettings)
         this.testResult = result
         this.placehoder = false
-        setTimeout(() => {
-          this.resultLoading = false
-        }, 1000)
+        this.resultLoading = false
       },
       onChange(activeIdx, prevIdx) {
         this.currIdx = activeIdx

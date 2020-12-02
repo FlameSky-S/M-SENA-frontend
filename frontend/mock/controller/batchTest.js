@@ -1,64 +1,3 @@
-const datasets = [
-  {
-    value: '01',
-    label: 'CH-SIMS',
-  },
-  {
-    value: '02',
-    label: 'CMU-MOSI',
-  },
-  {
-    value: '03',
-    label: 'MOSEI',
-  },
-]
-
-const sentiment = [
-  {
-    value: '0',
-    label: 'All',
-  },
-  {
-    value: '1',
-    label: 'Positive',
-  },
-  {
-    value: '2',
-    label: 'Neutural',
-  },
-  {
-    value: '3',
-    label: 'Negative',
-  },
-]
-
-const models = [
-  {
-    value: '001',
-    label: 'TFN',
-  },
-  {
-    value: '002',
-    label: 'LMF',
-  },
-  {
-    value: '003',
-    label: 'MFN',
-  },
-  {
-    value: '004',
-    label: 'MulT',
-  },
-  {
-    value: '005',
-    label: 'LF_DNN',
-  },
-  {
-    value: '006',
-    label: 'EF_LSTM',
-  },
-]
-
 const tabelHeader = [
   { label: 'Model', prop: 'model' },
   { label: 'Acc2', prop: 'acc2' },
@@ -127,19 +66,6 @@ const testResults = [
 ]
 
 module.exports = [
-  {
-    url: '/presentationEnd/batchSettings',
-    type: 'get',
-    response() {
-      return {
-        code: 200,
-        msg: 'success',
-        datasets: datasets,
-        sentiment: sentiment,
-        models: models,
-      }
-    },
-  },
   {
     url: '/presentationEnd/batchResults',
     type: 'post',

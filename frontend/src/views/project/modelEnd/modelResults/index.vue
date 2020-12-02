@@ -1,6 +1,6 @@
 <template>
   <div class="results-container">
-    <h1>Model Results</h1>
+    <h1 style="margin-left: 2%">Model Results</h1>
     <p class="tips"></p>
     <el-row>
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
@@ -12,9 +12,9 @@
                   <el-select v-model="filter.model" style="width: 150px">
                     <el-option
                       v-for="item in modelList"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
+                      :key="item"
+                      :label="item"
+                      :value="item"
                     ></el-option>
                   </el-select>
                 </el-form-item>
@@ -22,19 +22,19 @@
                   <el-select v-model="filter.dataset" style="width: 150px">
                     <el-option
                       v-for="item in datasetList"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
+                      :key="item.name"
+                      :label="item.name"
+                      :value="item.name"
                     ></el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="Dataset:" style="font-weight: bold">
+                <el-form-item label="Mode:" style="font-weight: bold">
                   <el-select v-model="filter.mode" style="width: 120px">
                     <el-option
                       v-for="item in modeList"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
+                      :key="item"
+                      :label="item"
+                      :value="item"
                     ></el-option>
                   </el-select>
                 </el-form-item>
@@ -56,6 +56,15 @@
             element-loading-text="Loading Results..."
             stripe
           >
+            <el-table-column type="expand">
+              <template slot-scope="props">
+                <el-form label-position="left" inline class="table-expand">
+                  <el-form-item label="Args:">
+                    <span>{{ props.row.args }}</span>
+                  </el-form-item>
+                </el-form>
+              </template>
+            </el-table-column>
             <el-table-column
               label="Id"
               prop="id"
@@ -87,15 +96,18 @@
               min-width="100"
             ></el-table-column>
             <el-table-column
-              label="Description"
+              label="Notes"
               prop="description"
               align="center"
-              min-width="250"
+              min-width="200"
             ></el-table-column>
             <el-table-column label="Operations" align="center" min-width="160">
               <template slot-scope="scope">
                 <el-button type="text" @click="viewResult(scope.row)">
-                  View
+                  More
+                </el-button>
+                <el-button type="text" @click="setDefault(scope.row)">
+                  Default
                 </el-button>
                 <el-button type="text" @click="retrain(scope.row)">
                   Retrain
@@ -123,7 +135,8 @@
 </template>
 
 <script>
-  import { getTrainResults, trainSettings } from '@/api/model'
+  import { getTrainResults } from '@/api/modelEnd'
+  import { getAllSettings } from '@/api/getSettings'
   export default {
     name: 'ModelResults',
     data() {
@@ -131,17 +144,13 @@
         resultList: [],
         datasetList: [],
         modelList: [],
-        modeList: [
-          { value: '0', label: 'All' },
-          { value: '1', label: 'Tune Args' },
-          { value: '2', label: 'Run & Save' },
-        ],
+        modeList: ['Both', 'Tune', 'Run'],
         resultLoading: true,
         total: 0,
         filter: {
-          model: '000',
-          dataset: '00',
-          mode: '0',
+          model: 'All',
+          dataset: 'All',
+          mode: 'Both',
           pageNo: 1,
           pageSize: 10,
         },
@@ -150,6 +159,9 @@
     computed: {},
     watch: {},
     created() {
+      if (this.$route.query.model) {
+        this.filter.model = this.$route.query.model
+      }
       this.fetchResults()
     },
     mounted() {},
@@ -167,11 +179,14 @@
         let { results, totalCount } = await getTrainResults(this.filter)
         this.resultList = results
         this.total = totalCount
-        let { datasets, models } = await trainSettings()
+        let { datasets, models } = await getAllSettings()
         this.modelList = models
-        this.modelList.push({ value: '000', label: 'All' })
+        this.modelList.unshift('All')
         this.datasetList = datasets
-        this.datasetList.push({ value: '00', label: 'All' })
+        this.datasetList.unshift({
+          name: 'All',
+          sentiment: '',
+        })
         this.resultLoading = false
       },
       applyFilter() {
@@ -179,7 +194,14 @@
         this.fetchResults()
       },
       viewResult() {},
-      retrain() {},
+      setDefault() {},
+      retrain(row) {
+        console.log(row)
+        this.$router.push({
+          path: '/model/modelTraining',
+          query: { model: row.model, dataset: row.dataset },
+        })
+      },
       delResult() {},
     },
   }
@@ -191,5 +213,17 @@
     .results-table {
       margin: 0% 5%;
     }
+  }
+  .table-expand {
+    font-size: 0;
+  }
+  .table-expand label {
+    width: 70px;
+    color: #99a9bf;
+  }
+  .table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
   }
 </style>

@@ -1,21 +1,23 @@
 <template>
   <div class="modelManagement-container">
-    <h1>Model Management</h1>
-    <p class="tips">Click model name to view model-related results.</p>
+    <h1 style="margin-left: 2%">Model Management</h1>
+    <div class="tips">
+      <p>Click model name to view model-related results.</p>
+    </div>
     <el-row>
-      <el-col :xs="24" :sm="24" :md="24" :lg="20" :xl="18" :offset="offset">
+      <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <div class="model-table">
           <vab-query-form>
             <vab-query-form-left-panel>
-              <el-button icon="el-icon-plus" type="primary" @click="addModel">
-                Create
-              </el-button>
-            </vab-query-form-left-panel>
-            <vab-query-form-right-panel>
-              <el-form ref="form" :model="queryForm" :inline="true">
+              <el-form
+                ref="form"
+                :model="queryForm"
+                :inline="true"
+                style="margin-right: 15px"
+              >
                 <el-form-item>
                   <el-input
-                    v-model="queryForm.title"
+                    v-model="queryForm.model"
                     placeholder="Model Name"
                   />
                 </el-form-item>
@@ -29,7 +31,14 @@
                   </el-button>
                 </el-form-item>
               </el-form>
-            </vab-query-form-right-panel>
+              <el-button
+                icon="el-icon-refresh-left"
+                type="primary"
+                @click="addModel"
+              >
+                Rescan
+              </el-button>
+            </vab-query-form-left-panel>
           </vab-query-form>
 
           <el-table
@@ -39,33 +48,44 @@
             stripe
           >
             <el-table-column
-              label="Id"
-              prop="id"
+              type="index"
               align="center"
-              min-width="100"
+              min-width="50"
             ></el-table-column>
             <el-table-column
               label="Model Name"
               prop="modelName"
               align="center"
-              min-width="150"
+              min-width="120"
             ></el-table-column>
+            <el-table-column
+              label="Related Paper"
+              align="center"
+              min-width="250"
+            >
+              <template slot-scope="scope">
+                <a
+                  :href="scope.row.paperLink"
+                  class="paper-title"
+                  target="_blank"
+                >
+                  {{ scope.row.paperTitle }}
+                </a>
+              </template>
+            </el-table-column>
             <el-table-column
               label="Description"
               prop="description"
               align="center"
-              min-width="400"
+              min-width="250"
             ></el-table-column>
-            <el-table-column label="Operations" align="center" min-width="200">
+            <el-table-column label="Operations" align="center" min-width="150">
               <template slot-scope="scope">
-                <el-button type="text" @click="viewModel(scope.row)">
-                  View
+                <el-button type="text" @click="viewResults(scope.row)">
+                  Results
                 </el-button>
                 <el-button type="text" @click="trainModel(scope.row)">
                   Train
-                </el-button>
-                <el-button type="text" @click="editModel(scope.row)">
-                  Edit
                 </el-button>
                 <el-button type="text" @click="delModel(scope.row)">
                   Delete
@@ -90,7 +110,7 @@
 </template>
 
 <script>
-  import { getModelList, delModel } from '@/api/model'
+  import { getModelList, delModel, addModel } from '@/api/modelEnd'
   export default {
     name: 'ModelManagement',
     components: {},
@@ -102,33 +122,12 @@
         queryForm: {
           pageNo: 1,
           pageSize: 10,
-          title: '',
+          model: '',
         },
-        screenWidth: 0,
-        offset: 0,
       }
     },
     computed: {},
-    watch: {
-      screenWidth: function (newValue) {
-        if (newValue >= 1920) {
-          //xl
-          this.offset = 3
-        } else if (newValue >= 1200) {
-          //lg
-          this.offset = 2
-        } else if (newValue >= 992) {
-          //md
-          this.offset = 0
-        } else if (newValue >= 768) {
-          //sm
-          this.offset = 0
-        } else {
-          //xs
-          this.offset = 0
-        }
-      },
-    },
+    watch: {},
     created() {
       this.fetchModelList()
     },
@@ -157,9 +156,28 @@
         this.total = totalCount
         this.modelLoading = false
       },
-      addModel() {},
-      viewModel(row) {},
-      editModel(row) {},
+      async addModel() {
+        let { msg } = await addModel()
+        if (msg == 'success') {
+          this.$message({
+            message: 'Model dir rescanned',
+            type: 'success',
+          })
+        }
+      },
+      viewResults(row) {
+        this.$router.push({
+          path: '/model/modelResults',
+          query: { model: row.modelName },
+        })
+      },
+      trainModel(row) {
+        this.$router.push({
+          path: '/model/modelTraining',
+          query: { model: row.modelName },
+        })
+      },
+      // editModel(row) {},
       delModel(row) {
         const h = this.$createElement
         // console.log(row)
@@ -186,15 +204,18 @@
           confirmButtonClass: 'el-button--danger',
         })
           .then(async () => {
-            let modelID = row.id
-            console.log(modelID)
-            let { msg } = await delModel(row.id)
+            let { msg } = await delModel(row.modelName)
             if (msg == 'success') {
               this.$message({
                 message: 'Successfully Deleted Model',
                 type: 'success',
               })
               this.fetchModelList()
+            } else {
+              this.$message({
+                message: msg,
+                type: 'error',
+              })
             }
           })
           .catch(() => {
@@ -212,8 +233,18 @@
 <style lang="scss" scoped>
   .modelManagement-container {
     margin: 0%;
-    .train-settings {
+    .model-table {
       margin: 0% 5%;
     }
+  }
+  .paper-title {
+    text-decoration: none;
+    color: #606266;
+  }
+  .paper-title:hover {
+    color: #1890ff;
+  }
+  .tips {
+    margin: 0% 2% 1% 2%;
   }
 </style>

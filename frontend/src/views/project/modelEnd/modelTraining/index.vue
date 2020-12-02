@@ -1,80 +1,75 @@
 <template>
   <div class="training-container">
-    <h1>Train Model</h1>
+    <h1 style="margin-left: 2%">Train Model</h1>
     <p class="tips"></p>
     <el-row>
-      <el-col
-        v-loading="settingsLoading"
-        :xs="20"
-        :sm="16"
-        :md="14"
-        :lg="10"
-        :xl="8"
-      >
-        <div class="train-settings">
-          <el-form
-            ref="trainSettings"
-            :model="trainSettings"
-            label-position="left"
-            label-width="130px"
-          >
-            <el-form-item label="Train Mode:" style="font-weight: bold">
-              <el-radio v-model="trainSettings.mode" label="1">
-                Tune Args
-              </el-radio>
-              <el-radio v-model="trainSettings.mode" label="2">
-                Run & Save
-              </el-radio>
-            </el-form-item>
-            <el-form-item label="Select Model:" style="font-weight: bold">
-              <el-select v-model="trainSettings.model">
-                <el-option
-                  v-for="item in modelList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Select Dataset:" style="font-weight: bold">
-              <el-select v-model="trainSettings.dataset">
-                <el-option
-                  v-for="item in datasetList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Args:" style="font-weight: bold">
-              <el-input
-                v-model="trainSettings.args"
-                type="textarea"
-                resize="none"
-                :autosize="argsAutosize"
-                placehoder="JSON String"
-              />
-            </el-form-item>
-            <el-form-item label="Description:" style="font-weight: bold">
-              <el-input
-                v-model="trainSettings.description"
-                type="textarea"
-                resize="none"
-                :autosize="descAutosize"
-                placehoder="Add Notes Here"
-              />
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                :icon="icon"
-                type="primary"
-                style="font-weight: bold; font-size: 14px"
-                @click="startTrain"
-              >
-                Start
-              </el-button>
-            </el-form-item>
-          </el-form>
+      <el-col :xs="24" :sm="20" :md="18" :lg="12" :xl="10">
+        <div v-loading="settingsLoading" class="train-settings">
+          <el-card shadow="hover" style="padding: 20px">
+            <el-form
+              ref="trainSettings"
+              :model="trainSettings"
+              label-position="left"
+              label-width="130px"
+            >
+              <el-form-item label="Train Mode:" style="font-weight: bold">
+                <el-radio v-model="trainSettings.mode" label="tune">
+                  Tune Args
+                </el-radio>
+                <el-radio v-model="trainSettings.mode" label="run">
+                  Run & Save
+                </el-radio>
+              </el-form-item>
+              <el-form-item label="Select Model:" style="font-weight: bold">
+                <el-select v-model="trainSettings.model">
+                  <el-option
+                    v-for="item in modelList"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Select Dataset:" style="font-weight: bold">
+                <el-select v-model="trainSettings.dataset">
+                  <el-option
+                    v-for="item in datasetList"
+                    :key="item.name"
+                    :label="item.name"
+                    :value="item.name"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Args:" style="font-weight: bold">
+                <el-input
+                  v-model="trainSettings.args"
+                  type="textarea"
+                  resize="none"
+                  :autosize="argsAutosize"
+                  placeholder="JSON String of Args"
+                />
+              </el-form-item>
+              <el-form-item label="Notes:" style="font-weight: bold">
+                <el-input
+                  v-model="trainSettings.description"
+                  type="textarea"
+                  resize="none"
+                  :autosize="descAutosize"
+                  placeholder="Add Notes Here"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  :icon="icon"
+                  type="primary"
+                  style="font-weight: bold; font-size: 14px"
+                  @click="startTrain"
+                >
+                  Start
+                </el-button>
+              </el-form-item>
+            </el-form>
+          </el-card>
         </div>
       </el-col>
     </el-row>
@@ -83,7 +78,8 @@
 
 <script>
   // import VabMarkdownEditor from '@/plugins/vabMarkdownEditor'
-  import { trainSettings, startTraining } from '@/api/model'
+  import { startTraining } from '@/api/modelEnd'
+  import { getAllSettings } from '@/api/getSettings'
   export default {
     name: 'Training',
     components: {},
@@ -92,9 +88,9 @@
         datasetList: [],
         modelList: [],
         trainSettings: {
-          mode: '1',
-          model: '001',
-          dataset: '01',
+          mode: 'tune',
+          model: '',
+          dataset: '',
           args: '',
           description: '',
         },
@@ -113,9 +109,19 @@
     methods: {
       async fetchSettings() {
         this.settingsLoading = true
-        let { datasets, models } = await trainSettings()
+        let { datasets, models } = await getAllSettings()
         this.datasetList = datasets
         this.modelList = models
+        if (this.$route.query.model) {
+          this.trainSettings.model = this.$route.query.model
+        } else {
+          this.trainSettings.model = this.modelList[0]
+        }
+        if (this.$route.query.dataset) {
+          this.trainSettings.dataset = this.$route.query.dataset
+        } else {
+          this.trainSettings.dataset = this.datasetList[0].name
+        }
         this.settingsLoading = false
       },
       async startTrain() {
@@ -143,6 +149,7 @@
     margin: 0%;
     .train-settings {
       margin: 0% 10%;
+      width: 500px;
     }
   }
 </style>

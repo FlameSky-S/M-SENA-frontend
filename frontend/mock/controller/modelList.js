@@ -1,38 +1,45 @@
 const modelList = [
   {
-    id: '001',
     modelName: 'TFN',
+    paperTitle: 'Tensor Fusion Network for Multimodal Sentiment Analysis',
+    paperLink: 'https://arxiv.org/abs/1707.07250',
     description: 'This is the description for Tensor Fusion Network',
   },
   {
-    id: '002',
     modelName: 'TFN',
+    paperTitle: 'Tensor Fusion Network for Multimodal Sentiment Analysis',
+    paperLink: 'https://arxiv.org/abs/1707.07250',
     description: 'This is the description for Tensor Fusion Network',
   },
   {
-    id: '003',
     modelName: 'TFN',
+    paperTitle: 'Tensor Fusion Network for Multimodal Sentiment Analysis',
+    paperLink: 'https://arxiv.org/abs/1707.07250',
     description: 'This is the description for Tensor Fusion Network',
   },
   {
-    id: '004',
     modelName: 'TFN',
+    paperTitle: 'Tensor Fusion Network for Multimodal Sentiment Analysis',
+    paperLink: 'https://arxiv.org/abs/1707.07250',
     description: 'This is the description for Tensor Fusion Network',
   },
 
   {
-    id: '005',
     modelName: 'TFN',
+    paperTitle: 'Tensor Fusion Network for Multimodal Sentiment Analysis',
+    paperLink: 'https://arxiv.org/abs/1707.07250',
     description: 'This is the description for Tensor Fusion Network',
   },
   {
-    id: '006',
     modelName: 'TFN',
+    paperTitle: 'Tensor Fusion Network for Multimodal Sentiment Analysis',
+    paperLink: 'https://arxiv.org/abs/1707.07250',
     description: 'This is the description for Tensor Fusion Network',
   },
   {
-    id: '007',
     modelName: 'TFN',
+    paperTitle: 'Tensor Fusion Network for Multimodal Sentiment Analysis',
+    paperLink: 'https://arxiv.org/abs/1707.07250',
     description: 'This is the description for Tensor Fusion Network',
   },
 ]
@@ -54,6 +61,16 @@ module.exports = [
     url: '/model/delModel',
     type: 'post',
     response(config) {
+      return {
+        code: 200,
+        msg: 'success',
+      }
+    },
+  },
+  {
+    url: '/model/addModel',
+    type: 'get',
+    response() {
       return {
         code: 200,
         msg: 'success',
