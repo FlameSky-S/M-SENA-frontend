@@ -1,127 +1,122 @@
 <template>
   <div class="labeling-container">
-    <vab-query-form>
-      <vab-query-form-left-panel>
-        <el-form
-          ref="form"
-          :model="queryForm"
-          :inline="true"
-          @submit.native.prevent
-        >
-          <el-form-item>
-            <el-input v-model="queryForm.title" placeholder="Dataset Name" />
-          </el-form-item>
-          <el-form-item>
-            <el-button
-              icon="el-icon-search"
-              type="primary"
-              native-type="submit"
-              @click="handleQuery"
-            >
-              Search
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </vab-query-form-left-panel>
-      <vab-query-form-right-panel></vab-query-form-right-panel>
-    </vab-query-form>
-    <el-table
-      ref="datasetTable"
-      v-loading="listLoading"
-      :data="list"
-      :element-loading-text="elementLoadingText"
-      :height="fullHeight * 0.7"
-      stripe
-      @sort-change="tableSortChange"
-    >
-      <el-table-column
-        show-overflow-tooltip
-        label="Index"
-        width="auto"
-        align="center"
-      >
-        <template #default="scope">
-          {{ scope.$index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="datasetName"
-        label="Dataset"
-        width="auto"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="capacity"
-        label="Capacity"
-        width="auto"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        label="Language"
-        width="auto"
-        align="center"
-      >
-        <template #default="{ row }">
-          <el-tooltip
-            :content="row.language"
-            class="item"
-            effect="dark"
-            placement="top-start"
+    <h1>Model Results</h1>
+    <p class="tips"></p>
+    <el-row>
+      <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+        <div class="unlock-dataset-table">
+          <vab-query-form>
+            <vab-query-form-left-panel>
+              <el-form
+                ref="form"
+                :model="queryForm"
+                :inline="true"
+                @submit.native.prevent
+              >
+                <el-form-item>
+                  <el-input
+                    v-model="queryForm.title"
+                    placeholder="Dataset Name"
+                  />
+                </el-form-item>
+                <el-form-item>
+                  <el-button
+                    icon="el-icon-search"
+                    type="primary"
+                    native-type="submit"
+                    @click="handleQuery"
+                  >
+                    Search
+                  </el-button>
+                </el-form-item>
+              </el-form>
+            </vab-query-form-left-panel>
+            <vab-query-form-right-panel></vab-query-form-right-panel>
+          </vab-query-form>
+          <el-table
+            ref="datasetTable"
+            v-loading="listLoading"
+            :data="list"
+            :element-loading-text="elementLoadingText"
+            stripe
           >
-            <el-tag :type="row.language | statusFilter">
-              {{ row.language }}
-            </el-tag>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="unimodalLabel"
-        label="Uni-Label"
-        width="auto"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="labelType"
-        label="Label Type"
-        width="auto"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="description"
-        label="Description"
-        :width="descriptionWidth()"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        label="Operations"
-        :width="operationWidth()"
-        align="center"
-      >
-        <template #default="{ row }">
-          <el-button type="text" @click="startLabeling(row)">
-            Auto Labeling
-          </el-button>
-          <el-button type="text" @click="handleDelete(row)">Delete</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <el-pagination
-      :background="background"
-      :current-page="queryForm.pageNo"
-      :layout="layout"
-      :page-size="queryForm.pageSize"
-      :total="total"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
-    ></el-pagination>
+            <el-table-column
+              label="Id"
+              width="auto"
+              align="center"
+              min-width="60px"
+            >
+              <template #default="scope">
+                {{ scope.$index + 1 }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="datasetName"
+              label="Dataset"
+              width="auto"
+              min-width="80px"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="capacity"
+              label="Capacity"
+              width="auto"
+              min-width="80px"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="language"
+              label="Language"
+              width="auto"
+              min-width="90px"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="unimodalLabel"
+              label="Uni-Label"
+              width="auto"
+              min-width="100px"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="labelType"
+              label="Label Type"
+              width="auto"
+              min-width="110px"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="description"
+              label="Description"
+              :width="descriptionWidth()"
+              min-width="260px"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              label="Operations"
+              :width="operationWidth()"
+              align="center"
+              min-width="140px"
+            >
+              <template #default="{ row }">
+                <el-button type="text" @click="startLabeling(row)">
+                  Auto Labeling
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination
+            :background="background"
+            :current-page="queryForm.pageNo"
+            :layout="layout"
+            :page-size="queryForm.pageSize"
+            :total="total"
+            @current-change="handleCurrentChange"
+            @size-change="handleSizeChange"
+          ></el-pagination>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -130,19 +125,10 @@
   export default {
     name: 'Labeling',
     components: {},
-    filters: {
-      statusFilter(status) {
-        const statusMap = {
-          English: 'success',
-          Chinese: 'gray',
-        }
-        return statusMap[status]
-      },
-    },
     data() {
       return {
         fullWidth: document.documentElement.clientWidth,
-        fullHeight: document.documentElement.clientHeight,
+        // fullHeight: document.documentElement.clientHeight,
         list: [],
         listLoading: true,
         layout: 'total, sizes, prev, pager, next, jumper',
@@ -180,7 +166,6 @@
         }
       },
       handleQuery() {},
-      tableSortChange() {},
       handleSizeChange(val) {
         this.queryForm.pageSize = val
         this.fetchUnlockedData()
@@ -190,7 +175,6 @@
         this.fetchUnlockedData()
       },
       startLabeling(row) {},
-      handleDelete(row) {},
       async fetchUnlockedData() {
         this.listLoading = true
         const { data, totalCount } = await getUnlockedDatasetList(
@@ -206,7 +190,10 @@
   }
 </script>
 <style lang="scss" scoped>
-  // .labeling-container {
-
-  // }
+  .labeling-container {
+    margin: 0%;
+    .unlock-dataset-table {
+      margin: 0% 5%;
+    }
+  }
 </style>

@@ -1,12 +1,12 @@
 <template>
   <el-dropdown @command="handleCommand">
     <span class="avatar-dropdown">
-      <!--<el-avatar class="avatar" :src="avatar"></el-avatar>-->
-      <img class="avatar" :src="avatar" alt="" />
-      <div class="base-repo">
-        repo
+      <el-avatar class="avatar" :src="avatar"></el-avatar>
+      <!-- <img class="avatar" :src="avatar" alt="" /> -->
+
+      <!-- <div class="base-repo">
         <i class="el-icon-arrow-down el-icon--right"></i>
-      </div>
+      </div> -->
     </span>
 
     <el-dropdown-menu slot="dropdown">
@@ -24,7 +24,8 @@
     name: 'Avatar',
     data() {
       return {
-        avatar: 'https://i.gtimg.cn/club/item/face/img/2/15922_100.gif',
+        avatar:
+          'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2331027602,2365508232&fm=26&gp=0.jpg',
       }
     },
     methods: {
@@ -50,13 +51,6 @@
     justify-items: center;
     height: 50px;
     padding: 0;
-
-    .avatar {
-      width: 40px;
-      height: 40px;
-      cursor: pointer;
-      border-radius: 50%;
-    }
 
     .base-repo {
       position: relative;
