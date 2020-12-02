@@ -45,7 +45,7 @@
         <div class="detail-info-operation">
           <h2 class="detail-info-operation-header">Operations</h2>
           <div class="operation-item">
-            <el-button type="primary" class="operation-button" round>
+            <el-button type="primary" class="operation-button">
               {{ lockOperation }}
             </el-button>
           </div>
@@ -53,7 +53,6 @@
             <el-button
               type="success"
               class="operation-button"
-              round
               :disabled="disabledButton"
             >
               Import
@@ -63,7 +62,6 @@
             <el-button
               type="info"
               class="operation-button"
-              round
               :disabled="disabledButton"
             >
               Rename
@@ -73,7 +71,6 @@
             <el-button
               type="danger"
               class="operation-button"
-              round
               :disabled="disabledButton"
             >
               Delete
@@ -89,7 +86,6 @@
       :data="datasetDetails.instanceList"
       :element-loading-text="elementLoadingText"
       style="width: 100%"
-      :height="height"
       @selection-change="setSelectRows"
       @sort-change="tableSortChange"
     >
@@ -342,9 +338,6 @@
       }
     },
     computed: {
-      height() {
-        return this.$baseTableHeight()
-      },
       lockOperation() {
         return this.datasetDetails.detailInfo.locked === 'locked'
           ? 'UnLock'

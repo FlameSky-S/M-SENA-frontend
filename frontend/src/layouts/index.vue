@@ -83,7 +83,7 @@
       },
     },
     created() {
-      let temp_response = doTest()
+      // let temp_response = doTest()
       // console.log(temp_response)
     },
     beforeMount() {
