@@ -6,6 +6,8 @@ const datasetMetaData = {
   modalities: '{T, A, V}',
   labelType: 'Classification',
   language: 'English',
+  description:
+    'The Multimodal Corpus of Sentiment Intensity (CMU-MOSI) dataset is a collection of 2199 opinion video clips.',
   unimodalLabel: false,
 }
 
