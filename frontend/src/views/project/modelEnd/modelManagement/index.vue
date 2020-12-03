@@ -48,7 +48,7 @@
             ></el-table-column>
             <el-table-column
               label="Model Name"
-              prop="modelName"
+              prop="model_name"
               align="center"
               min-width="120"
             ></el-table-column>
@@ -59,11 +59,11 @@
             >
               <template slot-scope="scope">
                 <a
-                  :href="scope.row.paperLink"
+                  :href="scope.row.paper_url"
                   class="paper-title"
                   target="_blank"
                 >
-                  {{ scope.row.paperTitle }}
+                  {{ scope.row.paper_name }}
                 </a>
               </template>
             </el-table-column>
@@ -145,6 +145,8 @@
       async fetchModelList() {
         this.modelLoading = true
         let { modelList, totalCount } = await getModelList(this.queryForm)
+        // let testForm = 'pageNo=1&pageSize=10'
+        // let { modelList, totalCount } = await getModelList(this.testForm)
         // console.log(modelList)
         this.modelList = modelList
         this.total = totalCount
@@ -157,18 +159,19 @@
             message: 'Model dir rescanned',
             type: 'success',
           })
+          this.fetchModelList()
         }
       },
       viewResults(row) {
         this.$router.push({
           path: '/model/modelResults',
-          query: { model: row.modelName },
+          query: { model: row.model_name },
         })
       },
       trainModel(row) {
         this.$router.push({
           path: '/model/modelTraining',
-          query: { model: row.modelName },
+          query: { model: row.model_name },
         })
       },
       // editModel(row) {},
@@ -182,7 +185,7 @@
             h(
               'span',
               { style: 'color: teal; font-weight: 700' },
-              row.modelName
+              row.model_name
             ),
           ])
         )
@@ -197,7 +200,7 @@
           confirmButtonClass: 'el-button--danger',
         })
           .then(async () => {
-            let { msg } = await delModel({ model: row.modelName })
+            let { msg } = await delModel({ model: row.model_name })
             if (msg == 'success') {
               this.$message({
                 message: 'Successfully Deleted Model',

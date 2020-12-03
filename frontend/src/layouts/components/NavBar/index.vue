@@ -5,7 +5,7 @@
         <div class="left-panel">
           <i
             :class="collapse ? 'el-icon-s-unfold' : 'el-icon-s-fold'"
-            :title="collapse ? '展开' : '收起'"
+            :title="collapse ? 'Expand' : 'Fold'"
             class="fold-unfold"
             @click="handleCollapse"
           ></i>
@@ -17,7 +17,7 @@
           <full-screen-bar @refresh="refreshRoute"></full-screen-bar>
           <theme-bar class="hidden-xs-only"></theme-bar>
           <vab-icon
-            title="重载所有路由"
+            title="Reload Routes"
             :pulse="pulse"
             :icon="['fas', 'redo']"
             @click="refreshRoute"

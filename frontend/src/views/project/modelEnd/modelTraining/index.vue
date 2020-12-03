@@ -13,15 +13,18 @@
               label-width="130px"
             >
               <el-form-item label="Train Mode:" style="font-weight: bold">
-                <el-radio v-model="trainSettings.mode" label="tune">
-                  Tune Args
+                <el-radio v-model="trainSettings.mode" label="Tune">
+                  Tune
                 </el-radio>
-                <el-radio v-model="trainSettings.mode" label="run">
-                  Run & Save
+                <el-radio v-model="trainSettings.mode" label="Normal">
+                  Normal
                 </el-radio>
               </el-form-item>
               <el-form-item label="Select Model:" style="font-weight: bold">
-                <el-select v-model="trainSettings.model">
+                <el-select
+                  v-model="trainSettings.model"
+                  @change="onSettingsChange"
+                >
                   <el-option
                     v-for="item in modelList"
                     :key="item"
@@ -31,7 +34,10 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="Select Dataset:" style="font-weight: bold">
-                <el-select v-model="trainSettings.dataset">
+                <el-select
+                  v-model="trainSettings.dataset"
+                  @change="onSettingsChange"
+                >
                   <el-option
                     v-for="item in datasetList"
                     :key="item.name"
@@ -42,7 +48,7 @@
               </el-form-item>
               <el-form-item label="Args:" style="font-weight: bold">
                 <el-input
-                  v-model="trainSettings.args"
+                  v-model="argsDisplay"
                   type="textarea"
                   resize="none"
                   :autosize="argsAutosize"
@@ -78,7 +84,7 @@
 
 <script>
   // import VabMarkdownEditor from '@/plugins/vabMarkdownEditor'
-  import { startTraining } from '@/api/modelEnd'
+  import { startTraining, getArgs } from '@/api/modelEnd'
   import { getAllSettings } from '@/api/getSettings'
   export default {
     name: 'Training',
@@ -88,13 +94,14 @@
         datasetList: [],
         modelList: [],
         trainSettings: {
-          mode: 'tune',
+          mode: 'Tune',
           model: '',
           dataset: '',
           args: '',
           description: '',
         },
-        argsAutosize: { minRows: 10, maxRows: 12 },
+        argsDisplay: '',
+        argsAutosize: { minRows: 10, maxRows: 20 },
         descAutosize: { minRows: 3, maxRows: 5 },
         settingsLoading: true,
         icon: 'el-icon-check',
@@ -122,13 +129,21 @@
         } else {
           this.trainSettings.dataset = this.datasetList[0].name
         }
+        this.onSettingsChange()
         this.settingsLoading = false
+      },
+      async onSettingsChange() {
+        let model = this.trainSettings.model
+        let query = { model: model }
+        let { args } = await getArgs(query)
+        this.trainSettings.args = args
+        this.argsDisplay = JSON.stringify(JSON.parse(args), null, '\t')
       },
       async startTrain() {
         this.icon = 'el-icon-loading'
-        let { result } = await startTraining(this.trainSettings)
+        let { msg } = await startTraining(this.trainSettings)
         this.icon = 'el-icon-check'
-        if (result == true) {
+        if (msg == 'success') {
           this.$message({
             message: 'Training Started',
             type: 'success',
