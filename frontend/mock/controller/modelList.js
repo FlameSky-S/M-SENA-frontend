@@ -46,7 +46,7 @@ const modelList = [
 
 module.exports = [
   {
-    url: '/model/modelList',
+    url: '/modelEnd/modelList',
     type: 'post',
     response(config) {
       return {
@@ -58,7 +58,7 @@ module.exports = [
     },
   },
   {
-    url: '/model/delModel',
+    url: '/modelEnd/delModel',
     type: 'post',
     response(config) {
       return {
@@ -68,7 +68,7 @@ module.exports = [
     },
   },
   {
-    url: '/model/addModel',
+    url: '/modelEnd/scanModel',
     type: 'get',
     response() {
       return {

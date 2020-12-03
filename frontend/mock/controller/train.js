@@ -1,6 +1,6 @@
 module.exports = [
   {
-    url: '/model/startTraining',
+    url: '/modelEnd/startTraining',
     type: 'post',
     response(config) {
       return {

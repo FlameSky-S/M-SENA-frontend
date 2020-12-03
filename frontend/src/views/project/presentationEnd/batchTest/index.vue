@@ -91,11 +91,40 @@
             border
           >
             <el-table-column
-              v-for="(item, index) in testHeader"
-              :key="index"
-              :prop="item.prop"
-              :label="item.label"
+              label="Model"
+              prop="model"
               align="center"
+              min-width="80"
+            ></el-table-column>
+            <el-table-column
+              label="Acc"
+              prop="acc"
+              align="center"
+              min-width="80"
+            ></el-table-column>
+            <el-table-column
+              label="F1"
+              prop="f1"
+              align="center"
+              min-width="80"
+            ></el-table-column>
+            <el-table-column
+              label="MAE"
+              prop="mae"
+              align="center"
+              min-width="80"
+            ></el-table-column>
+            <el-table-column
+              label="Corr"
+              prop="corr"
+              align="center"
+              min-width="80"
+            ></el-table-column>
+            <el-table-column
+              label="Loss"
+              prop="loss"
+              align="center"
+              min-width="80"
             ></el-table-column>
           </el-table>
           <p class="test-info-footer" style="text-align: right">{{ footer }}</p>
@@ -241,8 +270,7 @@
       },
       async fetchResults() {
         this.resultLoading = true
-        let { header, result } = await batchResults(this.testSettings)
-        this.testHeader = header
+        let { result } = await batchResults(this.testSettings)
         this.testResults = result
         this.header =
           'Test ' +
@@ -253,10 +281,7 @@
           this.testSettings.mode +
           ' set'
         if (this.testSettings.useStored === 'True') {
-          this.footer =
-            'Note: Used history results except for ' +
-            this.testSettings.primary +
-            '. '
+          this.footer = 'Note: Used history results when possible. '
         } else {
           this.footer = ''
         }

@@ -8,37 +8,31 @@
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <div class="model-table">
           <vab-query-form>
-            <vab-query-form-left-panel>
-              <el-form
-                ref="form"
-                :model="queryForm"
-                :inline="true"
-                style="margin-right: 15px"
-              >
-                <el-form-item>
-                  <el-input
-                    v-model="queryForm.model"
-                    placeholder="Model Name"
-                  />
-                </el-form-item>
-                <el-form-item>
-                  <el-button
-                    icon="el-icon-search"
-                    type="primary"
-                    @click="searchModel"
-                  >
-                    Search
-                  </el-button>
-                </el-form-item>
-              </el-form>
-              <el-button
-                icon="el-icon-refresh-left"
-                type="primary"
-                @click="addModel"
-              >
-                Rescan
-              </el-button>
-            </vab-query-form-left-panel>
+            <!-- <vab-query-form-left-panel> -->
+            <el-form ref="form" :model="queryForm" :inline="true">
+              <el-form-item>
+                <el-input v-model="queryForm.model" placeholder="Model Name" />
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  icon="el-icon-search"
+                  type="primary"
+                  @click="searchModel"
+                >
+                  Search
+                </el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  icon="el-icon-refresh-left"
+                  type="primary"
+                  @click="scanModel"
+                >
+                  Rescan
+                </el-button>
+              </el-form-item>
+            </el-form>
+            <!-- </vab-query-form-left-panel> -->
           </vab-query-form>
 
           <el-table
@@ -110,7 +104,7 @@
 </template>
 
 <script>
-  import { getModelList, delModel, addModel } from '@/api/modelEnd'
+  import { getModelList, delModel, scanModel } from '@/api/modelEnd'
   export default {
     name: 'ModelManagement',
     components: {},
@@ -156,8 +150,8 @@
         this.total = totalCount
         this.modelLoading = false
       },
-      async addModel() {
-        let { msg } = await addModel()
+      async scanModel() {
+        let { msg } = await scanModel()
         if (msg == 'success') {
           this.$message({
             message: 'Model dir rescanned',
@@ -193,7 +187,6 @@
           ])
         )
         msg.push(h('p', null, 'Are you sure?'))
-
         this.$msgbox({
           title: 'Warning',
           message: h('div', null, msg),
@@ -204,7 +197,7 @@
           confirmButtonClass: 'el-button--danger',
         })
           .then(async () => {
-            let { msg } = await delModel(row.modelName)
+            let { msg } = await delModel({ model: row.modelName })
             if (msg == 'success') {
               this.$message({
                 message: 'Successfully Deleted Model',

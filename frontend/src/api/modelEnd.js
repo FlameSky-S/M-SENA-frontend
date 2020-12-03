@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getModelList(data) {
   return request({
-    url: '/model/modelList',
+    url: '/modelEnd/modelList',
     method: 'post',
     data,
   })
@@ -10,22 +10,38 @@ export function getModelList(data) {
 
 export function delModel(data) {
   return request({
-    url: '/model/delModel',
+    url: '/modelEnd/delModel',
     method: 'post',
     data,
   })
 }
 
-export function addModel() {
+export function scanModel() {
   return request({
-    url: '/model/addModel',
+    url: '/modelEnd/scanModel',
     method: 'get',
   })
 }
 
-export function getTrainResults(data) {
+export function getResults(data) {
   return request({
-    url: '/model/trainResults',
+    url: '/modelEnd/getResults',
+    method: 'post',
+    data,
+  })
+}
+
+export function setDefaultParams(data) {
+  return request({
+    url: '/modelEnd/setDefaultParams',
+    method: 'post',
+    data,
+  })
+}
+
+export function delResult(data) {
+  return request({
+    url: '/modelEnd/delResult',
     method: 'post',
     data,
   })
@@ -33,7 +49,7 @@ export function getTrainResults(data) {
 
 export function startTraining(data) {
   return request({
-    url: '/model/startTraining',
+    url: '/modelEnd/startTraining',
     method: 'post',
     data,
   })
