@@ -1,22 +1,47 @@
 const resultList = []
 
-resultset = {
-  id: '00001',
-  model: 'TFN',
-  dataset: 'CH-SIMS',
-  mode: 'tune',
-  date: '2020-09-30 14:32:27',
-  description:
-    'This is the description of the train result with TFN on CH-SIMS',
+resultset1 = {
+  result_id: '00001',
+  model_name: 'TFN',
+  dataset_name: 'CH-SIMS',
+  data_mode: 'train',
+  is_tuning: 'normal',
+  created_at: '2020-09-30 14:32:27',
+  accuracy: '80.66',
+  f1: '81.62',
+  mae: '42.52',
+  corr: '61.16',
+  loss_value: '0.00215',
+  description: 'Notes TFN CH-SIMS',
+  args: '{"x1": "1", "x2": "2", "x3": "3"}',
 }
 
-for (let i = 1; i < 100; ++i) {
-  resultList.push(resultset)
+resultset2 = {
+  result_id: '00002',
+  model_name: 'MFN',
+  dataset_name: 'MOSEI',
+  data_mode: 'valid',
+  is_tuning: 'tune',
+  created_at: '2020-09-30 14:32:27',
+  accuracy: '60',
+  f1: '81.62',
+  mae: '42.52',
+  corr: '61.16',
+  loss_value: '0.03215',
+  description: 'Notes MFN MOSEI',
+  args: '{"x1": "1", "x2": "2", "x3": "3"}',
+}
+
+for (let i = 1; i < 20; ++i) {
+  resultList.push(resultset1)
+}
+for (let i = 1; i < 20; ++i) {
+  resultList.push(resultset2)
 }
 
 module.exports = [
   {
-    url: '/model/trainResults',
+    url: '/modelEnd/getResults',
     type: 'post',
     response(config) {
       let { model, dataset, mode, pageNo, pageSize } = config.body
@@ -30,6 +55,26 @@ module.exports = [
         msg: 'success',
         results: mockResultList,
         totalCount: total,
+      }
+    },
+  },
+  {
+    url: '/modelEnd/setDefaultParams',
+    type: 'post',
+    response(config) {
+      return {
+        code: 200,
+        msg: 'success',
+      }
+    },
+  },
+  {
+    url: '/modelEnd/delResult',
+    type: 'post',
+    response(config) {
+      return {
+        code: 200,
+        msg: 'success',
       }
     },
   },

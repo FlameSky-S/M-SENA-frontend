@@ -2,7 +2,7 @@
  * @description 导出自定义配置
  **/
 const config = {
-  layout: 'horizontal',
+  layout: 'vertical',
   tabsbar: false,
 }
 module.exports = config

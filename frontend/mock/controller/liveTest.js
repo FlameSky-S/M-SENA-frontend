@@ -1,30 +1,3 @@
-const models = [
-  {
-    value: '001',
-    label: 'TFN',
-  },
-  {
-    value: '002',
-    label: 'LMF',
-  },
-  {
-    value: '003',
-    label: 'MFN',
-  },
-  {
-    value: '004',
-    label: 'MulT',
-  },
-  {
-    value: '005',
-    label: 'LF_DNN',
-  },
-  {
-    value: '006',
-    label: 'EF_LSTM',
-  },
-]
-
 const testResults = [
   {
     model: 'TFN',
@@ -66,17 +39,6 @@ const testResults = [
 const transcript = 'This is the transcript of the recorded video.'
 
 module.exports = [
-  {
-    url: '/presentationEnd/liveSettings',
-    type: 'get',
-    response() {
-      return {
-        code: 200,
-        msg: 'success',
-        models: models,
-      }
-    },
-  },
   {
     url: '/presentationEnd/liveResults',
     type: 'post',
