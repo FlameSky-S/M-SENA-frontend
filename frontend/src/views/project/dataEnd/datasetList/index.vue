@@ -1,6 +1,6 @@
 <template>
   <div class="datasetList-container">
-    <h1>Model Results</h1>
+    <h1>Dataset Management</h1>
     <p class="tips"></p>
     <el-row>
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
@@ -18,7 +18,6 @@
             :data="list"
             :element-loading-text="elementLoadingText"
             stripe
-            @row-dblclick="showDetails"
           >
             <el-table-column label="Id" min-width="60" align="center">
               <template #default="scope">
@@ -39,16 +38,9 @@
               min-width="80px"
             >
               <template #default="{ row }">
-                <el-tooltip
-                  :content="row.status"
-                  class="item"
-                  effect="dark"
-                  placement="top-start"
-                >
-                  <el-tag :type="row.status | lockedFilter">
-                    {{ row.status }}
-                  </el-tag>
-                </el-tooltip>
+                <el-tag :type="row.status | lockedFilter">
+                  {{ row.status }}
+                </el-tag>
               </template>
             </el-table-column>
             <el-table-column

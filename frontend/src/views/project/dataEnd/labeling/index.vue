@@ -174,7 +174,14 @@
         this.queryForm.pageNo = val
         this.fetchUnlockedData()
       },
-      startLabeling(row) {},
+      startLabeling(row) {
+        this.$router.push({
+          path: '/data/labelingDetail',
+          query: {
+            dataset: row.datasetName,
+          },
+        })
+      },
       async fetchUnlockedData() {
         this.listLoading = true
         const { data, totalCount } = await getUnlockedDatasetList(

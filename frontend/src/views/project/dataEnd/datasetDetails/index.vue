@@ -1,287 +1,218 @@
 <template>
   <div class="datasetDetails-container">
-    <el-row class="top-info">
-      <el-col :span="8">
-        <div class="detail-info-container">
-          <h2 class="detail-info-header">Detail Info</h2>
-          <div class="detail-info-item">
-            <em style="font-weight: 700">Dataset Name:</em>
-            {{ datasetDetails.detailInfo.datasetName }}
+    <h1>Dataset Details</h1>
+    <p class="tips"></p>
+    <el-row :gutter="120">
+      <div class="top-row">
+        <el-col :xs="24" :sm="24" :md="24" :lg="14" :xl="15">
+          <h2>{{ queryForm.datasetName }} Dataset</h2>
+          <el-row>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form
+                ref="form"
+                :model="datasetDetails.detailInfo"
+                label-width="160px"
+              >
+                <el-form-item label="Dataset:">
+                  <el-input
+                    v-model="datasetDetails.detailInfo.datasetName"
+                    style="min-width: 120px"
+                    disabled
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="Labeled Ins / Total Ins:">
+                  <el-input
+                    v-model="labeledFraction"
+                    style="min-width: 120px"
+                    disabled
+                  ></el-input>
+                </el-form-item>
+              </el-form>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form
+                ref="form"
+                :model="datasetDetails.detailInfo"
+                label-width="120px"
+              >
+                <el-form-item label="Status:">
+                  <el-input
+                    v-model="datasetDetails.detailInfo.locked"
+                    style="min-width: 120px"
+                    disabled
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="Language:">
+                  <el-input
+                    v-model="datasetDetails.detailInfo.language"
+                    style="min-width: 120px"
+                    disabled
+                  ></el-input>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+              <el-form label-width="160px">
+                <el-form-item label="Dataset Description:">
+                  <el-input
+                    v-model="datasetDetails.detailInfo.description"
+                    style="min-width: 320px"
+                    type="textarea"
+                    :rows="3"
+                    disabled
+                  ></el-input>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+        </el-col>
+
+        <!-- <el-divider direction="vertical" class="top-right-divider"></el-divider> -->
+        <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="9">
+          <div class="detail-info-operation">
+            <h2>Operations</h2>
+            <div class="operation-item">
+              <el-button type="primary" class="operation-button">
+                {{ lockOperation }}
+              </el-button>
+            </div>
+            <div class="operation-item">
+              <el-button
+                type="success"
+                class="operation-button"
+                :disabled="disabledButton"
+              >
+                Import
+              </el-button>
+            </div>
+            <div class="operation-item">
+              <el-button
+                type="info"
+                class="operation-button"
+                :disabled="disabledButton"
+              >
+                Rename
+              </el-button>
+            </div>
+            <div class="operation-item">
+              <el-button
+                type="danger"
+                class="operation-button"
+                :disabled="disabledButton"
+              >
+                Delete
+              </el-button>
+            </div>
           </div>
-          <div class="detail-info-item">
-            <em style="font-weight: 700">Modalities:</em>
-            {{ datasetDetails.detailInfo.modalities }}
-          </div>
-          <div class="detail-info-item">
-            <em style="font-weight: 700">Labeled / Total Data:</em>
-            {{ labeledFraction }}
-          </div>
-          <div class="detail-info-item">
-            <em style="font-weight: 700">Label Type:</em>
-            {{ datasetDetails.detailInfo.labelType }}
-          </div>
-          <div class="detail-info-item">
-            <em style="font-weight: 700">Language:</em>
-            {{ datasetDetails.detailInfo.language }}
-          </div>
-          <div class="detail-info-item">
-            <em style="font-weight: 700">Unimodal labels:</em>
-            {{ datasetDetails.detailInfo.unimodalLabel }}
-          </div>
-        </div>
-      </el-col>
-      <el-divider direction="vertical" class="top-left-divider"></el-divider>
-      <el-col :span="8">
-        <div class="chart-container">
-          <el-image
-            class="detail-chart"
-            :preview-src-list="datasetDetails.modelImg"
-            src="https://i.picsum.photos/id/703/200/200.jpg?hmac=6zWxIBRmIf2e0jZTqvKBIwrc7wm-dPkvGky4go6Yyvg"
-          ></el-image>
-        </div>
-      </el-col>
-      <el-divider direction="vertical" class="top-right-divider"></el-divider>
-      <el-col :span="8">
-        <div class="detail-info-operation">
-          <h2 class="detail-info-operation-header">Operations</h2>
-          <div class="operation-item">
-            <el-button type="primary" class="operation-button">
-              {{ lockOperation }}
-            </el-button>
-          </div>
-          <div class="operation-item">
-            <el-button
-              type="success"
-              class="operation-button"
-              :disabled="disabledButton"
-            >
-              Import
-            </el-button>
-          </div>
-          <div class="operation-item">
-            <el-button
-              type="info"
-              class="operation-button"
-              :disabled="disabledButton"
-            >
-              Rename
-            </el-button>
-          </div>
-          <div class="operation-item">
-            <el-button
-              type="danger"
-              class="operation-button"
-              :disabled="disabledButton"
-            >
-              Delete
-            </el-button>
-          </div>
-        </div>
-      </el-col>
+        </el-col>
+      </div>
     </el-row>
-    <el-divider direction="horizontal"></el-divider>
-    <el-table
-      ref="tableSort"
-      v-loading="listLoading"
-      :data="datasetDetails.instanceList"
-      :element-loading-text="elementLoadingText"
-      style="width: 100%"
-      @selection-change="setSelectRows"
-      @sort-change="tableSortChange"
-    >
-      <el-table-column
-        fixed
-        show-overflow-tooltip
-        type="selection"
-        width="80"
-      ></el-table-column>
-      <el-table-column
-        fixed
-        show-overflow-tooltip
-        label="Video ID"
-        prop="videoID"
-        width="200"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        fixed
-        show-overflow-tooltip
-        label="Clip ID"
-        prop="clipID"
-        width="200"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        label="Preface"
-        width="auto"
-        align="center"
-      >
-        <template #default="{ row }">
-          <el-image
-            :preview-src-list="prefaceList"
-            :src="row.preface"
-          ></el-image>
-        </template>
-      </el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        label="M-Label"
-        prop="multimodalLabel"
-        width="auto"
-        align="center"
-      ></el-table-column>
+    <!-- <el-divider direction="horizontal"></el-divider> -->
+    <el-row style="margin-top: 3%">
+      <div class="top-row">
+        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+          <el-table
+            ref="tableSort"
+            v-loading="listLoading"
+            :data="datasetDetails.instanceList"
+            :element-loading-text="elementLoadingText"
+            style="width: 100%"
+          >
+            <el-table-column
+              fixed
+              show-overflow-tooltip
+              label="Video ID"
+              prop="videoID"
+              width="200"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              fixed
+              show-overflow-tooltip
+              label="Clip ID"
+              prop="clipID"
+              width="200"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              show-overflow-tooltip
+              label="Preface"
+              width="auto"
+              align="center"
+            >
+              <template #default="{ row }">
+                <el-image
+                  :preview-src-list="prefaceList"
+                  :src="row.preface"
+                ></el-image>
+              </template>
+            </el-table-column>
+            <el-table-column
+              show-overflow-tooltip
+              label="M-Label"
+              prop="multimodalLabel"
+              width="auto"
+              align="center"
+            ></el-table-column>
 
-      <el-table-column
-        show-overflow-tooltip
-        label="M-label-Type"
-        width="auto"
-        align="center"
-      >
-        <template #default="{ row }">
-          <el-tooltip
-            :content="row.multimodalLabelType"
-            class="item"
-            effect="dark"
-            placement="top-start"
-          >
-            <el-tag :type="row.multimodalLabelType | statusFilter">
-              {{ row.multimodalLabelType }}
-            </el-tag>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="showUnimodalColumn"
-        show-overflow-tooltip
-        label="T-Label"
-        prop="textLabel"
-        width="auto"
-        align="center"
-      ></el-table-column>
+            <el-table-column
+              show-overflow-tooltip
+              label="M-label-Type"
+              prop="multimodalLabelType"
+              width="auto"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              show-overflow-tooltip
+              label="Belonging"
+              prop="belonging"
+              width="auto"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              fixed="right"
+              show-overflow-tooltip
+              label="Operations"
+              width="auto"
+              align="center"
+            >
+              <template #default="{ row }">
+                <el-button type="text" @click="showPreview(row)">
+                  Preview
+                </el-button>
+                <el-button
+                  type="text"
+                  :disabled="disabledButton"
+                  @click="handleEdit(row)"
+                >
+                  Edit
+                </el-button>
+                <el-button
+                  type="text"
+                  :disabled="disabledButton"
+                  @click="handleDelete(row)"
+                >
+                  Delete
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination
+            :background="background"
+            :current-page="queryForm.pageNo"
+            :layout="layout"
+            :page-size="queryForm.pageSize"
+            :total="total"
+            @current-change="handleCurrentChange"
+            @size-change="handleSizeChange"
+          ></el-pagination>
+        </el-col>
+      </div>
+    </el-row>
 
-      <el-table-column
-        v-if="showUnimodalColumn"
-        show-overflow-tooltip
-        label="T-label-Type"
-        width="auto"
-        align="center"
-      >
-        <template #default="{ row }">
-          <el-tooltip
-            :content="row.textLabelType"
-            class="item"
-            effect="dark"
-            placement="top-start"
-          >
-            <el-tag :type="row.textLabelType | statusFilter">
-              {{ row.textLabelType }}
-            </el-tag>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="showUnimodalColumn"
-        show-overflow-tooltip
-        label="A-Label"
-        prop="audioLabel"
-        width="auto"
-        align="center"
-      ></el-table-column>
-
-      <el-table-column
-        v-if="showUnimodalColumn"
-        show-overflow-tooltip
-        label="A-label-Type"
-        width="auto"
-        align="center"
-      >
-        <template #default="{ row }">
-          <el-tooltip
-            :content="row.audioLabelType"
-            class="item"
-            effect="dark"
-            placement="top-start"
-          >
-            <el-tag :type="row.audioLabelType | statusFilter">
-              {{ row.audioLabelType }}
-            </el-tag>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="showUnimodalColumn"
-        show-overflow-tooltip
-        label="V-Label"
-        prop="visionLabel"
-        width="auto"
-        align="center"
-      ></el-table-column>
-
-      <el-table-column
-        v-if="showUnimodalColumn"
-        show-overflow-tooltip
-        label="V-label-Type"
-        width="auto"
-        align="center"
-      >
-        <template #default="{ row }">
-          <el-tooltip
-            :content="row.visionLabelType"
-            class="item"
-            effect="dark"
-            placement="top-start"
-          >
-            <el-tag :type="row.visionLabelType | statusFilter">
-              {{ row.visionLabelType }}
-            </el-tag>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        show-overflow-tooltip
-        label="Belonging"
-        prop="belonging"
-        width="auto"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        fixed="right"
-        show-overflow-tooltip
-        label="Operations"
-        width="auto"
-        align="center"
-      >
-        <template #default="{ row }">
-          <el-button type="text" @click="showPreview(row)">Preview</el-button>
-          <el-button
-            type="text"
-            :disabled="disabledButton"
-            @click="handleEdit(row)"
-          >
-            Edit
-          </el-button>
-          <el-button
-            type="text"
-            :disabled="disabledButton"
-            @click="handleDelete(row)"
-          >
-            Delete
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      :background="background"
-      :current-page="queryForm.pageNo"
-      :layout="layout"
-      :page-size="queryForm.pageSize"
-      :total="total"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
-    ></el-pagination>
-    <preview ref="preview" class="video-preview-dialogue"></preview>
+    <preview ref="preview"></preview>
   </div>
 </template>
 
@@ -312,12 +243,11 @@
         background: true,
         selectRows: '',
         prefaceList: [],
-        elementLoadingText: '正在加载...',
+        elementLoadingText: 'Loading Elements...',
         queryForm: {
           datasetName: null,
           pageNo: 1,
           pageSize: 20,
-          title: '',
         },
         datasetDetails: {
           detailInfo: {
@@ -329,6 +259,7 @@
             labelType: null,
             language: null,
             unimodalLabel: null,
+            description: null,
           },
           modelImg: [
             'https://i.picsum.photos/id/703/200/200.jpg?hmac=6zWxIBRmIf2e0jZTqvKBIwrc7wm-dPkvGky4go6Yyvg',
@@ -361,7 +292,6 @@
     },
     created() {
       this.queryForm.datasetName = this.$route.query.dataset
-      // console.log(this.queryForm.datasetName)
       this.fetchDetails()
       this.fetchMetadata()
     },
@@ -427,21 +357,7 @@
           // 设置最小宽度
           flexWidth = 80
         }
-        // if (flexWidth > 250) {
-        //   // 设置最大宽度
-        //   flexWidth = 250
-        // }
         return flexWidth + 'px'
-      },
-      tableSortChange() {
-        const prefaceList = []
-        this.$refs.tableSort.tableData.forEach((item, index) => {
-          prefaceList.push(item.img)
-        })
-        this.prefaceList = prefaceList
-      },
-      setSelectRows(val) {
-        this.selectRows = val
       },
       handleEdit() {},
       showPreview(row) {
@@ -476,10 +392,6 @@
         this.queryForm.pageNo = val
         this.fetchDetails()
       },
-      handleQuery() {
-        this.queryForm.pageNo = 1
-        this.fetchDetails()
-      },
       async fetchDetails() {
         this.listLoading = true
         // console.log(this.queryForm)
@@ -510,6 +422,7 @@
         this.datasetDetails.detailInfo.unimodalLabel = data.unimodalLabel
           ? 'Yes'
           : 'No'
+        this.datasetDetails.detailInfo.description = data.description
       },
     },
   }
@@ -517,39 +430,9 @@
 
 <style lang="scss" scoped>
   .datasetDetails-container {
-    .top-info {
-      height: 50%;
-      margin: 0%;
-      .top-left-divider {
-        position: absolute;
-        left: 33%;
-        height: 100%;
-      }
-      .top-right-divider {
-        position: absolute;
-        right: 33%;
-        height: 100%;
-      }
-      .detail-info-container {
-        display: inline;
-        .detail-info-header {
-          margin-left: 10%;
-        }
-        .detail-info-item {
-          margin: 5% 15%;
-        }
-      }
-      .chart-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        // display: table-cell;
-        width: 100%;
-        .detail-chart {
-          height: 60%;
-          margin-top: 10%;
-        }
-      }
+    margin: 0%;
+    .top-row {
+      margin: 0% 5%;
       .detail-info-operation {
         display: inline;
         .detail-info-operation-header {
