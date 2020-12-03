@@ -72,6 +72,16 @@ export const constantRoutes = [
           title: 'Dataset Labeling',
         },
       },
+      {
+        path: 'labelingDetail',
+        name: 'Labeling Process',
+        component: () =>
+          import('@/views/project/dataEnd/labelingProcess/index'),
+        meta: {
+          title: 'Dataset Labeling',
+        },
+        hidden: true,
+      },
     ],
   },
   {
@@ -166,14 +176,7 @@ export const constantRoutes = [
         component: () => import('@/views/project/Wiki/docs/index'),
         meta: {
           title: 'System Documents',
-        },
-      },
-      {
-        path: 'more',
-        name: 'More Info',
-        component: () => import('@/views/project/Wiki/more/index'),
-        meta: {
-          title: 'More Info',
+          icon: 'shopping-cart',
         },
       },
     ],
