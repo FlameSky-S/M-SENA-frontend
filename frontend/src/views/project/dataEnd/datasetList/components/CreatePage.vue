@@ -24,8 +24,7 @@
 </template>
 
 <script>
-  // import { doEdit } from '@/api/table'
-  import { createDataset } from '@/api/createDataset'
+  import { createDataset } from '@/api/datasetCurd'
   export default {
     name: 'CreatePage',
     data() {
@@ -62,17 +61,18 @@
       confirm() {
         this.$refs['form'].validate(async (valid) => {
           if (valid) {
-            console.log(this.form)
-            const { msg } = await createDataset(this.form)
+            // console.log(this.form)
+            this.dialogFormVisible = false
+            const { msg } = await createDataset({
+              datasetPath: this.form.datasetPath,
+            })
+
             this.$baseMessage(msg, 'success')
             this.$refs['form'].resetFields()
-            this.dialogFormVisible = false
+
             this.$emit('fetch-data')
-            console.log(this.$options.data().form)
             this.form = this.$options.data().form
           } else {
-            alert(this.form.datasetPath)
-            alert('fagoioahrgoarhg')
             return false
           }
         })

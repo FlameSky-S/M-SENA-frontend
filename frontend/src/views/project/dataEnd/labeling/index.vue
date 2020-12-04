@@ -1,38 +1,10 @@
 <template>
   <div class="labeling-container">
-    <h1>Model Results</h1>
+    <h1>Dataset Labeling</h1>
     <p class="tips"></p>
     <el-row>
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <div class="unlock-dataset-table">
-          <vab-query-form>
-            <vab-query-form-left-panel>
-              <el-form
-                ref="form"
-                :model="queryForm"
-                :inline="true"
-                @submit.native.prevent
-              >
-                <el-form-item>
-                  <el-input
-                    v-model="queryForm.title"
-                    placeholder="Dataset Name"
-                  />
-                </el-form-item>
-                <el-form-item>
-                  <el-button
-                    icon="el-icon-search"
-                    type="primary"
-                    native-type="submit"
-                    @click="handleQuery"
-                  >
-                    Search
-                  </el-button>
-                </el-form-item>
-              </el-form>
-            </vab-query-form-left-panel>
-            <vab-query-form-right-panel></vab-query-form-right-panel>
-          </vab-query-form>
           <el-table
             ref="datasetTable"
             v-loading="listLoading"
@@ -51,7 +23,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="datasetName"
+              prop="dataset_name"
               label="Dataset"
               width="auto"
               min-width="80px"
@@ -71,7 +43,7 @@
               min-width="90px"
               align="center"
             ></el-table-column>
-            <el-table-column
+            <!-- <el-table-column
               prop="unimodalLabel"
               label="Uni-Label"
               width="auto"
@@ -84,7 +56,7 @@
               width="auto"
               min-width="110px"
               align="center"
-            ></el-table-column>
+            ></el-table-column> -->
             <el-table-column
               prop="description"
               label="Description"
@@ -121,7 +93,7 @@
 </template>
 
 <script>
-  import { getUnlockedDatasetList } from '@/api/datasetList'
+  import { getDatasetList } from '@/api/datasetList'
   export default {
     name: 'Labeling',
     components: {},
@@ -138,7 +110,6 @@
         queryForm: {
           pageNo: 1,
           pageSize: 10,
-          title: '',
         },
       }
     },
@@ -149,18 +120,18 @@
     methods: {
       operationWidth() {
         if (this.fullWidth > 1500) {
-          return 240 + 'px'
+          return 260 + 'px'
         } else if (this.fullWidth > 1200) {
-          return 150 + 'px'
+          return 160 + 'px'
         } else {
           return 'auto'
         }
       },
       descriptionWidth() {
         if (this.fullWidth > 1500) {
-          return 640 + 'px'
+          return 700 + 'px'
         } else if (this.fullWidth > 1200) {
-          return 380 + 'px'
+          return 400 + 'px'
         } else {
           return 'auto'
         }
@@ -178,16 +149,19 @@
         this.$router.push({
           path: '/data/labelingDetail',
           query: {
-            dataset: row.datasetName,
+            dataset: row.dataset_name,
           },
         })
       },
       async fetchUnlockedData() {
         this.listLoading = true
-        const { data, totalCount } = await getUnlockedDatasetList(
-          this.queryForm
-        )
-        this.list = data
+        const { datasetList, totalCount } = await getDatasetList({
+          pageNo: this.queryForm.pageNo,
+          pageSize: this.queryForm.pageSize,
+          unlocked: true,
+        })
+
+        this.list = datasetList
         this.total = totalCount
         setTimeout(() => {
           this.listLoading = false

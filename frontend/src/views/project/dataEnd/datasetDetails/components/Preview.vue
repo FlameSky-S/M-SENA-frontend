@@ -75,23 +75,25 @@
     methods: {
       showPreview(row) {
         this.title = 'Preview Video Clips'
-        console.log(row)
 
-        // TODO : use getVideoInfoByID API to get the video Info.
+        this.fetchVideoUrl(row.sample_id)
 
         this.form.clipInfo.clipID = row.clipID
-        this.form.clipInfo.belonging = row.belonging
-        this.form.clipInfo.M_label = row.multimodalLabel
-        this.form.clipInfo.transcript =
-          'A course to build the SQL layer of a distributed database.'
+        this.form.clipInfo.belonging = row.data_mode
+        this.form.clipInfo.transcript = row.text
 
-        this.form.clipInfo.M_label_type = row.multimodalLabelType
+        this.form.clipInfo.M_label_type = row.label_value
 
         this.dialogFormVisible = true
       },
       close() {
         this.dialogFormVisible = false
         this.$emit('fetch-data')
+      },
+      async fetchVideoUrl(sample_id) {
+        const { data } = await getVideoInfoByID({ sample_id: sample_id })
+        this.form.videoconfig.url = data.video_url
+        // console.log(this.form.videoconfig.url)
       },
     },
   }

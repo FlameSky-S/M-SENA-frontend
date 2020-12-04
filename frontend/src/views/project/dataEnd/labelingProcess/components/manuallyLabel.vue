@@ -47,13 +47,6 @@
             <el-form-item v-if="editmode" label="Difficulty">
               <el-input v-model="form.clipInfo.difficulty" disabled></el-input>
             </el-form-item>
-            <!-- <el-form-item label="manuallyLabel">
-              <el-radio-group v-model="manuallyLabel" style="display: block">
-                <el-radio :label="1">Positive</el-radio>
-                <el-radio :label="0">Neutural</el-radio>
-                <el-radio :label="-1">Negative</el-radio>
-              </el-radio-group>
-            </el-form-item> -->
           </el-form>
         </el-col>
       </el-row>
@@ -94,7 +87,6 @@
     created() {},
     methods: {
       show(row) {
-        alert(row)
         if (row.sampleId) {
           this.editmode = true
         } else {

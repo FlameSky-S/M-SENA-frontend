@@ -74,7 +74,11 @@
           <div class="detail-info-operation">
             <h2>Operations</h2>
             <div class="operation-item">
-              <el-button type="primary" class="operation-button">
+              <el-button
+                type="primary"
+                class="operation-button"
+                @click="handleLockDataset"
+              >
                 {{ lockOperation }}
               </el-button>
             </div>
@@ -87,24 +91,26 @@
                 Import
               </el-button>
             </div>
-            <div class="operation-item">
+            <!-- <div class="operation-item">
               <el-button
                 type="info"
                 class="operation-button"
                 :disabled="disabledButton"
+                @click="handleRenameDataset"
               >
                 Rename
               </el-button>
-            </div>
-            <div class="operation-item">
+            </div> -->
+            <!-- <div class="operation-item">
               <el-button
                 type="danger"
                 class="operation-button"
                 :disabled="disabledButton"
+                @click="handleDeleteDataset"
               >
                 Delete
               </el-button>
-            </div>
+            </div> -->
           </div>
         </el-col>
       </div>
@@ -113,6 +119,31 @@
     <el-row style="margin-top: 3%">
       <div class="top-row">
         <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+          <vab-query-form>
+            <vab-query-form-left-panel>
+              <el-form
+                ref="form"
+                :model="searchForm"
+                :inline="true"
+                @submit.native.prevent
+              >
+                <el-form-item>
+                  <el-input v-model="searchForm.title" placeholder="SampleID" />
+                </el-form-item>
+                <el-form-item>
+                  <el-button
+                    icon="el-icon-search"
+                    type="primary"
+                    native-type="submit"
+                    @click="handleQuery"
+                  >
+                    Search
+                  </el-button>
+                </el-form-item>
+              </el-form>
+            </vab-query-form-left-panel>
+            <vab-query-form-right-panel></vab-query-form-right-panel>
+          </vab-query-form>
           <el-table
             ref="tableSort"
             v-loading="listLoading"
@@ -123,52 +154,50 @@
             <el-table-column
               fixed
               show-overflow-tooltip
+              label="Sample ID"
+              prop="sample_id"
+              min-width="100"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              fixed
+              show-overflow-tooltip
               label="Video ID"
-              prop="videoID"
-              width="200"
+              prop="video_id"
+              min-width="100"
               align="center"
             ></el-table-column>
             <el-table-column
               fixed
               show-overflow-tooltip
               label="Clip ID"
-              prop="clipID"
-              width="200"
+              prop="clip_id"
+              min-width="100"
               align="center"
             ></el-table-column>
             <el-table-column
               show-overflow-tooltip
-              label="Preface"
-              width="auto"
-              align="center"
-            >
-              <template #default="{ row }">
-                <el-image
-                  :preview-src-list="prefaceList"
-                  :src="row.preface"
-                ></el-image>
-              </template>
-            </el-table-column>
-            <el-table-column
-              show-overflow-tooltip
               label="M-Label"
-              prop="multimodalLabel"
+              prop="label_value"
               width="auto"
+              min-width="100px"
               align="center"
             ></el-table-column>
 
             <el-table-column
               show-overflow-tooltip
-              label="M-label-Type"
-              prop="multimodalLabelType"
+              label="Text"
+              prop="text"
               width="auto"
+              min-width="240px"
               align="center"
             ></el-table-column>
             <el-table-column
               show-overflow-tooltip
-              label="Belonging"
-              prop="belonging"
+              label="Data Mode"
+              prop="data_mode"
               width="auto"
+              min-width="100px"
               align="center"
             ></el-table-column>
             <el-table-column
@@ -176,6 +205,7 @@
               show-overflow-tooltip
               label="Operations"
               width="auto"
+              min-width="180px"
               align="center"
             >
               <template #default="{ row }">
@@ -218,6 +248,12 @@
 
 <script>
   import { getDetails, getMetaData } from '@/api/datasetDetail'
+  import {
+    renameDataset,
+    unlockDataset,
+    lockDataset,
+    deleteDataset,
+  } from '@/api/datasetCurd'
   import Preview from './components/Preview'
   export default {
     name: 'DatasetDetails',
@@ -242,12 +278,14 @@
         total: 0,
         background: true,
         selectRows: '',
-        prefaceList: [],
         elementLoadingText: 'Loading Elements...',
         queryForm: {
           datasetName: null,
           pageNo: 1,
           pageSize: 20,
+        },
+        searchForm: {
+          search_sid: null,
         },
         datasetDetails: {
           detailInfo: {
@@ -255,8 +293,6 @@
             locked: null,
             labeledCount: null,
             totalCount: null,
-            modalities: null,
-            labelType: null,
             language: null,
             unimodalLabel: null,
             description: null,
@@ -297,6 +333,21 @@
     },
     mounted() {},
     methods: {
+      handleLockDataset() {
+        if (this.datasetDetails.detailInfo.locked === 'locked') {
+          unlockDataset({ dataset_name: this.queryForm.datasetName })
+        } else {
+          lockDataset({ dataset_name: this.queryForm.datasetName })
+        }
+        setTimeout(() => {
+          this.fetchDetails()
+          this.fetchMetadata()
+        }, 100)
+      },
+      handleRenameDataset() {},
+      // handleDeleteDataset() {
+      //   deleteDataset({ datasetName: this.queryForm.datasetName })
+      // },
       flexColumnWidth(str, tableData, flag = 'max') {
         // str为该列的字段名(传字符串);tableData为该表格的数据源(传变量);
         // flag为可选值，可不传该参数,传参时可选'max'或'equal',默认为'max'
@@ -384,6 +435,7 @@
         //   }
         // }
       },
+      handleQuery(row) {},
       handleSizeChange(val) {
         this.queryForm.pageSize = val
         this.fetchDetails()
@@ -394,13 +446,12 @@
       },
       async fetchDetails() {
         this.listLoading = true
-        // console.log(this.queryForm)
-        const { data, totalCount } = await getDetails(this.queryForm)
-        this.datasetDetails.instanceList = data
-        const prefaceList = []
-        data.forEach((item, index) => {
-          prefaceList.push(item.img)
+        const { data, totalCount } = await getDetails({
+          datasetName: this.queryForm.datasetName,
+          pageNo: this.queryForm.pageNo,
+          pageSize: this.queryForm.pageSize,
         })
+        this.datasetDetails.instanceList = data
         this.total = totalCount
         setTimeout(() => {
           this.listLoading = false
@@ -410,18 +461,13 @@
         const { data } = await getMetaData({
           datasetName: this.queryForm.datasetName,
         })
-        this.datasetDetails.detailInfo.datasetName = data.datasetName
-        this.datasetDetails.detailInfo.locked = data.locked
+        this.datasetDetails.detailInfo.datasetName = data.dataset_name
+        this.datasetDetails.detailInfo.locked = data.is_locked
           ? 'locked'
           : 'unlocked'
         this.datasetDetails.detailInfo.labeledCount = data.labeledCount
         this.datasetDetails.detailInfo.totalCount = data.totalCount
-        this.datasetDetails.detailInfo.modalities = data.modalities
-        this.datasetDetails.detailInfo.labelType = data.labelType
         this.datasetDetails.detailInfo.language = data.language
-        this.datasetDetails.detailInfo.unimodalLabel = data.unimodalLabel
-          ? 'Yes'
-          : 'No'
         this.datasetDetails.detailInfo.description = data.description
       },
     },

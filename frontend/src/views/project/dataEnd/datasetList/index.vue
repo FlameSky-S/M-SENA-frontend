@@ -25,7 +25,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="datasetName"
+              prop="dataset_name"
               label="Dataset"
               align="center"
               width="auto"
@@ -58,20 +58,6 @@
               align="center"
             ></el-table-column>
             <el-table-column
-              prop="unimodalLabel"
-              label="Uni-Label"
-              width="auto"
-              align="center"
-              min-width="100px"
-            ></el-table-column>
-            <el-table-column
-              prop="labelType"
-              label="Label Type"
-              width="auto"
-              align="center"
-              min-width="110px"
-            ></el-table-column>
-            <el-table-column
               prop="description"
               label="Description"
               align="center"
@@ -88,6 +74,12 @@
                 <el-button type="text" @click="showDetails(row)">
                   Dataset Details
                 </el-button>
+                <el-button type="text" @click="handleDelete(row)">
+                  Delete
+                </el-button>
+                <el-button type="text" @click="handleLock(row)">
+                  {{ row.status === 'locked' ? 'unlock' : 'lock' }}
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -103,12 +95,13 @@
         </div>
       </el-col>
     </el-row>
-    <create-page ref="createPage"></create-page>
+    <create-page ref="createPage" @fetch-data="fetchData"></create-page>
   </div>
 </template>
 
 <script>
-  import { getDatasetList, deleteDataset } from '@/api/datasetList'
+  import { getDatasetList } from '@/api/datasetList'
+  import { deleteDataset, unlockDataset, lockDataset } from '@/api/datasetCurd'
   import CreatePage from './components/CreatePage'
   export default {
     name: 'DatasetList',
@@ -138,7 +131,6 @@
         queryForm: {
           pageNo: 1,
           pageSize: 10,
-          // title: '',
         },
       }
     },
@@ -163,7 +155,7 @@
       },
       tableWidth() {
         if (this.fullWidth > 1500) {
-          return 640 + 'px'
+          return 580 + 'px'
         } else if (this.fullWidth > 1200) {
           return 350 + 'px'
         } else {
@@ -171,13 +163,31 @@
         }
       },
       showDetails(row, column) {
-        // alert(row.datasetName)
         this.$router.push({
           path: '/data/datasetDetail',
           query: {
-            dataset: row.datasetName,
+            dataset: row.dataset_name,
           },
         })
+      },
+      handleDelete(row) {
+        ;(async () => {
+          await deleteDataset({ datasetName: row.dataset_name })
+          this.fetchData()
+        })()
+      },
+      handleLock(row) {
+        if (row.status === 'locked') {
+          ;(async () => {
+            await unlockDataset({ dataset_name: row.dataset_name })
+            this.fetchData()
+          })()
+        } else {
+          ;(async () => {
+            await lockDataset({ dataset_name: row.dataset_name })
+            this.fetchData()
+          })()
+        }
       },
       // TODO: to change here.
       handleAdd() {
@@ -199,12 +209,17 @@
       },
       async fetchData() {
         this.listLoading = true
-        const { data, totalCount } = await getDatasetList(this.queryForm)
-        this.list = data
+        const { datasetList, totalCount } = await getDatasetList({
+          pageNo: this.queryForm.pageNo,
+          pageSize: this.queryForm.pageSize,
+          unlocked: false,
+        })
+        this.list = datasetList
+        this.list.forEach((element) => {
+          element.status = element.is_locked ? 'locked' : 'unlocked'
+        })
         this.total = totalCount
-        setTimeout(() => {
-          this.listLoading = false
-        }, 500)
+        this.listLoading = false
       },
     },
   }

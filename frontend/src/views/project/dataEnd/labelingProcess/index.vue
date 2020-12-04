@@ -95,15 +95,40 @@
         </div>
       </el-col>
     </el-row>
-    <el-row>
+    <el-row style="margin-top: 2%">
       <el-col :span="24">
         <div class="video-list">
+          <vab-query-form>
+            <vab-query-form-left-panel>
+              <el-form
+                ref="form"
+                :model="searchForm"
+                :inline="true"
+                @submit.native.prevent
+              >
+                <el-form-item>
+                  <el-input v-model="searchForm.title" placeholder="SampleID" />
+                </el-form-item>
+                <el-form-item>
+                  <el-button
+                    icon="el-icon-search"
+                    type="primary"
+                    native-type="submit"
+                    @click="handleQuery"
+                  >
+                    Search
+                  </el-button>
+                </el-form-item>
+              </el-form>
+            </vab-query-form-left-panel>
+            <vab-query-form-right-panel></vab-query-form-right-panel>
+          </vab-query-form>
           <el-table
             ref="tableSort"
             v-loading="listLoading"
             :data="instanceList"
             :element-loading-text="elementLoadingText"
-            style="width: 100%; margin-top: 3%"
+            style="width: 100%"
           >
             <el-table-column
               fixed
@@ -173,11 +198,7 @@
 </template>
 
 <script>
-  import {
-    getDetails,
-    getLabelPageDetails,
-    getLabelMetaData,
-  } from '@/api/datasetDetail'
+  import { getDetails, getMetaData } from '@/api/datasetDetail'
   import { startActiveLearning } from '@/api/labeling'
   import ManuallyLabel from './components/manuallyLabel.vue'
   export default {
@@ -196,6 +217,9 @@
           medium: 300,
           easy: 150,
           labeled: 400,
+        },
+        searchForm: {
+          search_sid: null,
         },
         queryForm: {
           datasetName: null,
@@ -221,6 +245,7 @@
     },
     mounted() {},
     methods: {
+      handleQuery() {},
       manuallyLabel(row) {
         this.$refs['manuallyLabel'].show(row)
       },
@@ -246,7 +271,11 @@
       async fetchDetails() {
         this.listLoading = true
         // const { data, totalCount } = await getDetails(this.queryForm)
-        const { data, totalCount } = await getLabelPageDetails(this.queryForm)
+        const { data, totalCount } = await getDetails({
+          pageNo: this.queryForm.pageNo,
+          pageSize: this.queryForm.pageSize,
+          datasetName: this.queryForm.datasetName,
+        })
         this.instanceList = data
         data.forEach((item, index) => {
           item.need = item.difficulty === 'HARD' ? 'YES' : 'NO'
@@ -257,13 +286,13 @@
         }, 500)
       },
       async fetchMetadata() {
-        const { data } = await getLabelMetaData({
+        const { data } = await getMetaData({
           datasetName: this.queryForm.datasetName,
         })
-        this.labelingDetails.difficults = data.difficult_ins
-        this.labelingDetails.medium = data.medium_ins
-        this.labelingDetails.easy = data.easy_ins
-        this.labelingDetails.labeled = data.already_labeled
+        this.labelingDetails.difficults = data.hard
+        this.labelingDetails.medium = data.medium
+        this.labelingDetails.easy = data.easy
+        this.labelingDetails.labeled = data.labeledCount
       },
     },
   }
