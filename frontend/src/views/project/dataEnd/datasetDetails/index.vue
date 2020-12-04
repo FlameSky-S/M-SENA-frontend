@@ -120,6 +120,49 @@
       <div class="top-row">
         <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
           <vab-query-form>
+            <el-form ref="filter" :model="filter" :inline="true">
+              <!-- <el-form-item label="Model:" style="font-weight: bold">
+                <el-select v-model="filter.model_name" style="width: 150px">
+                  <el-option
+                    v-for="item in modelList"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  ></el-option>
+                </el-select>
+              </el-form-item> -->
+              <el-form-item label="Sentiment:" style="font-weight: bold">
+                <el-select v-model="filter.sentiment" style="width: 150px">
+                  <el-option
+                    v-for="item in filter.sentiment_list"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Data Mode:" style="font-weight: bold">
+                <el-select v-model="filter.data_mode" style="width: 120px">
+                  <el-option
+                    v-for="item in filter.data_mode_list"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  icon="el-icon-search"
+                  type="primary"
+                  @click="applyFilter"
+                >
+                  Apply
+                </el-button>
+              </el-form-item>
+            </el-form>
+          </vab-query-form>
+          <!-- <vab-query-form>
             <vab-query-form-left-panel>
               <el-form
                 ref="form"
@@ -143,7 +186,7 @@
               </el-form>
             </vab-query-form-left-panel>
             <vab-query-form-right-panel></vab-query-form-right-panel>
-          </vab-query-form>
+          </vab-query-form> -->
           <el-table
             ref="tableSort"
             v-loading="listLoading"
@@ -284,8 +327,13 @@
           pageNo: 1,
           pageSize: 20,
         },
-        searchForm: {
-          search_sid: null,
+        filter: {
+          // model_name: 'All',
+          sentiment_list: ['positive', 'neutral', 'negative'],
+          sentiment: 'neutral',
+          data_mode_list: ['train', 'valid', 'test'],
+          data_mode: 'train',
+          // is_tuning: 'Both',
         },
         datasetDetails: {
           detailInfo: {
@@ -333,6 +381,7 @@
     },
     mounted() {},
     methods: {
+      applyFilter() {},
       handleLockDataset() {
         if (this.datasetDetails.detailInfo.locked === 'locked') {
           unlockDataset({ dataset_name: this.queryForm.datasetName })

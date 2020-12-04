@@ -99,29 +99,37 @@
       <el-col :span="24">
         <div class="video-list">
           <vab-query-form>
-            <vab-query-form-left-panel>
-              <el-form
-                ref="form"
-                :model="searchForm"
-                :inline="true"
-                @submit.native.prevent
-              >
-                <el-form-item>
-                  <el-input v-model="searchForm.title" placeholder="SampleID" />
-                </el-form-item>
-                <el-form-item>
-                  <el-button
-                    icon="el-icon-search"
-                    type="primary"
-                    native-type="submit"
-                    @click="handleQuery"
-                  >
-                    Search
-                  </el-button>
-                </el-form-item>
-              </el-form>
-            </vab-query-form-left-panel>
-            <vab-query-form-right-panel></vab-query-form-right-panel>
+            <el-form ref="filter" :model="filter" :inline="true">
+              <el-form-item label="Difficulty:" style="font-weight: bold">
+                <el-select v-model="filter.difficulty" style="width: 150px">
+                  <el-option
+                    v-for="item in filter.difficulty_list"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Need Human:" style="font-weight: bold">
+                <el-select v-model="filter.need_human" style="width: 120px">
+                  <el-option
+                    v-for="item in filter.need_human_list"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  icon="el-icon-search"
+                  type="primary"
+                  @click="applyFilter"
+                >
+                  Apply
+                </el-button>
+              </el-form-item>
+            </el-form>
           </vab-query-form>
           <el-table
             ref="tableSort"
@@ -134,7 +142,7 @@
               fixed
               show-overflow-tooltip
               label="SampleID"
-              prop="sampleId"
+              prop="sample_id"
               width="180"
               align="center"
             ></el-table-column>
@@ -218,6 +226,14 @@
           easy: 150,
           labeled: 400,
         },
+        filter: {
+          // model_name: 'All',
+          difficulty_list: ['unlabeled', 'easy', 'medium', 'hard', 'human'],
+          difficulty: 'hard',
+          need_human_list: ['NO', 'YES'],
+          need_human: 'YES',
+          // is_tuning: 'Both',
+        },
         searchForm: {
           search_sid: null,
         },
@@ -245,6 +261,7 @@
     },
     mounted() {},
     methods: {
+      applyFilter() {},
       handleQuery() {},
       manuallyLabel(row) {
         this.$refs['manuallyLabel'].show(row)
@@ -279,11 +296,27 @@
         this.instanceList = data
         data.forEach((item, index) => {
           item.need = item.difficulty === 'HARD' ? 'YES' : 'NO'
+          switch (item.label_by) {
+            case -1:
+              item.difficulty = 'unlabeled'
+              break
+            case 0:
+              item.difficulty = 'human'
+              break
+            case 1:
+              item.difficulty = 'easy'
+              break
+            case 2:
+              item.difficulty = 'medium'
+              break
+            case 3:
+              item.difficulty = 'hard'
+              break
+          }
         })
         this.total = totalCount
-        setTimeout(() => {
-          this.listLoading = false
-        }, 500)
+
+        this.listLoading = false
       },
       async fetchMetadata() {
         const { data } = await getMetaData({

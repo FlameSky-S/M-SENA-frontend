@@ -163,9 +163,7 @@
 
         this.list = datasetList
         this.total = totalCount
-        setTimeout(() => {
-          this.listLoading = false
-        }, 500)
+        this.listLoading = false
       },
     },
   }
