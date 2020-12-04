@@ -49,11 +49,11 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     //这里会过滤所有为空、0、false的key，如果不需要请自行注释
-    if (config.data)
-      config.data = Vue.prototype.$baseLodash.pickBy(
-        config.data,
-        Vue.prototype.$baseLodash.identity
-      )
+    // if (config.data)
+    //   config.data = Vue.prototype.$baseLodash.pickBy(
+    //     config.data,
+    //     Vue.prototype.$baseLodash.identity
+    //   )
     if (
       config.data &&
       config.headers['Content-Type'] ===
