@@ -4,7 +4,7 @@
     <p class="tips"></p>
     <el-row :gutter="120">
       <div class="top-row">
-        <el-col :xs="24" :sm="24" :md="24" :lg="14" :xl="15">
+        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
           <h2>{{ queryForm.datasetName }} Dataset</h2>
           <el-row>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -70,7 +70,7 @@
         </el-col>
 
         <!-- <el-divider direction="vertical" class="top-right-divider"></el-divider> -->
-        <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="9">
+        <!-- <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="9">
           <div class="detail-info-operation">
             <h2>Operations</h2>
             <div class="operation-item">
@@ -91,7 +91,7 @@
                 Import
               </el-button>
             </div>
-            <!-- <div class="operation-item">
+            <div class="operation-item">
               <el-button
                 type="info"
                 class="operation-button"
@@ -100,8 +100,8 @@
               >
                 Rename
               </el-button>
-            </div> -->
-            <!-- <div class="operation-item">
+            </div>
+            <div class="operation-item">
               <el-button
                 type="danger"
                 class="operation-button"
@@ -110,9 +110,9 @@
               >
                 Delete
               </el-button>
-            </div> -->
+            </div>
           </div>
-        </el-col>
+        </el-col> -->
       </div>
     </el-row>
     <!-- <el-divider direction="horizontal"></el-divider> -->
