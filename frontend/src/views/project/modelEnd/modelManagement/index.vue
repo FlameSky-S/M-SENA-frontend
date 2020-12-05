@@ -2,7 +2,7 @@
   <div class="modelManagement-container">
     <h1 style="margin-left: 2%">Model Management</h1>
     <div class="tips">
-      <p>Click model name to view model-related results.</p>
+      <p></p>
     </div>
     <el-row>
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
@@ -10,18 +10,6 @@
           <vab-query-form>
             <!-- <vab-query-form-left-panel> -->
             <el-form ref="form" :model="queryForm" :inline="true">
-              <el-form-item>
-                <el-input v-model="queryForm.model" placeholder="Model Name" />
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  icon="el-icon-search"
-                  type="primary"
-                  @click="searchModel"
-                >
-                  Search
-                </el-button>
-              </el-form-item>
               <el-form-item>
                 <el-button
                   icon="el-icon-refresh-left"
@@ -116,7 +104,6 @@
         queryForm: {
           pageNo: 1,
           pageSize: 10,
-          model: '',
         },
       }
     },

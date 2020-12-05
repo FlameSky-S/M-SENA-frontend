@@ -119,6 +119,12 @@
         let { datasets, models } = await getAllSettings()
         this.datasetList = datasets
         this.modelList = models
+        if (this.datasetList == '') {
+          this.datasetList = [{ name: 'None', sentiment: 'N/A' }]
+        }
+        if (this.modelList == '') {
+          this.modelList = ['None']
+        }
         if (this.$route.query.model) {
           this.trainSettings.model = this.$route.query.model
         } else {
@@ -136,11 +142,23 @@
         let model = this.trainSettings.model
         let query = { model: model }
         let { args } = await getArgs(query)
-        this.trainSettings.args = args
-        this.argsDisplay = JSON.stringify(JSON.parse(args), null, '\t')
+        // this.trainSettings.args = args
+        if (args != '')
+          this.argsDisplay = JSON.stringify(JSON.parse(args), null, '\t')
       },
       async startTrain() {
         this.icon = 'el-icon-loading'
+        this.trainSettings.args = this.argsDisplay.replace(/(\r\n|\n|\r)/gm, '')
+        if (!this.IsJsonString(this.trainSettings.args)) {
+          this.icon = 'el-icon-check'
+          this.$message({
+            message: 'Invalid Args! Please check your syntax',
+            type: 'error',
+          })
+
+          return
+        }
+        // console.log(this.trainSettings.args)
         let { msg } = await startTraining(this.trainSettings)
         this.icon = 'el-icon-check'
         if (msg == 'success') {
@@ -155,6 +173,14 @@
           })
         }
       },
+      IsJsonString(str) {
+        try {
+          JSON.parse(str)
+        } catch (e) {
+          return false
+        }
+        return true
+      },
     },
   }
 </script>
@@ -164,7 +190,7 @@
     margin: 0%;
     .train-settings {
       margin: 0% 10%;
-      width: 500px;
+      width: 600px;
     }
   }
 </style>

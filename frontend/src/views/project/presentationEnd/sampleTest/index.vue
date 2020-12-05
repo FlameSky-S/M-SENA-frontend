@@ -37,7 +37,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="Sentiment:" class="settings-item">
-            <el-select v-model="testSettings.sentiment" style="width: 150px">
+            <el-select v-model="testSettings.sentiments" style="width: 150px">
               <el-option
                 v-for="item in sentimentList"
                 :key="item"
@@ -150,7 +150,7 @@
         testSettings: {
           dataset: '',
           mode: 'Test',
-          sentiment: 'All',
+          sentiments: 'All',
           model: '',
         },
         settingsLoading: true,
@@ -164,16 +164,11 @@
       }
     },
     computed: {
-      // carouselHeight: function () {
-      //   let height = this.screenWidth * 0.27
-      //   height = height.toString() + 'px'
-      //   return height
-      // },
       sentimentList: function () {
         let x = []
         for (let i in this.datasetList) {
           if (this.datasetList[i].name == this.testSettings.dataset) {
-            x = this.datasetList[i].sentiment
+            x = this.datasetList[i].sentiments
             break
           }
         }
@@ -226,6 +221,11 @@
         let { datasets, models } = await getAllSettings()
         this.datasetList = datasets
         this.modelList = models
+        if (this.datasetList == '')
+          this.datasetList = [
+            { name: 'None', sentiments: ['Positive', 'Neutural', 'Negative'] },
+          ]
+        if (this.modelList == '') this.modelList = ['None']
         this.testSettings.dataset = this.datasetList[0].name
         this.testSettings.model = this.modelList[0]
         this.settingsLoading = false

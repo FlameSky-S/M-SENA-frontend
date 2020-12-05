@@ -261,9 +261,12 @@
       async fetchSettings() {
         this.settingsLoading = true
         let { datasets, models } = await getAllSettings()
-        console.log(datasets)
+        // console.log(datasets)
         this.datasetList = datasets
         this.modelList = models
+        if (this.datasetList == '')
+          this.datasetList = [{ name: 'None', sentiment: 'N/A' }]
+        if (this.modelList == '') this.modelList = ['None']
         this.testSettings.dataset = this.datasetList[0].name
         this.testSettings.primary = this.modelList[0]
         this.settingsLoading = false

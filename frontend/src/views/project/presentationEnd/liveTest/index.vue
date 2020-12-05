@@ -448,6 +448,7 @@
         let { models } = await getAllSettings()
 
         this.modelList = models
+        if (this.modelList == '') this.modelList = ['None']
         this.testSettings.primary = this.modelList[0]
         this.settingsLoading = false
       },

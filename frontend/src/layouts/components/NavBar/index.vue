@@ -5,7 +5,7 @@
         <div class="left-panel">
           <i
             :class="collapse ? 'el-icon-s-unfold' : 'el-icon-s-fold'"
-            :title="collapse ? 'Expand' : 'Fold'"
+            :title="collapse ? 'Expand' : 'Collapse'"
             class="fold-unfold"
             @click="handleCollapse"
           ></i>

@@ -1,170 +1,360 @@
 <template>
-  <span v-if="themeBar">
+  <span>
     <vab-icon
-      title="主题配置"
-      :icon="['fas', 'palette']"
-      @click="handleOpenThemeBar"
+      title="Tasks"
+      :icon="['fas', 'calendar-check']"
+      @click="handleOpenTaskBar"
     />
     <el-drawer
-      title="主题配置"
+      title="Task List"
       :visible.sync="drawerVisible"
       direction="rtl"
       append-to-body
-      size="470px"
+      size="550px"
     >
-      <el-scrollbar style="height: 94vh; overflow: hidden">
-        <div class="el-drawer__body">
-          <el-form ref="form" :model="theme">
-            <el-form-item label="主题">
-              <el-radio-group v-model="theme.name">
-                <el-radio-button label="default">默认</el-radio-button>
-                <el-radio-button label="green">绿荫草场</el-radio-button>
-                <el-radio-button label="glory">荣耀典藏</el-radio-button>
-                <el-radio-button label="dark">暗黑之子</el-radio-button>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="布局">
-              <el-radio-group v-model="theme.layout">
-                <el-radio-button label="vertical">纵向布局</el-radio-button>
-                <el-radio-button label="horizontal">横向布局</el-radio-button>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="头部">
-              <el-radio-group v-model="theme.header">
-                <el-radio-button label="fixed">固定头部</el-radio-button>
-                <el-radio-button label="noFixed">不固定头部</el-radio-button>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="多标签">
-              <el-radio-group v-model="theme.tabsBar">
-                <el-radio-button label="true">开启</el-radio-button>
-                <el-radio-button label="false">不开启</el-radio-button>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item>
-              <el-button @click="handleSetDfaultTheme">恢复默认</el-button>
-              <el-button type="primary" @click="handleSaveTheme">
-                保存
-              </el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-      </el-scrollbar>
+      <!-- <el-scrollbar style="height: 94vh; overflow: hidden"> -->
+      <div class="el-drawer__body">
+        <p>
+          <span>Total: {{ totalNum }}</span>
+          <el-button type="text" @click="deleteAllTask">
+            <i class="el-icon-delete" style="color: red"></i>
+          </el-button>
+        </p>
+        <el-collapse v-model="activeNames" accordion>
+          <el-collapse-item
+            :title="runTitle"
+            name="run"
+            :disabled="runDisabled"
+          >
+            <div>
+              <el-table :data="runList">
+                <el-table-column
+                  prop="task_id"
+                  label="id"
+                  align="center"
+                  min-width="10"
+                ></el-table-column>
+                <el-table-column
+                  prop="task_type"
+                  label="type"
+                  align="center"
+                  min-width="25"
+                ></el-table-column>
+                <el-table-column
+                  prop="model_name"
+                  label="model"
+                  align="center"
+                  min-width="20"
+                ></el-table-column>
+                <el-table-column
+                  prop="dataset_name"
+                  label="dataset"
+                  align="center"
+                  min-width="25"
+                ></el-table-column>
+                <el-table-column
+                  prop="start_time"
+                  label="time used"
+                  align="center"
+                  min-width="20"
+                ></el-table-column>
+                <el-table-column align="center" min-width="10">
+                  <template slot-scope="scope">
+                    <el-button type="text" @click="terminateTask(scope.row)">
+                      <i class="el-icon-switch-button" style="color: red"></i>
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </el-collapse-item>
+          <el-collapse-item
+            :title="errTitle"
+            name="err"
+            :disabled="errDisabled"
+          >
+            <div>
+              <el-table :data="errList">
+                <el-table-column
+                  prop="task_id"
+                  label="id"
+                  align="center"
+                  min-width="10"
+                ></el-table-column>
+                <el-table-column
+                  prop="task_type"
+                  label="type"
+                  align="center"
+                  min-width="25"
+                ></el-table-column>
+                <el-table-column
+                  prop="model_name"
+                  label="model"
+                  align="center"
+                  min-width="20"
+                ></el-table-column>
+                <el-table-column
+                  prop="dataset_name"
+                  label="dataset"
+                  align="center"
+                  min-width="25"
+                ></el-table-column>
+                <el-table-column
+                  prop="start_time"
+                  label="time used"
+                  align="center"
+                  min-width="20"
+                ></el-table-column>
+                <el-table-column align="center" min-width="10">
+                  <template slot-scope="scope">
+                    <el-button type="text" @click="deleteTask(scope.row)">
+                      <i class="el-icon-delete" style="color: red"></i>
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </el-collapse-item>
+          <el-collapse-item
+            :title="termTitle"
+            name="term"
+            :disabled="termDisabled"
+          >
+            <div>
+              <el-table :data="termList">
+                <el-table-column
+                  prop="task_id"
+                  label="id"
+                  align="center"
+                  min-width="10"
+                ></el-table-column>
+                <el-table-column
+                  prop="task_type"
+                  label="type"
+                  align="center"
+                  min-width="25"
+                ></el-table-column>
+                <el-table-column
+                  prop="model_name"
+                  label="model"
+                  align="center"
+                  min-width="20"
+                ></el-table-column>
+                <el-table-column
+                  prop="dataset_name"
+                  label="dataset"
+                  align="center"
+                  min-width="25"
+                ></el-table-column>
+                <el-table-column
+                  prop="start_time"
+                  label="time used"
+                  align="center"
+                  min-width="20"
+                ></el-table-column>
+                <el-table-column align="center" min-width="10">
+                  <template slot-scope="scope">
+                    <el-button type="text" @click="deleteTask(scope.row)">
+                      <i class="el-icon-delete" style="color: red"></i>
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </el-collapse-item>
+          <el-collapse-item
+            :title="finTitle"
+            name="fin"
+            :disabled="finDisabled"
+          >
+            <div>
+              <el-table :data="finList">
+                <el-table-column
+                  prop="task_id"
+                  label="id"
+                  align="center"
+                  min-width="10"
+                ></el-table-column>
+                <el-table-column
+                  prop="task_type"
+                  label="type"
+                  align="center"
+                  min-width="25"
+                ></el-table-column>
+                <el-table-column
+                  prop="model_name"
+                  label="model"
+                  align="center"
+                  min-width="20"
+                ></el-table-column>
+                <el-table-column
+                  prop="dataset_name"
+                  label="dataset"
+                  align="center"
+                  min-width="25"
+                ></el-table-column>
+                <el-table-column
+                  prop="start_time"
+                  label="time used"
+                  align="center"
+                  min-width="20"
+                ></el-table-column>
+                <el-table-column align="center" min-width="10">
+                  <template slot-scope="scope">
+                    <el-button type="text" @click="deleteTask(scope.row)">
+                      <i class="el-icon-delete" style="color: red"></i>
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+          </el-collapse-item>
+        </el-collapse>
+      </div>
+      <!-- </el-scrollbar> -->
     </el-drawer>
   </span>
 </template>
 
 <script>
-  import variables from '@/styles/variables.scss'
-  import { mapActions, mapGetters } from 'vuex'
-  import { layout as defaultLayout } from '@/config/settings'
+  // import variables from '@/styles/variables.scss'
+  // import { mapActions, mapGetters } from 'vuex'
+  // import { layout as defaultLayout } from '@/config/settings'
+  import { getTaskList, delTask, stopTask, delAllTask } from '@/api/task'
   export default {
     name: 'ThemeBar',
     data() {
       return {
         drawerVisible: false,
-        theme: {
-          name: 'default',
-          layout: '',
-          header: '',
-          tabsBar: '',
-        },
+        activeNames: [],
+        runList: [],
+        errList: [],
+        termList: [],
+        finList: [],
+        totalNum: 0,
+        runningNum: 0,
+        errorNum: 0,
+        terminatedNum: 0,
+        finishedNum: 0,
       }
     },
     computed: {
-      ...mapGetters({
-        layout: 'settings/layout',
-        header: 'settings/header',
-        tabsBar: 'settings/tabsBar',
-        themeBar: 'settings/themeBar',
-      }),
+      runTitle: function () {
+        let title = 'Running (' + this.runningNum + ')'
+        return title
+      },
+      errTitle: function () {
+        let title = 'Error (' + this.errorNum + ')'
+        return title
+      },
+      termTitle: function () {
+        let title = 'Terminated (' + this.terminatedNum + ')'
+        return title
+      },
+      finTitle: function () {
+        let title = 'Finished (' + this.finishedNum + ')'
+        return title
+      },
+      runDisabled: function () {
+        let disabled = false
+        if (this.runningNum == 0) disabled = true
+        return disabled
+      },
+      errDisabled: function () {
+        let disabled = false
+        if (this.errorNum == 0) disabled = true
+        return disabled
+      },
+      termDisabled: function () {
+        let disabled = false
+        if (this.terminatedNum == 0) disabled = true
+        return disabled
+      },
+      finDisabled: function () {
+        let disabled = false
+        if (this.finishedNum == 0) disabled = true
+        return disabled
+      },
+    },
+    watch: {
+      drawerVisible: function (newValue) {
+        if (newValue == true) this.fetchTaskList()
+      },
     },
     created() {
-      this.$baseEventBus.$on('theme', () => {
-        this.handleOpenThemeBar()
-      })
-      const theme = localStorage.getItem('vue-admin-beautiful-theme')
-      if (null !== theme) {
-        this.theme = JSON.parse(theme)
-        this.handleSetTheme()
-      } else {
-        this.theme.layout = this.layout
-        this.theme.header = this.header
-        this.theme.tabsBar = this.tabsBar
-      }
+      this.fetchTaskList()
+      // this.$baseEventBus.$on('theme', () => {
+      //   this.handleOpenTaskBar()
+      // })
     },
     methods: {
-      ...mapActions({
-        changeLayout: 'settings/changeLayout',
-        changeHeader: 'settings/changeHeader',
-        changeTabsBar: 'settings/changeTabsBar',
-      }),
-      handleIsMobile() {
-        return document.body.getBoundingClientRect().width - 1 < 992
-      },
-      handleOpenThemeBar() {
+      handleOpenTaskBar() {
         this.drawerVisible = true
       },
-      handleSetTheme() {
-        let { name, layout, header, tabsBar } = this.theme
-        localStorage.setItem(
-          'vue-admin-beautiful-theme',
-          `{
-            "name":"${name}",
-            "layout":"${layout}",
-            "header":"${header}",
-            "tabsBar":"${tabsBar}"
-          }`
-        )
-        if (!this.handleIsMobile()) this.changeLayout(layout)
-        this.changeHeader(header)
-        this.changeTabsBar(tabsBar)
-        document.getElementsByTagName(
-          'body'
-        )[0].className = `vue-admin-beautiful-theme-${name}`
-        this.drawerVisible = false
+      async fetchTaskList() {
+        let { data } = await getTaskList()
+        this.runList = data.runList
+        this.errList = data.errList
+        this.termList = data.termList
+        this.finList = data.finList
+        this.totalNum = data.totalNum
+        this.runningNum = data.runList.length
+        this.errorNum = data.errList.length
+        this.terminatedNum = data.termList.length
+        this.finishedNum = data.finList.length
       },
-      handleSaveTheme() {
-        this.handleSetTheme()
+      async deleteTask(row) {
+        let query = { task_id: row.task_id }
+        // console.log(row)
+        let { msg } = await delTask(query)
+        if (msg == 'success')
+          this.$message({
+            message: 'Task ' + row.task_id + ' deleted',
+            type: 'success',
+          })
+        else
+          this.$message({
+            message: 'Deletion failed',
+            type: 'error',
+          })
+        this.fetchTaskList()
       },
-      handleSetDfaultTheme() {
-        let { name } = this.theme
-        document
-          .getElementsByTagName('body')[0]
-          .classList.remove(`vue-admin-beautiful-theme-${name}`)
-        localStorage.removeItem('vue-admin-beautiful-theme')
-        this.$refs['form'].resetFields()
-        Object.assign(this.$data, this.$options.data())
-        this.changeHeader(defaultLayout)
-        this.theme.name = 'default'
-        this.theme.layout = this.layout
-        this.theme.header = this.header
-        this.theme.tabsBar = this.tabsBar
-        this.drawerVisible = false
+      async terminateTask(row) {
+        let query = { task_id: row.task_id }
+        let { msg } = await stopTask(query)
+        if (msg == 'success')
+          this.$message({
+            message: 'Task ' + row.task_id + ' stopped',
+            type: 'success',
+          })
+        else
+          this.$message({
+            message: msg,
+            type: 'error',
+          })
+        this.fetchTaskList()
       },
-      handleGetCode() {
-        const url =
-          'https://github.com/chuzhixin/vue-admin-beautiful/tree/master/src/views'
-        let path = this.$route.path + '/index.vue'
-        if (path === '/vab/menu1/menu1-1/menu1-1-1/index.vue') {
-          path = '/vab/nested/menu1/menu1-1/menu1-1-1/index.vue'
+      getTimeDelta(time1, time2 = '') {
+        let result = 0
+        let unit = 's'
+        if (time2 != '') {
+          let now = new Date()
+          let start = Date.parse(time1)
+          result = (now - start) / 1000
+          if (result > 60) {
+            result = result / 60
+            unit = 'min'
+            if (result > 60) {
+              result = result / 60
+              unit = 'h'
+            }
+          }
+          return result
         }
-        if (path === '/vab/icon/awesomeIcon/index.vue') {
-          path = '/vab/icon/index.vue'
-        }
-        if (path === '/vab/icon/remixIcon/index.vue') {
-          path = '/vab/icon/remixIcon.vue'
-        }
-        if (path === '/vab/icon/colorfulIcon/index.vue') {
-          path = '/vab/icon/colorfulIcon.vue'
-        }
-        if (path === '/vab/table/comprehensiveTable/index.vue') {
-          path = '/vab/table/index.vue'
-        }
-        if (path === '/vab/table/inlineEditTable/index.vue') {
-          path = '/vab/table/inlineEditTable.vue'
-        }
-        window.open(url + path)
+      },
+      async deleteAllTask() {
+        let { msg } = await delAllTask()
+        this.fetchTaskList()
       },
     },
   }
