@@ -43,20 +43,7 @@
               min-width="90px"
               align="center"
             ></el-table-column>
-            <!-- <el-table-column
-              prop="unimodalLabel"
-              label="Uni-Label"
-              width="auto"
-              min-width="100px"
-              align="center"
-            ></el-table-column>
-            <el-table-column
-              prop="labelType"
-              label="Label Type"
-              width="auto"
-              min-width="110px"
-              align="center"
-            ></el-table-column> -->
+
             <el-table-column
               prop="description"
               label="Description"

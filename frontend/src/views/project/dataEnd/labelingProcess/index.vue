@@ -215,7 +215,10 @@
         </div>
       </el-col>
     </el-row>
-    <manually-label ref="manuallyLabel"></manually-label>
+    <manually-label
+      ref="manuallyLabel"
+      @refresh-video-list="fetchAll"
+    ></manually-label>
   </div>
 </template>
 
@@ -270,11 +273,15 @@
     },
     created() {
       this.queryForm.datasetName = this.$route.query.dataset
-      this.fetchDetails()
-      this.fetchMetadata()
+      this.fetchAll()
     },
     mounted() {},
     methods: {
+      fetchAll() {
+        this.fetchDetails()
+        this.fetchMetadata()
+      },
+
       applyFilter() {
         this.queryForm.pageNo = 1
         this.fetchDetails()
