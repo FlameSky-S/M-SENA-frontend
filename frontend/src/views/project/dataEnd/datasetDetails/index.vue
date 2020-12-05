@@ -4,7 +4,7 @@
     <p class="tips"></p>
     <el-row :gutter="120">
       <div class="top-row">
-        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+        <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="14">
           <h2>{{ queryForm.datasetName }} Dataset</h2>
           <el-row>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -67,6 +67,30 @@
               </el-form>
             </el-col>
           </el-row>
+        </el-col>
+        <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="10">
+          <h2>Data Distribution</h2>
+          <el-row>
+            <el-col :span="12">
+              <div
+                id="dataDistribution"
+                ref="dataDistribution1"
+                style="width: 300px; height: 200px; margin: 0 auto"
+              ></div>
+            </el-col>
+            <el-col :span="12">
+              <div
+                id="dataDistribution"
+                ref="dataDistribution2"
+                style="width: 300px; height: 200px; margin: 0 auto"
+              ></div>
+            </el-col>
+          </el-row>
+          <!-- <div
+            id="dataDistribution"
+            ref="dataDistribution"
+            style="width: 300px; height: 200px; margin: 0 auto"
+          ></div> -->
         </el-col>
       </div>
     </el-row>
@@ -283,7 +307,50 @@
       this.fetchDetails()
       this.fetchMetadata()
     },
-    mounted() {},
+    mounted() {
+      // draw data distribution
+      var echarts = require('echarts')
+      // 基于准备好的dom，初始化echarts实例
+      var pie_dv_1 = this.$refs.dataDistribution1
+      var pie_dv_2 = this.$refs.dataDistribution2
+      let myChart_1 = echarts.init(pie_dv_1)
+      let myChart_2 = echarts.init(pie_dv_2)
+      // var myChart = echarts.init(document.getElementById('dataDistribution'))
+      // console.log(myChart)
+      // // 绘制图表
+      myChart_1.setOption({
+        series: [
+          {
+            name: '访问来源',
+            type: 'pie', // 设置图表类型为饼图
+            radius: '55%', // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
+            data: [
+              // 数据数组，name 为数据项名称，value 为数据项值
+              { value: 235, name: 'Human' },
+              { value: 274, name: 'Unlabeled' },
+              { value: 310, name: 'Easy' },
+              { value: 335, name: 'Medium' },
+              { value: 400, name: 'Hard' },
+            ],
+          },
+        ],
+      })
+      myChart_2.setOption({
+        series: [
+          {
+            name: '访问来源',
+            type: 'pie', // 设置图表类型为饼图
+            radius: '55%', // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
+            data: [
+              // 数据数组，name 为数据项名称，value 为数据项值
+              { value: 235, name: 'Positive' },
+              { value: 274, name: 'Neutral' },
+              { value: 310, name: 'Negative' },
+            ],
+          },
+        ],
+      })
+    },
     methods: {
       applyFilter() {
         this.queryForm.pageNo = 1

@@ -3,7 +3,7 @@
     <h1>Labeling Process</h1>
     <p class="tips"></p>
     <el-row>
-      <el-col :xs="24" :sm="24" :md="24" :lg="9" :xl="9">
+      <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8">
         <div class="labelingInfo">
           <header>
             <el-row>
@@ -54,7 +54,7 @@
           </header>
         </div>
       </el-col>
-      <el-col :xs="24" :sm="24" :md="24" :lg="15" :xl="15">
+      <el-col :xs="24" :sm="24" :md="24" :lg="16" :xl="16">
         <div class="operations">
           <el-row>
             <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
@@ -63,11 +63,21 @@
           </el-row>
           <el-row>
             <el-col :xs="24" :sm="24" :md="14" :lg="14" :xl="14">
-              <p>
-                Labeling by
-                <strong>ACTIVE LEARNING</strong>
-                strategy
-              </p>
+              <el-form ref="filter" :model="filter" :inline="true">
+                <el-form-item
+                  label="Select an Active Learning Strategy"
+                  style="margin-top: 5px; font-weight: bold"
+                >
+                  <el-select v-model="filter.activeModel" style="width: 120px">
+                    <el-option
+                      v-for="item in filter.activeModelList"
+                      :key="item"
+                      :label="item"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-form>
             </el-col>
             <el-col :xs="24" :sm="24" :md="10" :lg="10" :xl="10">
               <el-button
@@ -81,10 +91,13 @@
           </el-row>
           <el-row>
             <el-col :xs="24" :sm="24" :md="14" :lg="14" :xl="14">
-              <p>
-                Labeling on difficult samples
-                <strong>MANUALLY</strong>
-              </p>
+              <el-form ref="filter" :model="filter" :inline="true">
+                <el-form-item
+                  label="Label difficult sample MANUALLY"
+                  style="display: block; margin-top: 5px; font-weight: bold"
+                  label-position="left"
+                ></el-form-item>
+              </el-form>
             </el-col>
             <el-col :xs="24" :sm="24" :md="10" :lg="10" :xl="10">
               <el-button
@@ -258,10 +271,9 @@
           sentiment: 'All',
           prediction_list: ['All', 'Positive', 'Neutral', 'Negative'],
           prediction: 'All',
+          activeModelList: ['default'],
+          activeModel: 'default',
           // is_tuning: 'Both',se
-        },
-        searchForm: {
-          search_sid: null,
         },
         queryForm: {
           datasetName: null,
@@ -293,6 +305,7 @@
       async onSubmit() {
         const { code, msg } = await startActiveLearning({
           datasetName: this.queryForm.datasetName,
+          modelName: this.filter.activeModel,
         })
         if (code === 200 && msg == 'success') {
           this.$baseMessage('Start Active Learning Successfully', 'success')

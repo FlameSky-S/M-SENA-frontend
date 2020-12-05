@@ -3,6 +3,8 @@ import App from './App'
 import store from './store'
 import router from './router'
 import './plugins'
+import echarts from 'echarts'
+
 /**
  * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
  * @description 生产环境默认都使用mock，如果正式用于生产环境时，记得去掉
@@ -13,6 +15,7 @@ if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
 
+Vue.prototype.$echarts = echarts
 Vue.config.productionTip = false
 
 new Vue({
