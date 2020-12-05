@@ -7,19 +7,3 @@ export function getDatasetList(data) {
     data,
   })
 }
-
-// export function doEdit(data) {
-//   return request({
-//     url: '/table/doEdit',
-//     method: 'post',
-//     data,
-//   })
-// }
-
-export function deleteDataset(datasetIndexs) {
-  return request({
-    url: '/dataEnd/deleteDataset',
-    method: 'post',
-    data: datasetIndexs,
-  })
-}

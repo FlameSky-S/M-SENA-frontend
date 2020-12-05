@@ -6,13 +6,13 @@
     @close="close"
   >
     <el-card shadow="hover">
-      <div slot="header">{{ form.clipInfo.clipID }}</div>
+      <div slot="header">SampleID : {{ form.clipInfo.sampleID }}</div>
       <el-row>
-        <el-col :span="16">
+        <el-col :xs="24" :sm="24" :md="17" :lg="17" :xl="17">
           <video :src="form.videoconfig.url" controls width="100%"></video>
         </el-col>
-        <el-divider direction="vertical" class="preview-divider"></el-divider>
-        <el-col :span="8">
+
+        <el-col :xs="24" :sm="24" :md="7" :lg="7" :xl="7">
           <el-form
             :label-position="labelPosition"
             label-width="120px"
@@ -23,7 +23,7 @@
               <el-input
                 v-model="form.clipInfo.transcript"
                 type="textarea"
-                :rows="5"
+                :rows="3"
                 disabled
               ></el-input>
             </el-form-item>
@@ -32,12 +32,6 @@
             </el-form-item>
             <el-form-item label="M Label">
               <el-input v-model="form.clipInfo.M_label" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="M Label Type">
-              <el-input
-                v-model="form.clipInfo.M_label_type"
-                disabled
-              ></el-input>
             </el-form-item>
           </el-form>
         </el-col>
@@ -52,6 +46,8 @@
     name: 'Preview',
     data() {
       return {
+        fullWidth: document.documentElement.clientWidth,
+        fullHeight: document.documentElement.clientHeight,
         form: {
           clipInfo: {
             clipID: null,
@@ -67,22 +63,31 @@
           translate: 'This is the original transcipt for the video',
         },
         title: '',
-        labelPosition: 'right',
         dialogFormVisible: false,
       }
     },
+    computed: {
+      labelPosition() {
+        if (this.fullWidth >= 992) {
+          return 'top'
+        } else {
+          return 'right'
+        }
+      },
+    },
     created() {},
+
     methods: {
       showPreview(row) {
         this.title = 'Preview Video Clips'
 
         this.fetchVideoUrl(row.sample_id)
 
-        this.form.clipInfo.clipID = row.clipID
+        this.form.clipInfo.sampleID = row.sample_id
         this.form.clipInfo.belonging = row.data_mode
         this.form.clipInfo.transcript = row.text
 
-        this.form.clipInfo.M_label_type = row.label_value
+        this.form.clipInfo.M_label = row.label_value
 
         this.dialogFormVisible = true
       },

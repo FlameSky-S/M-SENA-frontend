@@ -18,7 +18,8 @@
                     <div>
                       DIFFICULT
                       <strong>
-                        {{ labelingDetails.difficults }} / {{ totalInstance }}
+                        {{ labelingDetails.difficults }} /
+                        {{ labelingDetails.totalInstance }}
                       </strong>
                     </div>
                   </li>
@@ -26,7 +27,8 @@
                     <div>
                       MEDIUM
                       <strong>
-                        {{ labelingDetails.medium }} / {{ totalInstance }}
+                        {{ labelingDetails.medium }} /
+                        {{ labelingDetails.totalInstance }}
                       </strong>
                     </div>
                   </li>
@@ -34,7 +36,8 @@
                     <div>
                       EASY
                       <strong>
-                        {{ labelingDetails.easy }} / {{ totalInstance }}
+                        {{ labelingDetails.easy }} /
+                        {{ labelingDetails.totalInstance }}
                       </strong>
                     </div>
                   </li>
@@ -42,7 +45,8 @@
                 <p>
                   ALREADY LABELED
                   <strong>
-                    {{ labelingDetails.labeled }} / {{ totalInstance }}
+                    {{ labelingDetails.labeled }} /
+                    {{ labelingDetails.totalInstance }}
                   </strong>
                 </p>
               </el-col>
@@ -110,10 +114,20 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="Need Human:" style="font-weight: bold">
-                <el-select v-model="filter.need_human" style="width: 120px">
+              <el-form-item label="Prediction:" style="font-weight: bold">
+                <el-select v-model="filter.prediction" style="width: 150px">
                   <el-option
-                    v-for="item in filter.need_human_list"
+                    v-for="item in filter.prediction_list"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Sentiment:" style="font-weight: bold">
+                <el-select v-model="filter.sentiment" style="width: 150px">
+                  <el-option
+                    v-for="item in filter.sentiment_list"
                     :key="item"
                     :label="item"
                     :value="item"
@@ -172,7 +186,7 @@
               label="Manually Label"
               prop="manualLabel"
               width="auto"
-              min-width="110px"
+              min-width="120px"
               align="center"
             ></el-table-column>
             <el-table-column
@@ -228,11 +242,20 @@
         },
         filter: {
           // model_name: 'All',
-          difficulty_list: ['unlabeled', 'easy', 'medium', 'hard', 'human'],
-          difficulty: 'hard',
-          need_human_list: ['NO', 'YES'],
-          need_human: 'YES',
-          // is_tuning: 'Both',
+          difficulty_list: [
+            'All',
+            'Unlabeled',
+            'Easy',
+            'Medium',
+            'Hard',
+            'Human',
+          ],
+          difficulty: 'All',
+          sentiment_list: ['All', 'Positive', 'Neutral', 'Negative'],
+          sentiment: 'All',
+          prediction_list: ['All', 'Positive', 'Neutral', 'Negative'],
+          prediction: 'All',
+          // is_tuning: 'Both',se
         },
         searchForm: {
           search_sid: null,
@@ -245,15 +268,6 @@
         instanceList: null,
       }
     },
-    computed: {
-      totalInstance() {
-        return (
-          this.labelingDetails.difficults +
-          this.labelingDetails.medium +
-          this.labelingDetails.easy
-        )
-      },
-    },
     created() {
       this.queryForm.datasetName = this.$route.query.dataset
       this.fetchDetails()
@@ -261,7 +275,10 @@
     },
     mounted() {},
     methods: {
-      applyFilter() {},
+      applyFilter() {
+        this.queryForm.pageNo = 1
+        this.fetchDetails()
+      },
       handleQuery() {},
       manuallyLabel(row) {
         this.$refs['manuallyLabel'].show(row)
@@ -291,6 +308,11 @@
         const { data, totalCount } = await getDetails({
           pageNo: this.queryForm.pageNo,
           pageSize: this.queryForm.pageSize,
+
+          data_mode_filter: 'All',
+          difficulty: this.filter.difficulty,
+          sentiment_filter: this.filter.sentiment,
+          prediction: this.filter.prediction,
           datasetName: this.queryForm.datasetName,
         })
         this.instanceList = data
@@ -325,7 +347,8 @@
         this.labelingDetails.difficults = data.hard
         this.labelingDetails.medium = data.medium
         this.labelingDetails.easy = data.easy
-        this.labelingDetails.labeled = data.labeledCount
+        this.labelingDetails.labeled = data.human
+        this.labelingDetails.totalInstance = data.totalCount
       },
     },
   }

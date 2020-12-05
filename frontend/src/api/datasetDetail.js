@@ -16,20 +16,3 @@ export function getMetaData(data) {
     data,
   })
 }
-
-// Functions used in Labeling Details Page.
-export function getLabelPageDetails(data) {
-  return request({
-    url: '/dataEnd/getLabelDetails',
-    method: 'post',
-    data,
-  })
-}
-
-export function getLabelMetaData(data) {
-  return request({
-    url: '/dataEnd/getLabelMetaData',
-    method: 'post',
-    data,
-  })
-}

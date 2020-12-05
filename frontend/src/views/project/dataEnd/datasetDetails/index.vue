@@ -68,51 +68,6 @@
             </el-col>
           </el-row>
         </el-col>
-
-        <!-- <el-divider direction="vertical" class="top-right-divider"></el-divider> -->
-        <!-- <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="9">
-          <div class="detail-info-operation">
-            <h2>Operations</h2>
-            <div class="operation-item">
-              <el-button
-                type="primary"
-                class="operation-button"
-                @click="handleLockDataset"
-              >
-                {{ lockOperation }}
-              </el-button>
-            </div>
-            <div class="operation-item">
-              <el-button
-                type="success"
-                class="operation-button"
-                :disabled="disabledButton"
-              >
-                Import
-              </el-button>
-            </div>
-            <div class="operation-item">
-              <el-button
-                type="info"
-                class="operation-button"
-                :disabled="disabledButton"
-                @click="handleRenameDataset"
-              >
-                Rename
-              </el-button>
-            </div>
-            <div class="operation-item">
-              <el-button
-                type="danger"
-                class="operation-button"
-                :disabled="disabledButton"
-                @click="handleDeleteDataset"
-              >
-                Delete
-              </el-button>
-            </div>
-          </div>
-        </el-col> -->
       </div>
     </el-row>
     <!-- <el-divider direction="horizontal"></el-divider> -->
@@ -141,7 +96,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="Data Mode:" style="font-weight: bold">
+              <el-form-item label="Type of Dataset:" style="font-weight: bold">
                 <el-select v-model="filter.data_mode" style="width: 120px">
                   <el-option
                     v-for="item in filter.data_mode_list"
@@ -162,31 +117,6 @@
               </el-form-item>
             </el-form>
           </vab-query-form>
-          <!-- <vab-query-form>
-            <vab-query-form-left-panel>
-              <el-form
-                ref="form"
-                :model="searchForm"
-                :inline="true"
-                @submit.native.prevent
-              >
-                <el-form-item>
-                  <el-input v-model="searchForm.title" placeholder="SampleID" />
-                </el-form-item>
-                <el-form-item>
-                  <el-button
-                    icon="el-icon-search"
-                    type="primary"
-                    native-type="submit"
-                    @click="handleQuery"
-                  >
-                    Search
-                  </el-button>
-                </el-form-item>
-              </el-form>
-            </vab-query-form-left-panel>
-            <vab-query-form-right-panel></vab-query-form-right-panel>
-          </vab-query-form> -->
           <el-table
             ref="tableSort"
             v-loading="listLoading"
@@ -237,10 +167,10 @@
             ></el-table-column>
             <el-table-column
               show-overflow-tooltip
-              label="Data Mode"
+              label="Type of Dataset"
               prop="data_mode"
               width="auto"
-              min-width="100px"
+              min-width="120px"
               align="center"
             ></el-table-column>
             <el-table-column
@@ -248,26 +178,12 @@
               show-overflow-tooltip
               label="Operations"
               width="auto"
-              min-width="180px"
+              min-width="160px"
               align="center"
             >
               <template #default="{ row }">
                 <el-button type="text" @click="showPreview(row)">
-                  Preview
-                </el-button>
-                <el-button
-                  type="text"
-                  :disabled="disabledButton"
-                  @click="handleEdit(row)"
-                >
-                  Edit
-                </el-button>
-                <el-button
-                  type="text"
-                  :disabled="disabledButton"
-                  @click="handleDelete(row)"
-                >
-                  Delete
+                  Preview Instance
                 </el-button>
               </template>
             </el-table-column>
@@ -284,7 +200,6 @@
         </el-col>
       </div>
     </el-row>
-
     <preview ref="preview"></preview>
   </div>
 </template>
@@ -303,17 +218,6 @@
     components: {
       Preview,
     },
-    filters: {
-      statusFilter(status) {
-        const statusMap = {
-          0: 'success',
-          1: 'gray',
-          2: 'danger',
-          3: 'info',
-        }
-        return statusMap[status]
-      },
-    },
     data() {
       return {
         listLoading: true,
@@ -329,10 +233,10 @@
         },
         filter: {
           // model_name: 'All',
-          sentiment_list: ['positive', 'neutral', 'negative'],
-          sentiment: 'neutral',
-          data_mode_list: ['train', 'valid', 'test'],
-          data_mode: 'train',
+          sentiment_list: ['All', 'Positive', 'Neutral', 'Negative'],
+          sentiment: 'All',
+          data_mode_list: ['All', 'Train', 'Valid', 'Test'],
+          data_mode: 'All',
           // is_tuning: 'Both',
         },
         datasetDetails: {
@@ -381,7 +285,10 @@
     },
     mounted() {},
     methods: {
-      applyFilter() {},
+      applyFilter() {
+        this.queryForm.pageNo = 1
+        this.fetchDetails()
+      },
       handleLockDataset() {
         if (this.datasetDetails.detailInfo.locked === 'locked') {
           unlockDataset({ dataset_name: this.queryForm.datasetName })
@@ -459,32 +366,10 @@
         }
         return flexWidth + 'px'
       },
-      handleEdit() {},
       showPreview(row) {
         this.$refs['preview'].showPreview(row)
       },
-      handleDelete(row) {
-        // if (row.id) {
-        //   this.$baseConfirm('你确定要删除当前项吗', null, async () => {
-        //     const { msg } = await doDelete({ ids: row.id })
-        //     this.$baseMessage(msg, 'success')
-        //     this.fetchData()
-        //   })
-        // } else {
-        //   if (this.selectRows.length > 0) {
-        //     const ids = this.selectRows.map((item) => item.id).join()
-        //     this.$baseConfirm('你确定要删除选中项吗', null, async () => {
-        //       const { msg } = await doDelete({ ids: ids })
-        //       this.$baseMessage(msg, 'success')
-        //       this.fetchData()
-        //     })
-        //   } else {
-        //     this.$baseMessage('未选中任何行', 'error')
-        //     return false
-        //   }
-        // }
-      },
-      handleQuery(row) {},
+
       handleSizeChange(val) {
         this.queryForm.pageSize = val
         this.fetchDetails()
@@ -497,6 +382,10 @@
         this.listLoading = true
         const { data, totalCount } = await getDetails({
           datasetName: this.queryForm.datasetName,
+          prediction: 'All',
+          difficulty: 'All',
+          sentiment_filter: this.filter.sentiment,
+          data_mode_filter: this.filter.data_mode,
           pageNo: this.queryForm.pageNo,
           pageSize: this.queryForm.pageSize,
         })
@@ -514,7 +403,7 @@
         this.datasetDetails.detailInfo.locked = data.is_locked
           ? 'locked'
           : 'unlocked'
-        this.datasetDetails.detailInfo.labeledCount = data.labeledCount
+        this.datasetDetails.detailInfo.labeledCount = data.human
         this.datasetDetails.detailInfo.totalCount = data.totalCount
         this.datasetDetails.detailInfo.language = data.language
         this.datasetDetails.detailInfo.description = data.description

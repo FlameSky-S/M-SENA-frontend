@@ -18,15 +18,6 @@ export function deleteDataset(data) {
   })
 }
 
-export function renameDataset(data) {
-  // data: previous datasetName (primary key) -> new datasetName (primary key)
-  return request({
-    url: '/data/rename_dataset',
-    method: 'post',
-    data,
-  })
-}
-
 export function unlockDataset(data) {
   // data: datasetName (primary key)
   return request({

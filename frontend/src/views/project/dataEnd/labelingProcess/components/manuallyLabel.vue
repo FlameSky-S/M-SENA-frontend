@@ -20,16 +20,36 @@
       </div>
     </el-card>
     <el-card v-else shadow="hover">
-      <div slot="header">Manual Labeling - {{ form.clipInfo.sampleId }}</div>
+      <div slot="header">
+        <span>Manual Labeling - {{ form.clipInfo.sampleId }}</span>
+
+        <el-button
+          v-if="!editmode"
+          style="float: right; padding: 3px 0; margin-left: 10px"
+          type="text"
+        >
+          Next
+        </el-button>
+        <el-button style="float: right; padding: 3px 0" type="text">
+          Submit
+        </el-button>
+        <el-button
+          v-if="!editmode"
+          style="float: right; padding: 3px 0"
+          type="text"
+        >
+          Previous
+        </el-button>
+      </div>
+
       <el-row>
-        <el-col :span="16">
+        <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="16">
           <video :src="form.videoconfig.url" controls width="100%"></video>
         </el-col>
-        <el-divider direction="vertical" class="preview-divider"></el-divider>
-        <el-col :span="8">
+        <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
           <el-form
             :label-position="labelPosition"
-            label-width="120px"
+            label-width="100px"
             class="detail-form"
             :model="form.clipInfo"
           >
@@ -37,7 +57,7 @@
               <el-input
                 v-model="form.clipInfo.transcript"
                 type="textarea"
-                :rows="5"
+                :rows="2"
                 disabled
               ></el-input>
             </el-form-item>
@@ -46,6 +66,45 @@
             </el-form-item>
             <el-form-item v-if="editmode" label="Difficulty">
               <el-input v-model="form.clipInfo.difficulty" disabled></el-input>
+            </el-form-item>
+            <el-form-item label="Sentiment">
+              <el-radio-group
+                v-model="current_selection"
+                size="mini"
+                style="display: block"
+              >
+                <el-radio
+                  label="Positive"
+                  style="
+                    width: 30%;
+                    min-width: 70px;
+                    margin-right: 2.5%;
+                    margin-left: 0%;
+                  "
+                  border
+                >
+                  POS
+                </el-radio>
+                <el-radio
+                  label="Neutral"
+                  style="width: 30%; min-width: 70px; margin: 0 2.5%"
+                  border
+                >
+                  NEU
+                </el-radio>
+                <el-radio
+                  label="Negative"
+                  style="
+                    width: 30%;
+                    min-width: 70px;
+                    margin-right: 0%;
+                    margin-left: 2.5%;
+                  "
+                  border
+                >
+                  NEG
+                </el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-form>
         </el-col>
@@ -60,6 +119,9 @@
     name: 'Preview',
     data() {
       return {
+        fullWidth: document.documentElement.clientWidth,
+        fullHeight: document.documentElement.clientHeight,
+        current_selection: null,
         form: {
           clipInfo: {
             sampleId: null,
@@ -73,7 +135,6 @@
           translate: 'This is the original transcipt for the video',
         },
         title: '',
-        labelPosition: 'right',
         nextSampleId: null,
         editmode: null,
         dialogFormVisible: false,
@@ -83,11 +144,18 @@
       finished() {
         return this.nextSampleId === -1 && !this.editmode
       },
+      labelPosition() {
+        if (this.fullWidth >= 992) {
+          return 'top'
+        } else {
+          return 'right'
+        }
+      },
     },
     created() {},
     methods: {
       show(row) {
-        if (row.sampleId) {
+        if (row.sample_id) {
           this.editmode = true
         } else {
           this.editmode = false
@@ -95,14 +163,13 @@
         this.title = 'Manually Labeling Video Clips'
 
         // TODO : use getVideoInfoByID API to get the video Info.
+        console.log(row)
+        this.form.clipInfo.sampleId = row.sample_id
+        this.form.clipInfo.Prediction = row.prediction
+        this.form.clipInfo.difficulty = row.difficulty
+        this.form.clipInfo.transcript = row.text
 
-        this.form.clipInfo.sampleId = row.sampleId
-        this.form.clipInfo.belonging = row.belonging
-        this.form.clipInfo.M_label = row.multimodalLabel
-        this.form.clipInfo.transcript =
-          'A course to build the SQL layer of a distributed database.'
-
-        this.form.clipInfo.M_label_type = row.multimodalLabelType
+        // this.form.clipInfo.M_label_type = row.multimodalLabelType
 
         this.dialogFormVisible = true
       },
