@@ -237,7 +237,7 @@
 
 <script>
   import { getDetails, getMetaData } from '@/api/datasetDetail'
-  import { startActiveLearning } from '@/api/labeling'
+  import { startActiveLearning, getActiveModel } from '@/api/labeling'
   import ManuallyLabel from './components/manuallyLabel.vue'
   export default {
     name: 'LabelingProcess',
@@ -292,6 +292,7 @@
       fetchAll() {
         this.fetchDetails()
         this.fetchMetadata()
+        this.fetchActiveModel()
       },
 
       applyFilter() {
@@ -313,7 +314,6 @@
           this.$baseMessage('Sorry, There is currently a bug', 'error')
         }
       },
-      manualLabeling() {},
       handleSizeChange(val) {
         this.queryForm.pageSize = val
         this.fetchDetails()
@@ -321,6 +321,10 @@
       handleCurrentChange(val) {
         this.queryForm.pageNo = val
         this.fetchDetails()
+      },
+      async fetchActiveModel() {
+        const { activeModelList } = await getActiveModel()
+        this.filter.activeModelList = activeModelList
       },
       async fetchDetails() {
         this.listLoading = true

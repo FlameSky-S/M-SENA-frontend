@@ -18,6 +18,15 @@ export function getVideoLabelInfoById(data) {
   })
 }
 
+// get all active model.
+export function getActiveModel(data) {
+  return request({
+    url: '/dataEnd/getActiveModel',
+    method: 'post',
+    data,
+  })
+}
+
 // get next sampleId to label.
 export function getNextSampleId(data) {
   return request({
