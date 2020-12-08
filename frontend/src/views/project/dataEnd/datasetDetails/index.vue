@@ -7,11 +7,11 @@
         <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="14">
           <h2>{{ queryForm.datasetName }} Dataset</h2>
           <el-row>
-            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+            <el-col :xs="24" :sm="12" :md="12" :lg="24" :xl="12">
               <el-form
                 ref="form"
                 :model="datasetDetails.detailInfo"
-                label-width="160px"
+                label-width="120px"
               >
                 <el-form-item label="Dataset:">
                   <el-input
@@ -20,7 +20,7 @@
                     disabled
                   ></el-input>
                 </el-form-item>
-                <el-form-item label="Labeled Ins / Total Ins:">
+                <el-form-item label="Labeled / Total:">
                   <el-input
                     v-model="labeledFraction"
                     style="min-width: 120px"
@@ -29,7 +29,7 @@
                 </el-form-item>
               </el-form>
             </el-col>
-            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+            <el-col :xs="24" :sm="12" :md="12" :lg="24" :xl="12">
               <el-form
                 ref="form"
                 :model="datasetDetails.detailInfo"
@@ -54,11 +54,11 @@
           </el-row>
           <el-row>
             <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-              <el-form label-width="160px">
-                <el-form-item label="Dataset Description:">
+              <el-form label-width="120px">
+                <el-form-item label="Description:">
                   <el-input
                     v-model="datasetDetails.detailInfo.description"
-                    style="min-width: 320px"
+                    style="min-width: 120px"
                     type="textarea"
                     :rows="3"
                     disabled
@@ -71,14 +71,14 @@
         <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="10">
           <h2>Data Distribution</h2>
           <el-row>
-            <el-col :span="12">
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
               <div
                 id="dataDistribution"
                 ref="dataDistribution1"
                 style="width: 300px; height: 200px; margin: 0 auto"
               ></div>
             </el-col>
-            <el-col :span="12">
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
               <div
                 id="dataDistribution"
                 ref="dataDistribution2"
@@ -267,6 +267,11 @@
           detailInfo: {
             datasetName: null,
             locked: null,
+            human: null,
+            easy: null,
+            medium: null,
+            hard: null,
+            unlabeled: null,
             labeledCount: null,
             totalCount: null,
             language: null,
@@ -304,73 +309,67 @@
     },
     created() {
       this.queryForm.datasetName = this.$route.query.dataset
-      this.fetchDetails()
-      this.fetchMetadata()
+      ;(async () => {
+        await this.fetchDetails()
+        await this.fetchMetadata()
+      })()
     },
     mounted() {
-      // draw data distribution
-      var echarts = require('echarts')
-      // 基于准备好的dom，初始化echarts实例
-      var pie_dv_1 = this.$refs.dataDistribution1
-      var pie_dv_2 = this.$refs.dataDistribution2
-      let myChart_1 = echarts.init(pie_dv_1)
-      let myChart_2 = echarts.init(pie_dv_2)
-      // var myChart = echarts.init(document.getElementById('dataDistribution'))
-      // console.log(myChart)
-      // // 绘制图表
-      myChart_1.setOption({
-        series: [
-          {
-            name: '访问来源',
-            type: 'pie', // 设置图表类型为饼图
-            radius: '55%', // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
-            data: [
-              // 数据数组，name 为数据项名称，value 为数据项值
-              { value: 235, name: 'Human' },
-              { value: 274, name: 'Unlabeled' },
-              { value: 310, name: 'Easy' },
-              { value: 335, name: 'Medium' },
-              { value: 400, name: 'Hard' },
-            ],
-          },
-        ],
-      })
-      myChart_2.setOption({
-        series: [
-          {
-            name: '访问来源',
-            type: 'pie', // 设置图表类型为饼图
-            radius: '55%', // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
-            data: [
-              // 数据数组，name 为数据项名称，value 为数据项值
-              { value: 235, name: 'Positive' },
-              { value: 274, name: 'Neutral' },
-              { value: 310, name: 'Negative' },
-            ],
-          },
-        ],
-      })
+      ;(async () => {
+        await this.fetchDetails()
+        await this.fetchMetadata()
+        var echarts = require('echarts')
+        // 基于准备好的dom，初始化echarts实例
+        var pie_dv_1 = this.$refs.dataDistribution1
+        var pie_dv_2 = this.$refs.dataDistribution2
+        let myChart_1 = echarts.init(pie_dv_1)
+        let myChart_2 = echarts.init(pie_dv_2)
+        myChart_1.setOption({
+          series: [
+            {
+              name: '访问来源',
+              type: 'pie', // 设置图表类型为饼图
+              radius: '55%', // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
+              data: [
+                // 数据数组，name 为数据项名称，value 为数据项值
+                { value: this.datasetDetails.detailInfo.human, name: 'Human' },
+                {
+                  value: this.datasetDetails.detailInfo.unlabeled,
+                  name: 'Unlabeled',
+                },
+                { value: this.datasetDetails.detailInfo.easy, name: 'Easy' },
+                {
+                  value: this.datasetDetails.detailInfo.medium,
+                  name: 'Medium',
+                },
+                { value: this.datasetDetails.detailInfo.hard, name: 'Hard' },
+              ],
+            },
+          ],
+        })
+
+        myChart_2.setOption({
+          series: [
+            {
+              name: '访问来源',
+              type: 'pie', // 设置图表类型为饼图
+              radius: '55%', // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
+              data: [
+                // 数据数组，name 为数据项名称，value 为数据项值
+                { value: 235, name: 'Positive' },
+                { value: 274, name: 'Neutral' },
+                { value: 310, name: 'Negative' },
+              ],
+            },
+          ],
+        })
+      })()
     },
     methods: {
       applyFilter() {
         this.queryForm.pageNo = 1
         this.fetchDetails()
       },
-      handleLockDataset() {
-        if (this.datasetDetails.detailInfo.locked === 'locked') {
-          unlockDataset({ dataset_name: this.queryForm.datasetName })
-        } else {
-          lockDataset({ dataset_name: this.queryForm.datasetName })
-        }
-        setTimeout(() => {
-          this.fetchDetails()
-          this.fetchMetadata()
-        }, 100)
-      },
-      handleRenameDataset() {},
-      // handleDeleteDataset() {
-      //   deleteDataset({ datasetName: this.queryForm.datasetName })
-      // },
       flexColumnWidth(str, tableData, flag = 'max') {
         // str为该列的字段名(传字符串);tableData为该表格的数据源(传变量);
         // flag为可选值，可不传该参数,传参时可选'max'或'equal',默认为'max'
@@ -470,6 +469,11 @@
         this.datasetDetails.detailInfo.locked = data.is_locked
           ? 'locked'
           : 'unlocked'
+        this.datasetDetails.detailInfo.easy = data.easy
+        this.datasetDetails.detailInfo.medium = data.medium
+        this.datasetDetails.detailInfo.hard = data.hard
+        this.datasetDetails.detailInfo.unlabeled = data.unlabelled
+        this.datasetDetails.detailInfo.human = data.human
         this.datasetDetails.detailInfo.labeledCount = data.human
         this.datasetDetails.detailInfo.totalCount = data.totalCount
         this.datasetDetails.detailInfo.language = data.language

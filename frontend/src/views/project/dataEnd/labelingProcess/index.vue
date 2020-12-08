@@ -81,6 +81,7 @@
             </el-col>
             <el-col :xs="24" :sm="24" :md="10" :lg="10" :xl="10">
               <el-button
+                icon="el-icon-check"
                 type="primary"
                 class="operation-button"
                 @click="onSubmit"
@@ -101,6 +102,7 @@
             </el-col>
             <el-col :xs="24" :sm="24" :md="10" :lg="10" :xl="10">
               <el-button
+                icon="el-icon-check"
                 type="primary"
                 class="operation-button"
                 @click="manuallyLabel"
@@ -458,6 +460,7 @@
         width: 90%;
         min-width: 180px;
         font-size: 14px;
+        font-weight: bold;
         font-weight: 700;
         margin-block-start: 0.5em;
         margin-block-end: 0.5em;
