@@ -68,7 +68,7 @@
                 <el-button
                   :icon="icon"
                   type="primary"
-                  style="font-weight: bold; font-size: 14px"
+                  style="font-size: 14px; font-weight: bold"
                   @click="startTrain"
                 >
                   Start
@@ -189,8 +189,8 @@
   .training-container {
     margin: 0%;
     .train-settings {
-      margin: 0% 10%;
       width: 600px;
+      margin: 0% 10%;
     }
   }
 </style>

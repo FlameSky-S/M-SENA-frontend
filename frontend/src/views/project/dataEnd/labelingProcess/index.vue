@@ -65,17 +65,23 @@
             <el-col :xs="24" :sm="24" :md="14" :lg="14" :xl="14">
               <el-form ref="filter" :model="filter" :inline="true">
                 <el-form-item
-                  label="Select an Active Learning Strategy"
-                  style="margin-top: 5px; font-weight: bold"
+                  label="Select an Classifier"
+                  style="margin-top: 9px; font-weight: bold"
                 >
-                  <el-select v-model="filter.activeModel" style="width: 120px">
+                  <el-select
+                    v-model="activeLearningModel.classifier"
+                    style="width: 120px"
+                  >
                     <el-option
-                      v-for="item in filter.activeModelList"
+                      v-for="item in activeLearningModel.classifierList"
                       :key="item"
                       :label="item"
                       :value="item"
                     ></el-option>
                   </el-select>
+                  <el-button icon="el-icon-edit" @click="classifierDetails">
+                    Details
+                  </el-button>
                 </el-form-item>
               </el-form>
             </el-col>
@@ -94,10 +100,24 @@
             <el-col :xs="24" :sm="24" :md="14" :lg="14" :xl="14">
               <el-form ref="filter" :model="filter" :inline="true">
                 <el-form-item
-                  label="Label difficult sample MANUALLY"
-                  style="display: block; margin-top: 5px; font-weight: bold"
-                  label-position="left"
-                ></el-form-item>
+                  label="Select an Selector"
+                  style="margin-top: 9px; font-weight: bold"
+                >
+                  <el-select
+                    v-model="activeLearningModel.selector"
+                    style="width: 120px; margin-left: 4.67px"
+                  >
+                    <el-option
+                      v-for="item in activeLearningModel.selectorList"
+                      :key="item"
+                      :label="item"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
+                  <el-button icon="el-icon-edit" @click="selectorDetails">
+                    Details
+                  </el-button>
+                </el-form-item>
               </el-form>
             </el-col>
             <el-col :xs="24" :sm="24" :md="10" :lg="10" :xl="10">
@@ -123,16 +143,6 @@
                 <el-select v-model="filter.difficulty" style="width: 150px">
                   <el-option
                     v-for="item in filter.difficulty_list"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="Prediction:" style="font-weight: bold">
-                <el-select v-model="filter.prediction" style="width: 150px">
-                  <el-option
-                    v-for="item in filter.prediction_list"
                     :key="item"
                     :label="item"
                     :value="item"
@@ -234,16 +244,18 @@
       ref="manuallyLabel"
       @refresh-video-list="fetchAll"
     ></manually-label>
+    <config-dialog ref="configSettings"></config-dialog>
   </div>
 </template>
 
 <script>
   import { getDetails, getMetaData } from '@/api/datasetDetail'
-  import { startActiveLearning, getActiveModel } from '@/api/labeling'
+  import { startActiveLearning, getALModels } from '@/api/labeling'
   import ManuallyLabel from './components/manuallyLabel.vue'
+  import ConfigDialog from './components/configDialog.vue'
   export default {
     name: 'LabelingProcess',
-    components: { ManuallyLabel },
+    components: { ManuallyLabel, ConfigDialog },
     data() {
       return {
         listLoading: true,
@@ -258,8 +270,13 @@
           easy: 150,
           labeled: 400,
         },
+        activeLearningModel: {
+          classifierList: ['default'],
+          classifier: 'default',
+          selectorList: ['default'],
+          selector: 'default',
+        },
         filter: {
-          // model_name: 'All',
           difficulty_list: [
             'All',
             'Unlabeled',
@@ -271,11 +288,6 @@
           difficulty: 'All',
           sentiment_list: ['All', 'Positive', 'Neutral', 'Negative'],
           sentiment: 'All',
-          prediction_list: ['All', 'Positive', 'Neutral', 'Negative'],
-          prediction: 'All',
-          activeModelList: ['default'],
-          activeModel: 'default',
-          // is_tuning: 'Both',se
         },
         queryForm: {
           datasetName: null,
@@ -296,7 +308,18 @@
         this.fetchMetadata()
         this.fetchActiveModel()
       },
-
+      classifierDetails() {
+        this.$refs['configSettings'].show(
+          'Classifier',
+          this.activeLearningModel.classifier
+        )
+      },
+      selectorDetails() {
+        this.$refs['configSettings'].show(
+          'Selector',
+          this.activeLearningModel.selector
+        )
+      },
       applyFilter() {
         this.queryForm.pageNo = 1
         this.fetchDetails()
@@ -325,8 +348,10 @@
         this.fetchDetails()
       },
       async fetchActiveModel() {
-        const { activeModelList } = await getActiveModel()
-        this.filter.activeModelList = activeModelList
+        const { classifierList, selectorList } = await getALModels()
+
+        this.activeLearningModel.classifierList = classifierList
+        this.activeLearningModel.selectorList = selectorList
       },
       async fetchDetails() {
         this.listLoading = true
