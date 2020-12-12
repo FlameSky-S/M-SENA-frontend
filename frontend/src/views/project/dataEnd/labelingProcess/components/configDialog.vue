@@ -36,8 +36,8 @@
   import {
     getSelectorConfig,
     getClassifierConfig,
-    modifyClassifierConfig,
-    modifySelectorConfig,
+    saveClassifierConfig,
+    saveSelectorConfig,
   } from '@/api/labeling'
   export default {
     name: 'ConfigDialog',
@@ -71,10 +71,18 @@
           return
         } else {
           console.log(this.settings.argsDisplay)
-          if (configTitle === 'Classifier') {
-            // modifyClassifierConfig({})
+          if (this.dialogSettings.title === 'Classifier') {
+            console.log('modifyClassifierConfig')
+            saveClassifierConfig({
+              classifier: this.dialogSettings.modelName,
+              args: this.settings.argsDisplay,
+            })
           } else {
-            // modifySelectorConfig()
+            console.log('modifySelectorConfig')
+            saveSelectorConfig({
+              classifier: this.dialogSettings.modelName,
+              args: this.settings.argsDisplay,
+            })
           }
           this.close()
         }

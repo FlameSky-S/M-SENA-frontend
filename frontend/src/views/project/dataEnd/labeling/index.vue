@@ -23,7 +23,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="dataset_name"
+              prop="datasetName"
               label="Dataset"
               width="auto"
               min-width="80px"
@@ -43,7 +43,6 @@
               min-width="90px"
               align="center"
             ></el-table-column>
-
             <el-table-column
               prop="description"
               label="Description"
@@ -136,7 +135,7 @@
         this.$router.push({
           path: '/data/labelingDetail',
           query: {
-            dataset: row.dataset_name,
+            dataset: row.datasetName,
           },
         })
       },

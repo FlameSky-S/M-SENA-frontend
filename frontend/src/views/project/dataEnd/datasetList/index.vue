@@ -7,8 +7,12 @@
         <div class="dataset-table">
           <vab-query-form>
             <vab-query-form-left-panel>
-              <el-button icon="el-icon-plus" type="primary" @click="handleAdd">
-                Create
+              <el-button
+                icon="el-icon-plus"
+                type="primary"
+                @click="handleRescan"
+              >
+                Rescan
               </el-button>
             </vab-query-form-left-panel>
           </vab-query-form>
@@ -25,7 +29,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="dataset_name"
+              prop="datasetName"
               label="Dataset"
               align="center"
               width="auto"
@@ -66,17 +70,16 @@
             ></el-table-column>
             <el-table-column
               label="Operations"
-              :width="operationWidth()"
               align="center"
-              min-width="120px"
+              min-width="180px"
             >
               <template #default="{ row }">
                 <el-button type="text" @click="showDetails(row)">
                   Dataset Details
                 </el-button>
-                <el-button type="text" @click="handleDelete(row)">
+                <!-- <el-button type="text" @click="handleDelete(row)">
                   Delete
-                </el-button>
+                </el-button> -->
                 <el-button type="text" @click="handleLock(row)">
                   {{ row.status === 'locked' ? 'unlock' : 'lock' }}
                 </el-button>
@@ -100,7 +103,7 @@
 </template>
 
 <script>
-  import { getDatasetList } from '@/api/datasetList'
+  import { getDatasetList, scanDatasets } from '@/api/datasetList'
   import { deleteDataset, unlockDataset, lockDataset } from '@/api/datasetCurd'
   import CreatePage from './components/CreatePage'
   export default {
@@ -144,15 +147,6 @@
     },
     mounted() {},
     methods: {
-      operationWidth() {
-        if (this.fullWidth > 1500) {
-          return 240 + 'px'
-        } else if (this.fullWidth > 1200) {
-          return 130 + 'px'
-        } else {
-          return 'auto'
-        }
-      },
       tableWidth() {
         if (this.fullWidth > 1500) {
           return 580 + 'px'
@@ -166,33 +160,34 @@
         this.$router.push({
           path: '/data/datasetDetail',
           query: {
-            dataset: row.dataset_name,
+            dataset: row.datasetName,
           },
         })
       },
-      handleDelete(row) {
-        ;(async () => {
-          await deleteDataset({ datasetName: row.dataset_name })
-          this.fetchData()
-        })()
-      },
+      // handleDelete(row) {
+      //   ;(async () => {
+      //     await deleteDataset({ datasetName: row.dataset_name })
+      //     this.fetchData()
+      //   })()
+      // },
       handleLock(row) {
         if (row.status === 'locked') {
           ;(async () => {
-            await unlockDataset({ dataset_name: row.dataset_name })
+            await unlockDataset({ datasetName: row.datasetName })
             this.fetchData()
           })()
         } else {
           ;(async () => {
-            await lockDataset({ dataset_name: row.dataset_name })
+            await lockDataset({ datasetName: row.datasetName })
             this.fetchData()
           })()
         }
       },
       // TODO: to change here.
-      handleAdd() {
-        this.$refs['createPage'].showCreatePage()
-        console.log(process.env.NODE_ENV)
+      handleRescan() {
+        scanDatasets()
+        // this.$refs['createPage'].showCreatePage()
+        // console.log(process.env.NODE_ENV)
         // TODO: this is an optional function. Which will be used in peroid 2.
         // this.$router.push({
         //   path: '/data/createDataset',
@@ -216,7 +211,7 @@
         })
         this.list = datasetList
         this.list.forEach((element) => {
-          element.status = element.is_locked ? 'locked' : 'unlocked'
+          element.status = element.status
         })
         this.total = totalCount
         this.listLoading = false

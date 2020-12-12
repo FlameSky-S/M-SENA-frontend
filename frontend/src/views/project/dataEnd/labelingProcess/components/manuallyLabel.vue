@@ -50,13 +50,17 @@
 
       <el-row>
         <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="16">
-          <video :src="form.videoconfig.url" controls width="100%"></video>
+          <video
+            :src="form.videoconfig.url"
+            controls
+            width="95%"
+            class="videoPlayer"
+          ></video>
         </el-col>
         <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
           <el-form
             :label-position="labelPosition"
             label-width="100px"
-            class="detail-form"
             :model="form.clipInfo"
           >
             <el-form-item label="Transcripts">
@@ -293,6 +297,11 @@
     margin-block-start: 0;
     margin-block-end: 0;
   }
+  .videoPlayer {
+    margin-top: 4%;
+    margin-right: 5%;
+    margin-bottom: 4%;
+  }
   .last-page-container {
     width: 80%;
     height: 100%;
@@ -304,8 +313,5 @@
     position: absolute;
     left: 70%;
     height: 100%;
-  }
-  .detail-form {
-    margin-left: 10%;
   }
 </style>

@@ -7,3 +7,10 @@ export function getDatasetList(data) {
     data,
   })
 }
+
+export function scanDatasets() {
+  return request({
+    url: '/dataEnd/scanDatasets',
+    method: 'get',
+  })
+}

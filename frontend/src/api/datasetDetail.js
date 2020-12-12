@@ -9,6 +9,14 @@ export function getDetails(data) {
   })
 }
 
+// export function getVideoFilters(data) {
+//   return request({
+//     url: '/dataEnd/getVideoFilters',
+//     method: 'post',
+//     data,
+//   })
+// }
+
 export function getMetaData(data) {
   return request({
     url: '/dataEnd/getMetaData',

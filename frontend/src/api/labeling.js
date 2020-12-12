@@ -45,17 +45,17 @@ export function getSelectorConfig(data) {
   })
 }
 
-export function modifyClassifierConfig(data) {
+export function saveClassifierConfig(data) {
   return request({
-    url: '/dataEnd/modifyClassifierConfig',
+    url: '/dataEnd/saveClassifierConfig',
     method: 'post',
     data,
   })
 }
 
-export function modifySelectorConfig(data) {
+export function saveSelectorConfig(data) {
   return request({
-    url: '/dataEnd/modifySelectorConfig',
+    url: '/dataEnd/saveSelectorConfig',
     method: 'post',
     data,
   })

@@ -70,7 +70,7 @@
                 >
                   <el-select
                     v-model="activeLearningModel.classifier"
-                    style="width: 120px"
+                    style="width: 100px"
                   >
                     <el-option
                       v-for="item in activeLearningModel.classifierList"
@@ -105,7 +105,7 @@
                 >
                   <el-select
                     v-model="activeLearningModel.selector"
-                    style="width: 120px; margin-left: 4.67px"
+                    style="width: 100px; margin-left: 4.67px"
                   >
                     <el-option
                       v-for="item in activeLearningModel.selectorList"
@@ -265,29 +265,24 @@
         selectRows: '',
         elementLoadingText: 'Loading Elements...',
         labelingDetails: {
-          difficults: 200,
-          medium: 300,
-          easy: 150,
-          labeled: 400,
+          difficults: 0,
+          medium: 0,
+          easy: 0,
+          unlabeled: 0,
+          human: 0,
+          labeled: 0,
         },
         activeLearningModel: {
-          classifierList: ['default'],
-          classifier: 'default',
-          selectorList: ['default'],
-          selector: 'default',
+          classifierList: [],
+          classifier: '',
+          selectorList: [],
+          selector: '',
         },
         filter: {
-          difficulty_list: [
-            'All',
-            'Unlabeled',
-            'Easy',
-            'Medium',
-            'Hard',
-            'Human',
-          ],
-          difficulty: 'All',
-          sentiment_list: ['All', 'Positive', 'Neutral', 'Negative'],
-          sentiment: 'All',
+          difficulty_list: ['All'],
+          difficulty: '',
+          sentiment_list: ['All'],
+          sentiment: '',
         },
         queryForm: {
           datasetName: null,
@@ -304,9 +299,11 @@
     mounted() {},
     methods: {
       fetchAll() {
-        this.fetchDetails()
-        this.fetchMetadata()
         this.fetchActiveModel()
+        ;(async () => {
+          await this.fetchMetadata()
+          await this.fetchDetails()
+        })()
       },
       classifierDetails() {
         this.$refs['configSettings'].show(
@@ -331,7 +328,8 @@
       async onSubmit() {
         const { code, msg } = await startActiveLearning({
           datasetName: this.queryForm.datasetName,
-          modelName: this.filter.activeModel,
+          selector: this.activeLearningModel.selector,
+          classifier: this.activeLearningModel.classifier,
         })
         if (code === 200 && msg == 'success') {
           this.$baseMessage('Start Active Learning Successfully', 'success')
@@ -351,7 +349,9 @@
         const { classifierList, selectorList } = await getALModels()
 
         this.activeLearningModel.classifierList = classifierList
+        this.activeLearningModel.classifier = classifierList[0]
         this.activeLearningModel.selectorList = selectorList
+        this.activeLearningModel.selector = selectorList[0]
       },
       async fetchDetails() {
         this.listLoading = true
@@ -359,16 +359,15 @@
         const { data, totalCount } = await getDetails({
           pageNo: this.queryForm.pageNo,
           pageSize: this.queryForm.pageSize,
-
           data_mode_filter: 'All',
-          difficulty: this.filter.difficulty,
+          difficulty: 'All',
           sentiment_filter: this.filter.sentiment,
-          prediction: this.filter.prediction,
           datasetName: this.queryForm.datasetName,
         })
         this.instanceList = data
         data.forEach((item, index) => {
           item.need = item.difficulty === 'HARD' ? 'YES' : 'NO'
+          item.prediction = item.prediction ? item.prediction : '-'
           switch (item.label_by) {
             case -1:
               item.difficulty = 'unlabeled'
@@ -395,10 +394,37 @@
         const { data } = await getMetaData({
           datasetName: this.queryForm.datasetName,
         })
-        this.labelingDetails.difficults = data.hard
-        this.labelingDetails.medium = data.medium
-        this.labelingDetails.easy = data.easy
-        this.labelingDetails.labeled = data.human
+
+        this.labelingDetails.difficults = data.difficultyCount['Difficulty']
+          ? data.difficultyCount['Difficulty']
+          : 0
+        this.labelingDetails.medium = data.difficultyCount['Medium']
+          ? data.difficultyCount['Medium']
+          : 0
+        this.labelingDetails.easy = data.difficultyCount['Easy']
+          ? data.difficultyCount['Easy']
+          : 0
+        this.labelingDetails.human = data.difficultyCount['Human']
+          ? data.difficultyCount['Human']
+          : 0
+        this.labelingDetails.unlabeled = data.difficultyCount['Unlabeled']
+          ? data.difficultyCount['Unlabeled']
+          : 0
+
+        for (var key in this.labelingDetails) {
+          if (
+            this.labelingDetails[key] != 'labeled' &&
+            this.labelingDetails[key]
+          ) {
+            this.filter.difficulty_list.push(key)
+          }
+        }
+        this.filter.difficulty = this.filter.difficulty_list[0]
+        for (var key in data.classCount) {
+          this.filter.sentiment_list.push(key)
+        }
+        this.filter.sentiment = this.filter.sentiment_list[0]
+        // this.labelingDetails.labeled = data.difficultyCount['Label']
         this.labelingDetails.totalInstance = data.totalCount
       },
     },

@@ -4,7 +4,7 @@
     <p class="tips"></p>
     <el-row :gutter="120">
       <div class="top-row">
-        <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="14">
+        <el-col :xs="24" :sm="24" :md="24" :lg="10" :xl="14">
           <h2>{{ queryForm.datasetName }} Dataset</h2>
           <el-row>
             <el-col :xs="24" :sm="12" :md="12" :lg="24" :xl="12">
@@ -68,48 +68,32 @@
             </el-col>
           </el-row>
         </el-col>
-        <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="10">
+        <el-col :xs="24" :sm="24" :md="24" :lg="14" :xl="10">
           <h2>Data Distribution</h2>
           <el-row>
             <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
               <div
                 id="dataDistribution"
-                ref="dataDistribution1"
-                style="width: 300px; height: 200px; margin: 0 auto"
+                ref="dataDistribution2"
+                style="width: 340px; height: 220px; margin: 0 auto"
               ></div>
             </el-col>
             <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
               <div
                 id="dataDistribution"
-                ref="dataDistribution2"
-                style="width: 300px; height: 200px; margin: 0 auto"
+                ref="dataDistribution1"
+                style="width: 340px; height: 220px; margin: 0 auto"
               ></div>
             </el-col>
           </el-row>
-          <!-- <div
-            id="dataDistribution"
-            ref="dataDistribution"
-            style="width: 300px; height: 200px; margin: 0 auto"
-          ></div> -->
         </el-col>
       </div>
     </el-row>
-    <!-- <el-divider direction="horizontal"></el-divider> -->
     <el-row style="margin-top: 3%">
       <div class="top-row">
         <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
           <vab-query-form>
             <el-form ref="filter" :model="filter" :inline="true">
-              <!-- <el-form-item label="Model:" style="font-weight: bold">
-                <el-select v-model="filter.model_name" style="width: 150px">
-                  <el-option
-                    v-for="item in modelList"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  ></el-option>
-                </el-select>
-              </el-form-item> -->
               <el-form-item label="Sentiment:" style="font-weight: bold">
                 <el-select v-model="filter.sentiment" style="width: 150px">
                   <el-option
@@ -180,7 +164,6 @@
               min-width="100px"
               align="center"
             ></el-table-column>
-
             <el-table-column
               show-overflow-tooltip
               label="Text"
@@ -256,23 +239,21 @@
           pageSize: 20,
         },
         filter: {
-          // model_name: 'All',
-          sentiment_list: ['All', 'Positive', 'Neutral', 'Negative'],
-          sentiment: 'All',
-          data_mode_list: ['All', 'Train', 'Valid', 'Test'],
-          data_mode: 'All',
-          // is_tuning: 'Both',
+          sentiment_list: ['All'],
+          sentiment: '',
+          data_mode_list: ['All'],
+          data_mode: '',
         },
         datasetDetails: {
           detailInfo: {
             datasetName: null,
             locked: null,
-            human: null,
-            easy: null,
-            medium: null,
-            hard: null,
-            unlabeled: null,
-            labeledCount: null,
+            human: 0,
+            easy: 0,
+            medium: 0,
+            hard: 0,
+            unlabeled: 0,
+            labeled: 0,
             totalCount: null,
             language: null,
             unimodalLabel: null,
@@ -296,7 +277,7 @@
       },
       labeledFraction() {
         return (
-          this.datasetDetails.detailInfo.labeledCount +
+          this.datasetDetails.detailInfo.labeled +
           ' / ' +
           this.datasetDetails.detailInfo.totalCount
         )
@@ -309,15 +290,12 @@
     },
     created() {
       this.queryForm.datasetName = this.$route.query.dataset
-      ;(async () => {
-        await this.fetchDetails()
-        await this.fetchMetadata()
-      })()
     },
     mounted() {
       ;(async () => {
-        await this.fetchDetails()
         await this.fetchMetadata()
+        await this.fetchDetails()
+
         var echarts = require('echarts')
         // 基于准备好的dom，初始化echarts实例
         var pie_dv_1 = this.$refs.dataDistribution1
@@ -347,19 +325,22 @@
             },
           ],
         })
+        var sentiment_data = []
+        for (var key in this.datasetDetails.detailInfo.classCount) {
+          sentiment_data.push({
+            value: this.datasetDetails.detailInfo.classCount[key],
+            name: key,
+          })
+        }
 
+        // console.log(sentiment_data)
         myChart_2.setOption({
           series: [
             {
               name: '访问来源',
               type: 'pie', // 设置图表类型为饼图
               radius: '55%', // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
-              data: [
-                // 数据数组，name 为数据项名称，value 为数据项值
-                { value: 235, name: 'Positive' },
-                { value: 274, name: 'Neutral' },
-                { value: 310, name: 'Negative' },
-              ],
+              data: sentiment_data,
             },
           ],
         })
@@ -435,7 +416,6 @@
       showPreview(row) {
         this.$refs['preview'].showPreview(row)
       },
-
       handleSizeChange(val) {
         this.queryForm.pageSize = val
         this.fetchDetails()
@@ -448,7 +428,6 @@
         this.listLoading = true
         const { data, totalCount } = await getDetails({
           datasetName: this.queryForm.datasetName,
-          prediction: 'All',
           difficulty: 'All',
           sentiment_filter: this.filter.sentiment,
           data_mode_filter: this.filter.data_mode,
@@ -465,16 +444,41 @@
         const { data } = await getMetaData({
           datasetName: this.queryForm.datasetName,
         })
-        this.datasetDetails.detailInfo.datasetName = data.dataset_name
+        this.datasetDetails.detailInfo.datasetName = data.datasetName
         this.datasetDetails.detailInfo.locked = data.is_locked
           ? 'locked'
           : 'unlocked'
-        this.datasetDetails.detailInfo.easy = data.easy
-        this.datasetDetails.detailInfo.medium = data.medium
-        this.datasetDetails.detailInfo.hard = data.hard
-        this.datasetDetails.detailInfo.unlabeled = data.unlabelled
-        this.datasetDetails.detailInfo.human = data.human
-        this.datasetDetails.detailInfo.labeledCount = data.human
+        this.datasetDetails.detailInfo.easy = data.difficultyCount['Easy']
+          ? data.difficultyCount['Easy']
+          : 0
+        this.datasetDetails.detailInfo.medium = data.difficultyCount['Medium']
+          ? data.difficultyCount['Medium']
+          : 0
+        this.datasetDetails.detailInfo.hard = data.difficultyCount['Difficulty']
+          ? data.difficultyCount['Difficulty']
+          : 0
+        this.datasetDetails.detailInfo.unlabeled = data.difficultyCount[
+          'Unlabeled'
+        ]
+          ? data.difficultyCount['Unlabeled']
+          : 0
+        this.datasetDetails.detailInfo.human = data.difficultyCount['Human']
+          ? data.difficultyCount['Human']
+          : 0
+        this.datasetDetails.detailInfo.labeled =
+          this.datasetDetails.detailInfo.human +
+          this.datasetDetails.detailInfo.easy
+        this.datasetDetails.detailInfo.classCount = data.classCount
+        for (var key in data.classCount) {
+          this.filter.sentiment_list.push(key)
+        }
+        this.filter.sentiment = this.filter.sentiment_list[0]
+        for (var key in data.typeCount) {
+          this.filter.data_mode_list.push(key)
+        }
+        this.filter.data_mode = this.filter.data_mode_list[0]
+        this.datasetDetails.detailInfo.difficultyCount = data.difficultCount
+
         this.datasetDetails.detailInfo.totalCount = data.totalCount
         this.datasetDetails.detailInfo.language = data.language
         this.datasetDetails.detailInfo.description = data.description
