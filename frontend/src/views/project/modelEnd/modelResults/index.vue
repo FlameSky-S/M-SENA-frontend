@@ -104,17 +104,24 @@
               sortable
             ></el-table-column>
             <el-table-column
-              label="Data Mode"
+              label="Data Type"
               prop="data_mode"
               align="center"
-              min-width="100"
+              min-width="110"
               sortable
             ></el-table-column>
             <el-table-column
               label="Train Mode"
               prop="is_tuning"
               align="center"
-              min-width="90"
+              min-width="120"
+              sortable
+            ></el-table-column>
+            <el-table-column
+              label="Is Default"
+              prop="is_default"
+              align="center"
+              min-width="110"
               sortable
             ></el-table-column>
             <el-table-column
@@ -172,7 +179,7 @@
 </template>
 
 <script>
-  import { getResults, setDefaultParams, delResult } from '@/api/modelEnd'
+  import { getResults, setDefaultModel, delResult } from '@/api/modelEnd'
   import { getAllSettings } from '@/api/getSettings'
   export default {
     name: 'ModelResults',
@@ -181,7 +188,7 @@
         resultList: [],
         datasetList: [],
         modelList: [],
-        modeList: ['Both', 'Normal', 'Tune'],
+        modeList: ['Both', 'Train', 'Tune'],
         resultLoading: true,
         total: 0,
         filter: {
@@ -240,7 +247,11 @@
           this.resultList[i].loss_value = parseFloat(
             this.resultList[i].loss_value
           ).toFixed(4)
+          this.resultList[i].is_default = this.resultList[
+            i
+          ].is_default.toString()
         }
+        // console.log(this.resultList[0].is_default)
         this.total = totalCount
         this.resultLoading = false
       },
@@ -252,7 +263,7 @@
         this.$refs.table.toggleRowExpansion(row)
       },
       async setDefault(row) {
-        let { msg } = await setDefaultParams(row.result_id)
+        let { msg } = await setDefaultModel({ id: row.result_id })
         if (msg == 'success') {
           this.$message({
             message:

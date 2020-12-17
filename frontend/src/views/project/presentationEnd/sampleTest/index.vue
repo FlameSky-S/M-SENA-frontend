@@ -218,9 +218,9 @@
       },
       async fetchSettings() {
         this.settingsLoading = true
-        let { datasets, models } = await getAllSettings()
+        let { datasets, pretrained } = await getAllSettings()
         this.datasetList = datasets
-        this.modelList = models
+        this.modelList = pretrained
         if (this.datasetList == '')
           this.datasetList = [
             { name: 'None', sentiments: ['Positive', 'Neutural', 'Negative'] },

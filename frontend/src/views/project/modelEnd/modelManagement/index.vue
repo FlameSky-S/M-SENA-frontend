@@ -75,16 +75,6 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-pagination
-            :background="true"
-            :current-page="queryForm.pageNo"
-            :page-size="queryForm.pageSize"
-            :hide-on-single-page="false"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="total"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-          ></el-pagination>
         </div>
       </el-col>
     </el-row>
@@ -92,7 +82,7 @@
 </template>
 
 <script>
-  import { getModelList, delModel, scanModel } from '@/api/modelEnd'
+  import { getModelList, scanModel } from '@/api/modelEnd'
   export default {
     name: 'ModelManagement',
     components: {},
@@ -100,7 +90,6 @@
       return {
         modelList: [],
         modelLoading: true,
-        total: 0,
         queryForm: {
           pageNo: 1,
           pageSize: 10,
@@ -131,23 +120,25 @@
       },
       async fetchModelList() {
         this.modelLoading = true
-        let { modelList, totalCount } = await getModelList(this.queryForm)
-        // let testForm = 'pageNo=1&pageSize=10'
-        // let { modelList, totalCount } = await getModelList(this.testForm)
-        // console.log(modelList)
+        let { modelList } = await getModelList()
         this.modelList = modelList
-        this.total = totalCount
         this.modelLoading = false
       },
       async scanModel() {
-        let { msg } = await scanModel()
+        // let { msg } = await scanModel()
+        // if (msg == 'success') {
+
+        let { msg, modelList } = await getModelList()
         if (msg == 'success') {
+          this.modelLoading = true
+          this.modelList = modelList
+          this.modelLoading = false
           this.$message({
-            message: 'Model dir rescanned',
+            message: 'Model rescanned',
             type: 'success',
           })
-          this.fetchModelList()
         }
+        // }
       },
       viewResults(row) {
         this.$router.push({
@@ -162,49 +153,6 @@
         })
       },
       // editModel(row) {},
-      delModel(row) {
-        const h = this.$createElement
-        // console.log(row)
-        let msg = []
-        msg.push(
-          h('p', { style: 'text-align: center' }, [
-            h('span', null, 'Deleting Model '),
-            h(
-              'span',
-              { style: 'color: teal; font-weight: 700' },
-              row.model_name
-            ),
-          ])
-        )
-        msg.push(h('p', null, 'Are you sure?'))
-        this.$msgbox({
-          title: 'Warning',
-          message: h('div', null, msg),
-          confirmButtonText: 'DELETE',
-          showCancelButton: true,
-          type: 'warning',
-          center: true,
-          confirmButtonClass: 'el-button--danger',
-        })
-          .then(async () => {
-            let { msg } = await delModel({ model: row.model_name })
-            if (msg == 'success') {
-              this.$message({
-                message: 'Successfully Deleted Model',
-                type: 'success',
-              })
-              this.fetchModelList()
-            } else {
-              this.$message({
-                message: msg,
-                type: 'error',
-              })
-            }
-          })
-          .catch(() => {
-            // cancel button action
-          })
-      },
       searchModel() {
         this.queryForm.pageNo = 1
         this.fetchModelList()

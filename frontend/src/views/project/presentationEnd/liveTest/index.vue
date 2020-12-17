@@ -445,9 +445,9 @@
             type: 'error',
           })
         }
-        let { models } = await getAllSettings()
+        let { pretrained } = await getAllSettings()
 
-        this.modelList = models
+        this.modelList = pretrained
         if (this.modelList == '') this.modelList = ['None']
         this.testSettings.primary = this.modelList[0]
         this.settingsLoading = false

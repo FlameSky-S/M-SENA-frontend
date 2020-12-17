@@ -1,19 +1,9 @@
 import request from '@/utils/request'
 
-export function getModelList(data) {
-  console.log(data)
+export function getModelList() {
   return request({
     url: '/modelEnd/modelList',
-    method: 'POST',
-    data,
-  })
-}
-
-export function delModel(data) {
-  return request({
-    url: '/modelEnd/delModel',
-    method: 'post',
-    data,
+    method: 'get',
   })
 }
 
@@ -32,9 +22,9 @@ export function getResults(data) {
   })
 }
 
-export function setDefaultParams(data) {
+export function setDefaultModel(data) {
   return request({
-    url: '/modelEnd/setDefaultParams',
+    url: '/modelEnd/setDefaultModel',
     method: 'post',
     data,
   })

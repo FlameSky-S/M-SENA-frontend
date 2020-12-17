@@ -16,8 +16,8 @@
                 <el-radio v-model="trainSettings.mode" label="Tune">
                   Tune
                 </el-radio>
-                <el-radio v-model="trainSettings.mode" label="Normal">
-                  Normal
+                <el-radio v-model="trainSettings.mode" label="Train">
+                  Train
                 </el-radio>
               </el-form-item>
               <el-form-item label="Select Model:" style="font-weight: bold">
@@ -45,6 +45,17 @@
                     :value="item.name"
                   ></el-option>
                 </el-select>
+              </el-form-item>
+              <el-form-item
+                v-show="trainSettings.mode == 'Tune'"
+                label="Tune Times:"
+                style="font-weight: bold"
+              >
+                <el-input
+                  v-model="trainSettings.tuneTimes"
+                  onkeyup="value=value.replace(/[^\d]/g,'')"
+                  style="width: 80px"
+                ></el-input>
               </el-form-item>
               <el-form-item label="Args:" style="font-weight: bold">
                 <el-input
@@ -99,6 +110,7 @@
           dataset: '',
           args: '',
           description: '',
+          tuneTimes: '10',
         },
         argsDisplay: '',
         argsAutosize: { minRows: 10, maxRows: 20 },
@@ -107,7 +119,12 @@
         icon: 'el-icon-check',
       }
     },
-    computed: {},
+    computed: {
+      tuneTimesEnabled: function () {
+        console.log('test')
+        return this.trainSettings.mode == 'Tune' ? true : false
+      },
+    },
     watch: {},
     created() {
       this.fetchSettings()
@@ -155,7 +172,6 @@
             message: 'Invalid Args! Please check your syntax',
             type: 'error',
           })
-
           return
         }
         // console.log(this.trainSettings.args)

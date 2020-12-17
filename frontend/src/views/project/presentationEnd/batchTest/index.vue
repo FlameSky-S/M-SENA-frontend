@@ -55,12 +55,12 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Use Stored Results:" style="font-weight: bold">
+            <!-- <el-form-item label="Use Stored Results:" style="font-weight: bold">
               <el-radio-group v-model="testSettings.useStored">
                 <el-radio-button label="True"></el-radio-button>
                 <el-radio-button label="False"></el-radio-button>
               </el-radio-group>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item>
               <el-button
                 type="primary"
@@ -98,36 +98,30 @@
             ></el-table-column>
             <el-table-column
               label="Acc"
-              prop="acc"
+              prop="acc2Final"
               align="center"
               min-width="80"
             ></el-table-column>
             <el-table-column
               label="F1"
-              prop="f1"
+              prop="f1Final"
               align="center"
               min-width="80"
             ></el-table-column>
             <el-table-column
               label="MAE"
-              prop="mae"
+              prop="maeFinal"
               align="center"
               min-width="80"
             ></el-table-column>
             <el-table-column
               label="Corr"
-              prop="corr"
-              align="center"
-              min-width="80"
-            ></el-table-column>
-            <el-table-column
-              label="Loss"
-              prop="loss"
+              prop="corrFinal"
               align="center"
               min-width="80"
             ></el-table-column>
           </el-table>
-          <p class="test-info-footer" style="text-align: right">{{ footer }}</p>
+          <!-- <p class="test-info-footer" style="text-align: right">{{ footer }}</p> -->
         </div>
       </el-col>
     </el-row>
@@ -150,12 +144,12 @@
           mode: 'Test',
           primary: '',
           other: [],
-          useStored: 'True',
+          // useStored: 'True',
         },
         testResults: [],
         testHeader: [],
         header: '',
-        footer: '',
+        // footer: '',
         settingsLoading: true,
         resultLoading: false,
       }
@@ -237,16 +231,16 @@
             h('span', this.testSettings.other.join(', ')),
           ])
         )
-        confirm.push(
-          h('p', { style: 'text-align: center' }, [
-            h(
-              'span',
-              { style: 'color: teal; font-weight: 700' },
-              'Use Stored Results = '
-            ),
-            h('span', this.testSettings.useStored),
-          ])
-        )
+        // confirm.push(
+        //   h('p', { style: 'text-align: center' }, [
+        //     h(
+        //       'span',
+        //       { style: 'color: teal; font-weight: 700' },
+        //       'Use Stored Results = '
+        //     ),
+        //     h('span', this.testSettings.useStored),
+        //   ])
+        // )
         this.$msgbox({
           // title: 'Confirm',
           message: h('div', { style: 'text-align: center' }, confirm),
@@ -260,10 +254,9 @@
       },
       async fetchSettings() {
         this.settingsLoading = true
-        let { datasets, models } = await getAllSettings()
-        // console.log(datasets)
+        let { datasets, pretrained } = await getAllSettings()
         this.datasetList = datasets
-        this.modelList = models
+        this.modelList = pretrained
         if (this.datasetList == '')
           this.datasetList = [{ name: 'None', sentiment: 'N/A' }]
         if (this.modelList == '') this.modelList = ['None']
@@ -274,6 +267,33 @@
       async fetchResults() {
         this.resultLoading = true
         let { result } = await batchResults(this.testSettings)
+        for (let i in result) {
+          result[i].acc2Final =
+            result[i].acc2.toFixed(4).toString() +
+            ' [' +
+            (result[i].acc2Delta < 0 ? '' : '+') +
+            result[i].acc2Delta.toFixed(4).toString() +
+            ']'
+
+          result[i].maeFinal =
+            result[i].mae.toFixed(4).toString() +
+            ' [' +
+            (result[i].maeDelta < 0 ? '' : '+') +
+            result[i].maeDelta.toFixed(4).toString() +
+            ']'
+          result[i].f1Final =
+            result[i].f1.toFixed(4).toString() +
+            ' [' +
+            (result[i].f1Delta < 0 ? '' : '+') +
+            result[i].f1Delta.toFixed(4).toString() +
+            ']'
+          result[i].corrFinal =
+            result[i].corr.toFixed(4).toString() +
+            ' [' +
+            (result[i].corrDelta < 0 ? '' : '+') +
+            result[i].corrDelta.toFixed(4).toString() +
+            ']'
+        }
         this.testResults = result
         this.header =
           'Test ' +
@@ -283,19 +303,33 @@
           ' ' +
           this.testSettings.mode +
           ' set'
-        if (this.testSettings.useStored === 'True') {
-          this.footer = 'Note: Used history results when possible. '
-        } else {
-          this.footer = ''
-        }
+        // if (this.testSettings.useStored === 'True') {
+        //   this.footer = 'Note: Used history results when possible. '
+        // } else {
+        //   this.footer = ''
+        // }
         this.resultLoading = false
       },
       onPrimaryChange() {
         this.testSettings.other = []
       },
       addStyle({ row, column, rowIndex, columnIndex }) {
+        let better = 'color: green'
+        let worse = 'color: red'
         if (columnIndex == 0) {
           return 'background: #FAFAFA; font-weight: bold'
+        } else if (columnIndex == 1) {
+          if (row.acc2Delta > 0) return better
+          else if (row.acc2Delta < 0) return worse
+        } else if (columnIndex == 2) {
+          if (row.f1Delta > 0) return better
+          else if (row.f1Delta < 0) return worse
+        } else if (columnIndex == 3) {
+          if (row.maeDelta > 0) return worse
+          else if (row.maeDelta < 0) return better
+        } else if (columnIndex == 4) {
+          if (row.corrDelta > 0) return better
+          else if (row.corrDelta < 0) return worse
         }
       },
     },
