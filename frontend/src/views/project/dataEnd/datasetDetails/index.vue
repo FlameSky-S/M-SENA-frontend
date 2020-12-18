@@ -428,7 +428,7 @@
         this.listLoading = true
         const { data, totalCount } = await getDetails({
           datasetName: this.queryForm.datasetName,
-          difficulty: 'All',
+          difficulty_filter: 'All',
           sentiment_filter: this.filter.sentiment,
           data_mode_filter: this.filter.data_mode,
           pageNo: this.queryForm.pageNo,

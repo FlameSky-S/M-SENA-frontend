@@ -5,7 +5,7 @@
     width="70%"
     @close="close"
   >
-    <el-card v-if="finished" shadow="hover">
+    <el-card v-if="utils.finished" shadow="hover">
       <h2 slot="header" class="finished-header">
         Congrats! You've finished all manual labeling for now.
       </h2>
@@ -124,11 +124,7 @@
 </template>
 
 <script>
-  import {
-    getNextSampleId,
-    getVideoLabelInfoById,
-    submitLabelResult,
-  } from '@/api/labeling'
+  import { getHardSamples, submitLabelResult } from '@/api/labeling'
   export default {
     name: 'Preview',
     data() {
@@ -137,6 +133,7 @@
         fullHeight: document.documentElement.clientHeight,
 
         dialogSettings: {
+          datasetName: '',
           title: '', // dialog titile.
           editmode: null, // selected rows.
           dialogFormVisible: false, // whether to show.
@@ -144,6 +141,7 @@
 
         form: {
           // thing to show in the dialog.
+          hardSampleList: [],
           clipInfo: {
             // right side info.
             sampleId: null,
@@ -159,19 +157,13 @@
         },
         results: [],
         utils: {
-          nextSampleId: null,
-          current_selection: null, // current selection for current video.
+          finished: null,
+          current_selection: -1,
           current_index: -1, // current labeling index.
-          last_index: -1, // the last labeled index.
         },
       }
     },
     computed: {
-      finished() {
-        return (
-          this.form.clipInfo.sampleId === -1 && !this.dialogSettings.editmode
-        )
-      },
       labelPosition() {
         if (this.fullWidth >= 992) {
           return 'top'
@@ -183,76 +175,82 @@
     created() {},
     methods: {
       SubmitResult() {
-        console.log(this.utils.current_selection)
-        if (this.utils.current_selection) {
-          this.results.push({
-            sampleId: this.form.clipInfo.sampleId,
-            result: this.utils.current_selection,
+        if (this.dialogSettings.editmode) {
+          this.form.hardSampleList[0] = {
+            sample_id: this.form.clipInfo.sampleId,
+            annotation: this.utils.current_selection,
+          }
+        } else {
+          this.form.hardSampleList[
+            this.utils.current_index
+          ].annotation = this.utils.current_selection
+          this.utils.current_selection = null
+        }
+        ;(async () => {
+          const { code, msg } = await submitLabelResult({
+            resultList: this.form.hardSampleList,
           })
-          ;(async () => {
-            const { code, msg } = await submitLabelResult({
-              resultList: this.results,
-            })
-          })()
           if (code === 200) {
             this.$baseMessage(msg, 'success')
             this.close()
           } else {
             this.$$baseMessage(msg, 'error')
           }
-        } else {
-          this.$baseAlert(
-            'Please confirm your choise for current video before submit.'
-          )
-        }
+        })()
+        // this.close()
       },
       getPrevious() {
+        this.form.hardSampleList[
+          this.utils.current_index
+        ].annotation = this.utils.current_selection
+
         if (this.utils.current_index == 0) {
           return
         } else {
           this.utils.current_index -= 1
-          this.utils.current_selection = this.results[
+          if (this.form.hardSampleList[this.utils.current_index].annotation)
+            this.utils.current_selection = this.form.hardSampleList[
+              this.utils.current_index
+            ].annotation
+          else this.utils.current_selection = null
+          // this.utils.current_index += 1
+          this.form.clipInfo.sampleId = this.form.hardSampleList[
             this.utils.current_index
-          ].result
-          this.form.clipInfo.sampleId = this.results[
+          ].sample_id
+          this.form.clipInfo.transcript = this.form.hardSampleList[
             this.utils.current_index
-          ].sampleId
-          ;(async () => {
-            const { data } = await getVideoLabelInfoById({
-              sampleId: this.form.clipInfo.sampleId,
-            })
-            this.form.videoconfig.url = data.videoUrl
-
-            this.form.clipInfo.transcript = data.text
-          })()
+          ].text
+          this.form.videoconfig.url = this.form.hardSampleList[
+            this.utils.current_index
+          ].video_url
         }
       },
       getNext() {
-        if (this.utils.current_index == this.utils.last_index) {
-          // get the video sampleId to label.
-          ;(async () => {
-            const { nextVideoSampleId } = await getNextSampleId({
-              currentSampleId: this.form.clipInfo.sampleId,
-            })
-            this.form.clipInfo.sampleId = nextVideoSampleId
-          })()
+        this.form.hardSampleList[
+          this.utils.current_index
+        ].annotation = this.utils.current_selection
+        if (this.utils.current_index + 1 < this.form.hardSampleList.length) {
           this.utils.current_index += 1
-          this.utils.last_index += 1
+          if (this.form.hardSampleList[this.utils.current_index].annotation)
+            this.utils.current_selection = this.form.hardSampleList[
+              this.utils.current_index
+            ].annotation
+          else this.utils.current_selection = null
+          // this.utils.current_index += 1
+          this.form.clipInfo.sampleId = this.form.hardSampleList[
+            this.utils.current_index
+          ].sample_id
+          this.form.clipInfo.transcript = this.form.hardSampleList[
+            this.utils.current_index
+          ].text
+          this.form.videoconfig.url = this.form.hardSampleList[
+            this.utils.current_index
+          ].video_url
         } else {
-          this.form.clipInfo.sampleId = this.results[++this.utils.current_index]
-        }
-        if (this.form.clipInfo.sampleId != -1) {
-          ;(async () => {
-            const { data } = await getVideoLabelInfoById({
-              sampleId: this.form.clipInfo.sampleId,
-            })
-            this.form.videoconfig.url = data.videoUrl
-
-            this.form.clipInfo.transcript = data.text
-          })()
         }
       },
-      show(row) {
+      show(row, datasetName) {
+        this.dialogSettings.datasetName = datasetName
         if (row.sample_id) {
           this.dialogSettings.editmode = true
 
@@ -260,32 +258,41 @@
           this.form.clipInfo.Prediction = row.prediction
           this.form.clipInfo.difficulty = row.difficulty
           this.form.clipInfo.transcript = row.text
+          this.form.videoconfig.url = row.video_url
         } else {
           this.dialogSettings.editmode = false
 
           // get the video sampleId to label.
           ;(async () => {
-            const { nextVideoSampleId } = await getNextSampleId({
-              currentSampleId: -1,
+            this.utils.current_index = 0
+            const { data } = await getHardSamples({
+              datasetName: this.dialogSettings.datasetName,
             })
-            this.form.clipInfo.sampleId = nextVideoSampleId
+
+            console.log(data)
+            if (data) {
+              this.form.hardSampleList = data
+              this.form.clipInfo.sampleId = this.form.hardSampleList[
+                this.utils.current_index
+              ].sample_id
+              this.form.clipInfo.transcript = this.form.hardSampleList[
+                this.utils.current_index
+              ].text
+              this.form.videoconfig.url = this.form.hardSampleList[
+                this.utils.current_index
+              ].video_url
+              //   console.log(this.form.hardSampleList)
+            } else {
+              this.utils.finished = true
+            }
           })()
         }
-
-        ;(async () => {
-          const { data } = await getVideoLabelInfoById({
-            sampleId: this.form.clipInfo.sampleId,
-          })
-          this.form.videoconfig.url = data.videoUrl
-          if (!this.dialogSettings.editmode) {
-            this.form.clipInfo.transcript = data.text
-          }
-        })()
 
         this.dialogSettings.title = 'Manually Labeling Video Clips'
         this.dialogSettings.dialogFormVisible = true
       },
       close() {
+        this.utils.current_selection = null
         this.dialogSettings.dialogFormVisible = false
         this.$emit('refresh-video-list')
       },

@@ -70,7 +70,6 @@
           })
           return
         } else {
-          console.log(this.settings.argsDisplay)
           if (this.dialogSettings.title === 'Classifier') {
             console.log('modifyClassifierConfig')
             saveClassifierConfig({
@@ -80,7 +79,7 @@
           } else {
             console.log('modifySelectorConfig')
             saveSelectorConfig({
-              classifier: this.dialogSettings.modelName,
+              selector: this.dialogSettings.modelName,
               args: this.settings.argsDisplay,
             })
           }
@@ -109,6 +108,7 @@
                 '\t'
               )
           })()
+          this.dialogSettings.title = 'Classifier'
         } else {
           ;(async () => {
             const { args } = await getSelectorConfig({ selector: modelName })
@@ -119,6 +119,7 @@
                 '\t'
               )
           })()
+          this.dialogSettings.title = 'Selector'
         }
         this.dialogSettings.dialogFormVisible = true
         this.dialogSettings.modelName = modelName

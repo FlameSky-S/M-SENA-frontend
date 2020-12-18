@@ -10,10 +10,9 @@ export function startActiveLearning(data) {
   })
 }
 
-// get video dialouge Info by sampleId
-export function getVideoLabelInfoById(data) {
+export function exportDataset(data) {
   return request({
-    url: '/dataEnd/getVideoLabelInfoById',
+    url: '/dataEnd/exportDataset',
     method: 'post',
     data,
   })
@@ -62,9 +61,9 @@ export function saveSelectorConfig(data) {
 }
 
 // get next sampleId to label.
-export function getNextSampleId(data) {
+export function getHardSamples(data) {
   return request({
-    url: '/dataEnd/getNextSampleId',
+    url: '/dataEnd/getHardSamples',
     method: 'post',
     data,
   })

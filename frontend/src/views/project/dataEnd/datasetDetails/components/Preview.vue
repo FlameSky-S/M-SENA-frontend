@@ -41,7 +41,6 @@
 </template>
 
 <script>
-  import { getVideoInfoByID } from '@/api/preview'
   export default {
     name: 'Preview',
     data() {
@@ -80,8 +79,7 @@
     methods: {
       showPreview(row) {
         this.title = 'Preview Video Clips'
-
-        this.fetchVideoUrl(row.sample_id)
+        this.form.videoconfig.url = row.video_url
 
         this.form.clipInfo.sampleID = row.sample_id
         this.form.clipInfo.belonging = row.data_mode
@@ -94,11 +92,6 @@
       close() {
         this.dialogFormVisible = false
         this.$emit('fetch-data')
-      },
-      async fetchVideoUrl(sample_id) {
-        const { data } = await getVideoInfoByID({ sample_id: sample_id })
-        this.form.videoconfig.url = data.video_url
-        // console.log(this.form.videoconfig.url)
       },
     },
   }

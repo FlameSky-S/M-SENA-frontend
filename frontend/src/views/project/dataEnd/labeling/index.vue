@@ -60,6 +60,9 @@
                 <el-button type="text" @click="startLabeling(row)">
                   Auto Labeling
                 </el-button>
+                <el-button type="text" @click="exportDataset(row)">
+                  Export
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -80,6 +83,7 @@
 
 <script>
   import { getDatasetList } from '@/api/datasetList'
+  import { exportDataset } from '@/api/labeling'
   export default {
     name: 'Labeling',
     components: {},
@@ -104,6 +108,11 @@
       this.fetchUnlockedData()
     },
     methods: {
+      exportDataset(row) {
+        exportDataset({
+          datasetName: row.datasetName,
+        })
+      },
       operationWidth() {
         if (this.fullWidth > 1500) {
           return 260 + 'px'

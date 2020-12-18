@@ -18,7 +18,7 @@
                     <div>
                       DIFFICULT
                       <strong>
-                        {{ labelingDetails.difficults }} /
+                        {{ labelingDetails.Hard }} /
                         {{ labelingDetails.totalInstance }}
                       </strong>
                     </div>
@@ -27,7 +27,7 @@
                     <div>
                       MEDIUM
                       <strong>
-                        {{ labelingDetails.medium }} /
+                        {{ labelingDetails.Middle }} /
                         {{ labelingDetails.totalInstance }}
                       </strong>
                     </div>
@@ -36,7 +36,7 @@
                     <div>
                       EASY
                       <strong>
-                        {{ labelingDetails.easy }} /
+                        {{ labelingDetails.Machine }} /
                         {{ labelingDetails.totalInstance }}
                       </strong>
                     </div>
@@ -323,7 +323,7 @@
       },
       handleQuery() {},
       manuallyLabel(row) {
-        this.$refs['manuallyLabel'].show(row)
+        this.$refs['manuallyLabel'].show(row, this.queryForm.datasetName)
       },
       async onSubmit() {
         const { code, msg } = await startActiveLearning({
@@ -355,18 +355,16 @@
       },
       async fetchDetails() {
         this.listLoading = true
-        // const { data, totalCount } = await getDetails(this.queryForm)
         const { data, totalCount } = await getDetails({
           pageNo: this.queryForm.pageNo,
           pageSize: this.queryForm.pageSize,
           data_mode_filter: 'All',
-          difficulty: 'All',
+          difficulty_filter: this.filter.difficulty,
           sentiment_filter: this.filter.sentiment,
           datasetName: this.queryForm.datasetName,
         })
         this.instanceList = data
         data.forEach((item, index) => {
-          item.need = item.difficulty === 'HARD' ? 'YES' : 'NO'
           item.prediction = item.prediction ? item.prediction : '-'
           switch (item.label_by) {
             case -1:
@@ -385,7 +383,9 @@
               item.difficulty = 'hard'
               break
           }
+          item.need = item.difficulty === 'hard' ? 'YES' : 'NO'
         })
+
         this.total = totalCount
 
         this.listLoading = false
@@ -394,37 +394,28 @@
         const { data } = await getMetaData({
           datasetName: this.queryForm.datasetName,
         })
-
-        this.labelingDetails.difficults = data.difficultyCount['Difficulty']
-          ? data.difficultyCount['Difficulty']
-          : 0
-        this.labelingDetails.medium = data.difficultyCount['Medium']
-          ? data.difficultyCount['Medium']
-          : 0
-        this.labelingDetails.easy = data.difficultyCount['Easy']
-          ? data.difficultyCount['Easy']
-          : 0
-        this.labelingDetails.human = data.difficultyCount['Human']
-          ? data.difficultyCount['Human']
-          : 0
-        this.labelingDetails.unlabeled = data.difficultyCount['Unlabeled']
-          ? data.difficultyCount['Unlabeled']
-          : 0
-
+        this.labelingDetails = data.difficultyCount
         for (var key in this.labelingDetails) {
           if (
             this.labelingDetails[key] != 'labeled' &&
-            this.labelingDetails[key]
+            this.labelingDetails[key] != 'totalInstance' &&
+            this.labelingDetails[key] &&
+            !this.filter.difficulty_list.includes(key)
           ) {
             this.filter.difficulty_list.push(key)
           }
         }
         this.filter.difficulty = this.filter.difficulty_list[0]
+
         for (var key in data.classCount) {
-          this.filter.sentiment_list.push(key)
+          if (!this.filter.sentiment_list.includes(key))
+            this.filter.sentiment_list.push(key)
         }
         this.filter.sentiment = this.filter.sentiment_list[0]
-        // this.labelingDetails.labeled = data.difficultyCount['Label']
+
+        this.labelingDetails.labeled =
+          this.labelingDetails.Human + this.labelingDetails.Machine
+
         this.labelingDetails.totalInstance = data.totalCount
       },
     },
