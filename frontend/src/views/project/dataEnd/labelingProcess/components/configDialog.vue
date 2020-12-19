@@ -100,7 +100,7 @@
             const { args, code } = await getClassifierConfig({
               classifier: modelName,
             })
-            console.log(args)
+            // console.log(args)
             if (args != '')
               this.settings.argsDisplay = JSON.stringify(
                 JSON.parse(args),

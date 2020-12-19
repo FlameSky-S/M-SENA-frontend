@@ -264,7 +264,7 @@
         background: true,
         selectRows: '',
         elementLoadingText: 'Loading Elements...',
-        labelingDetails: null,
+        labelingDetails: {},
         activeLearningModel: {
           classifierList: [],
           classifier: '',
@@ -319,15 +319,24 @@
         this.$refs['manuallyLabel'].show(row, this.queryForm.datasetName)
       },
       async onSubmit() {
-        const { code, msg } = await startActiveLearning({
-          datasetName: this.queryForm.datasetName,
-          selector: this.activeLearningModel.selector,
-          classifier: this.activeLearningModel.classifier,
-        })
-        if (code === 200 && msg == 'success') {
-          this.$baseMessage('Start Active Learning Successfully', 'success')
+        if (
+          this.labelingDetails.labeled === this.labelingDetails.totalInstance
+        ) {
+          this.$baseMessage(
+            'This Dataset no longer needs to be labeled',
+            'error'
+          )
         } else {
-          this.$baseMessage('Sorry, There is currently a bug', 'error')
+          const { code, msg } = await startActiveLearning({
+            datasetName: this.queryForm.datasetName,
+            selector: this.activeLearningModel.selector,
+            classifier: this.activeLearningModel.classifier,
+          })
+          if (code === 200 && msg == 'success') {
+            this.$baseMessage('Start Active Learning Successfully', 'success')
+          } else {
+            this.$baseMessage('Sorry, There is currently a bug', 'error')
+          }
         }
       },
       handleSizeChange(val) {
@@ -388,12 +397,14 @@
           datasetName: this.queryForm.datasetName,
         })
         this.labelingDetails = data.difficultyCount
+        // console.log(this.labelingDetails)
         this.labelingDetails.Middle = this.labelingDetails.Middle
           ? this.labelingDetails.Middle
           : 0
         this.labelingDetails.Machine = this.labelingDetails.Machine
           ? this.labelingDetails.Machine
           : 0
+        // console.log(this.labelingDetails)
         this.labelingDetails.Hard = this.labelingDetails.Hard
           ? this.labelingDetails.Hard
           : 0

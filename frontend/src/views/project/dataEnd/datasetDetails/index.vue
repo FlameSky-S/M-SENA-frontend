@@ -249,7 +249,7 @@
             datasetName: null,
             locked: null,
             human: 0,
-            easy: 0,
+            machine: 0,
             medium: 0,
             hard: 0,
             unlabeled: 0,
@@ -267,25 +267,12 @@
       }
     },
     computed: {
-      lockOperation() {
-        return this.datasetDetails.detailInfo.locked === 'locked'
-          ? 'UnLock'
-          : 'Lock'
-      },
-      disabledButton() {
-        return this.datasetDetails.detailInfo.locked === 'locked' ? true : false
-      },
       labeledFraction() {
         return (
           this.datasetDetails.detailInfo.labeled +
           ' / ' +
           this.datasetDetails.detailInfo.totalCount
         )
-      },
-      showUnimodalColumn() {
-        if (this.datasetDetails.instanceList)
-          return this.datasetDetails.instanceList[0].T_label_type ? true : false
-        return false
       },
     },
     created() {
@@ -382,15 +369,15 @@
         this.datasetDetails.detailInfo.locked = data.is_locked
           ? 'locked'
           : 'unlocked'
-        this.datasetDetails.detailInfo.easy = data.difficultyCount['Easy']
-          ? data.difficultyCount['Easy']
+        this.datasetDetails.detailInfo.machine = data.difficultyCount['Machine']
+          ? data.difficultyCount['Machine']
           : 0
         this.datasetDetails.detailInfo.human = data.difficultyCount['Human']
           ? data.difficultyCount['Human']
           : 0
         this.datasetDetails.detailInfo.labeled =
           this.datasetDetails.detailInfo.human +
-          this.datasetDetails.detailInfo.easy
+          this.datasetDetails.detailInfo.machine
         // Search Bar DOM.
         this.datasetDetails.detailInfo.classCount = data.classCount
         this.datasetDetails.detailInfo.difficultyCount = data.difficultyCount
