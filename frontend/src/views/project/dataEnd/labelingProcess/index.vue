@@ -264,14 +264,7 @@
         background: true,
         selectRows: '',
         elementLoadingText: 'Loading Elements...',
-        labelingDetails: {
-          difficults: 0,
-          medium: 0,
-          easy: 0,
-          unlabeled: 0,
-          human: 0,
-          labeled: 0,
-        },
+        labelingDetails: null,
         activeLearningModel: {
           classifierList: [],
           classifier: '',
@@ -395,6 +388,15 @@
           datasetName: this.queryForm.datasetName,
         })
         this.labelingDetails = data.difficultyCount
+        this.labelingDetails.Middle = this.labelingDetails.Middle
+          ? this.labelingDetails.Middle
+          : 0
+        this.labelingDetails.Machine = this.labelingDetails.Machine
+          ? this.labelingDetails.Machine
+          : 0
+        this.labelingDetails.Hard = this.labelingDetails.Hard
+          ? this.labelingDetails.Hard
+          : 0
         for (var key in this.labelingDetails) {
           if (
             this.labelingDetails[key] != 'labeled' &&

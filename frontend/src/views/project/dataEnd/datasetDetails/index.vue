@@ -292,36 +292,30 @@
       this.queryForm.datasetName = this.$route.query.dataset
     },
     mounted() {
+      // Fetch Video List Info && Data Meta Data -> Excharts Dom.
       ;(async () => {
         await this.fetchMetadata()
         await this.fetchDetails()
-
+        // Construct Excharts Dom.
         var echarts = require('echarts')
-        // 基于准备好的dom，初始化echarts实例
         var pie_dv_1 = this.$refs.dataDistribution1
         var pie_dv_2 = this.$refs.dataDistribution2
         let myChart_1 = echarts.init(pie_dv_1)
         let myChart_2 = echarts.init(pie_dv_2)
+        var difficulty_data = []
+        for (var key in this.datasetDetails.detailInfo.difficultyCount) {
+          difficulty_data.push({
+            value: this.datasetDetails.detailInfo.difficultyCount[key],
+            name: key,
+          })
+        }
         myChart_1.setOption({
           series: [
             {
               name: '访问来源',
-              type: 'pie', // 设置图表类型为饼图
-              radius: '55%', // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
-              data: [
-                // 数据数组，name 为数据项名称，value 为数据项值
-                { value: this.datasetDetails.detailInfo.human, name: 'Human' },
-                {
-                  value: this.datasetDetails.detailInfo.unlabeled,
-                  name: 'Unlabeled',
-                },
-                { value: this.datasetDetails.detailInfo.easy, name: 'Easy' },
-                {
-                  value: this.datasetDetails.detailInfo.medium,
-                  name: 'Medium',
-                },
-                { value: this.datasetDetails.detailInfo.hard, name: 'Hard' },
-              ],
+              type: 'pie',
+              radius: '55%',
+              data: difficulty_data,
             },
           ],
         })
@@ -332,14 +326,12 @@
             name: key,
           })
         }
-
-        // console.log(sentiment_data)
         myChart_2.setOption({
           series: [
             {
               name: '访问来源',
-              type: 'pie', // 设置图表类型为饼图
-              radius: '55%', // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
+              type: 'pie',
+              radius: '55%',
               data: sentiment_data,
             },
           ],
@@ -350,68 +342,6 @@
       applyFilter() {
         this.queryForm.pageNo = 1
         this.fetchDetails()
-      },
-      flexColumnWidth(str, tableData, flag = 'max') {
-        // str为该列的字段名(传字符串);tableData为该表格的数据源(传变量);
-        // flag为可选值，可不传该参数,传参时可选'max'或'equal',默认为'max'
-        // flag为'max'则设置列宽适配该列中最长的内容,flag为'equal'则设置列宽适配该列中第一行内容的长度。
-        str = str + ''
-        let columnContent = ''
-        if (
-          !tableData ||
-          !tableData.length ||
-          tableData.length === 0 ||
-          tableData === undefined
-        ) {
-          return
-        }
-        if (!str || !str.length || str.length === 0 || str === undefined) {
-          return
-        }
-        if (flag === 'equal') {
-          // 获取该列中第一个不为空的数据(内容)
-          for (let i = 0; i < tableData.length; i++) {
-            if (tableData[i][str].length > 0) {
-              // console.log('该列数据[0]:', tableData[0][str])
-              columnContent = tableData[i][str]
-              break
-            }
-          }
-        } else {
-          // 获取该列中最长的数据(内容)
-          let index = 0
-          for (let i = 0; i < tableData.length; i++) {
-            if (tableData[i][str] === null) {
-              return
-            }
-            const now_temp = tableData[i][str] + ''
-            const max_temp = tableData[index][str] + ''
-            if (now_temp.length > max_temp.length) {
-              index = i
-            }
-          }
-          columnContent = tableData[index][str]
-        }
-        // console.log('该列数据[i]:', columnContent)
-        // 以下分配的单位长度可根据实际需求进行调整
-        let flexWidth = 0
-        for (const char of columnContent) {
-          if ((char >= 'A' && char <= 'Z') || (char >= 'a' && char <= 'z')) {
-            // 如果是英文字符，为字符分配8个单位宽度
-            flexWidth += 8
-          } else if (char >= '\u4e00' && char <= '\u9fa5') {
-            // 如果是中文字符，为字符分配15个单位宽度
-            flexWidth += 15
-          } else {
-            // 其他种类字符，为字符分配8个单位宽度
-            flexWidth += 8
-          }
-        }
-        if (flexWidth < 80) {
-          // 设置最小宽度
-          flexWidth = 80
-        }
-        return flexWidth + 'px'
       },
       showPreview(row) {
         this.$refs['preview'].showPreview(row)
@@ -436,31 +366,24 @@
         })
         this.datasetDetails.instanceList = data
         this.total = totalCount
-        setTimeout(() => {
-          this.listLoading = false
-        }, 500)
+        this.listLoading = false
       },
       async fetchMetadata() {
         const { data } = await getMetaData({
           datasetName: this.queryForm.datasetName,
         })
+        // Table List DOM.
         this.datasetDetails.detailInfo.datasetName = data.datasetName
+        this.datasetDetails.detailInfo.totalCount = data.totalCount
+        this.datasetDetails.detailInfo.language = data.language
+        this.datasetDetails.detailInfo.description = data.description
+
+        // Echarts DOM.
         this.datasetDetails.detailInfo.locked = data.is_locked
           ? 'locked'
           : 'unlocked'
         this.datasetDetails.detailInfo.easy = data.difficultyCount['Easy']
           ? data.difficultyCount['Easy']
-          : 0
-        this.datasetDetails.detailInfo.medium = data.difficultyCount['Medium']
-          ? data.difficultyCount['Medium']
-          : 0
-        this.datasetDetails.detailInfo.hard = data.difficultyCount['Difficulty']
-          ? data.difficultyCount['Difficulty']
-          : 0
-        this.datasetDetails.detailInfo.unlabeled = data.difficultyCount[
-          'Unlabeled'
-        ]
-          ? data.difficultyCount['Unlabeled']
           : 0
         this.datasetDetails.detailInfo.human = data.difficultyCount['Human']
           ? data.difficultyCount['Human']
@@ -468,7 +391,9 @@
         this.datasetDetails.detailInfo.labeled =
           this.datasetDetails.detailInfo.human +
           this.datasetDetails.detailInfo.easy
+        // Search Bar DOM.
         this.datasetDetails.detailInfo.classCount = data.classCount
+        this.datasetDetails.detailInfo.difficultyCount = data.difficultyCount
         for (var key in data.classCount) {
           this.filter.sentiment_list.push(key)
         }
@@ -477,11 +402,6 @@
           this.filter.data_mode_list.push(key)
         }
         this.filter.data_mode = this.filter.data_mode_list[0]
-        this.datasetDetails.detailInfo.difficultyCount = data.difficultCount
-
-        this.datasetDetails.detailInfo.totalCount = data.totalCount
-        this.datasetDetails.detailInfo.language = data.language
-        this.datasetDetails.detailInfo.description = data.description
       },
     },
   }
