@@ -269,7 +269,7 @@
               datasetName: this.dialogSettings.datasetName,
             })
 
-            console.log(data)
+            // console.log(data)
             if (data) {
               this.form.hardSampleList = data
               this.form.clipInfo.sampleId = this.form.hardSampleList[
