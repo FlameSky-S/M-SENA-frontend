@@ -14,30 +14,6 @@ export function scanModel() {
   })
 }
 
-export function getResults(data) {
-  return request({
-    url: '/modelEnd/getResults',
-    method: 'post',
-    data,
-  })
-}
-
-export function setDefaultModel(data) {
-  return request({
-    url: '/modelEnd/setDefaultModel',
-    method: 'post',
-    data,
-  })
-}
-
-export function delResult(data) {
-  return request({
-    url: '/modelEnd/delResult',
-    method: 'post',
-    data,
-  })
-}
-
 export function getArgs(data) {
   return request({
     url: '/modelEnd/getArgs',

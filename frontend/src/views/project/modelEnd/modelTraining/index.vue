@@ -158,10 +158,16 @@
       async onSettingsChange() {
         let model = this.trainSettings.model
         let query = { model: model }
-        let { args } = await getArgs(query)
+        let arg = ''
+        if (this.$route.query.args) {
+          arg = this.$route.query.args
+        } else {
+          let { args } = await getArgs(query)
+          arg = args
+        }
         // this.trainSettings.args = args
-        if (args != '')
-          this.argsDisplay = JSON.stringify(JSON.parse(args), null, '\t')
+        if (arg != '')
+          this.argsDisplay = JSON.stringify(JSON.parse(arg), null, '\t')
       },
       async startTrain() {
         this.icon = 'el-icon-loading'

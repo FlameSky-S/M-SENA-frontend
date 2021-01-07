@@ -52,6 +52,7 @@
                   target="_blank"
                 >
                   {{ scope.row.paper_name }}
+                  <i class="el-icon-document"></i>
                 </a>
               </template>
             </el-table-column>

@@ -32,9 +32,9 @@ export const constantRoutes = [
     path: '/data',
     component: Layout,
     redirect: 'noRedirect',
-    name: 'Data',
+    name: 'Dataset',
     meta: {
-      title: 'Data End',
+      title: 'Dataset',
       icon: 'shopping-cart',
     },
     children: [
@@ -90,7 +90,7 @@ export const constantRoutes = [
     redirect: 'noRedirect',
     name: 'Model',
     meta: {
-      title: 'Model End',
+      title: 'Model',
       icon: 'users-cog',
     },
     children: [
@@ -103,14 +103,23 @@ export const constantRoutes = [
           title: 'Model Management',
         },
       },
-      {
-        path: 'modelResults',
-        name: ' Model Results',
-        component: () => import('@/views/project/modelEnd/modelResults/index'),
-        meta: {
-          title: 'Model Results',
-        },
-      },
+      // {
+      //   path: 'modelResults',
+      //   name: ' Model Results',
+      //   component: () => import('@/views/project/modelEnd/modelResults/index'),
+      //   meta: {
+      //     title: 'Model Results',
+      //   },
+      // },
+      // {
+      //   path: 'resultDetail',
+      //   name: 'Result Details',
+      //   component: () => import('@/views/project/modelEnd/resultDetails/index'),
+      //   meta: {
+      //     title: 'Result Details',
+      //   },
+      //   hidden: true,
+      // },
       {
         path: 'modelTraining',
         name: ' Model Training',
@@ -122,38 +131,46 @@ export const constantRoutes = [
     ],
   },
   {
-    path: '/presentation',
+    path: '/analysis',
     component: Layout,
     redirect: 'noRedirect',
-    name: 'Presentation',
+    name: 'Analysis',
     meta: {
-      title: 'Presentation End',
+      title: 'Analysis',
       icon: 'box-open',
     },
     children: [
       {
+        path: 'resultAnalysis',
+        name: 'Result Analysis',
+        component: () =>
+          import('@/views/project/analysisEnd/resultAnalysis/index'),
+        meta: {
+          title: 'Result Analysis',
+        },
+      },
+      {
+        path: 'resultDetails',
+        name: 'Result Details',
+        component: () =>
+          import('@/views/project/analysisEnd/resultDetails/index'),
+        meta: {
+          title: 'Result Details',
+        },
+        hidden: true,
+      },
+      {
         path: 'batchTest',
         name: 'Batch Test',
-        component: () =>
-          import('@/views/project/presentationEnd/batchTest/index'),
+        component: () => import('@/views/project/analysisEnd/batchTest/index'),
         meta: {
           title: 'Batch Test',
         },
       },
       {
-        path: 'sampleTest',
-        name: 'Sample Test',
-        component: () =>
-          import('@/views/project/presentationEnd/sampleTest/index'),
-        meta: {
-          title: 'Case Study',
-        },
-      },
-      {
         path: 'liveTest',
         name: ' Live Test',
-        component: () =>
-          import('@/views/project/presentationEnd/liveTest/index'),
+        component: () => import('@/views/project/analysisEnd/liveTest/index'),
         meta: {
           title: 'Real Time Presentation',
         },
