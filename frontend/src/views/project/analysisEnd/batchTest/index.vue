@@ -130,7 +130,7 @@
 
 <script>
   import { getAllSettings } from '@/api/getSettings'
-  import { batchResults } from '@/api/testEnd'
+  import { batchResults } from '@/api/analysisEnd'
   export default {
     name: 'BatchTest',
     components: {},

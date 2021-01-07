@@ -253,7 +253,7 @@
 
 <script>
   import { getAllSettings } from '@/api/getSettings'
-  import { liveResults, getTranscript } from '@/api/testEnd'
+  import { liveResults } from '@/api/analysisEnd'
   export default {
     name: 'LiveTest',
     components: {},
@@ -544,7 +544,7 @@
           this.recData = []
           this.recorder = null
           this.rec_url = URL.createObjectURL(this.blob)
-          this.fetchTranscript()
+          // this.fetchTranscript()
           // this.$refs.downloadButton.href = this.rec_url
           // this.$refs.downloadButton.download = 'RecordedVideo.mp4'
           this.stopCam()
@@ -571,12 +571,12 @@
         this.resultShow = true
         this.resultLoading = false
       },
-      async fetchTranscript() {
-        let { transcript } = await getTranscript(this.rec_url)
-        this.testSettings.transcript = transcript
-        this.textArea = this.testSettings.transcript
-        this.transcriptDisabled = false
-      },
+      // async fetchTranscript() {
+      //   let { transcript } = await getTranscript(this.rec_url)
+      //   this.testSettings.transcript = transcript
+      //   this.textArea = this.testSettings.transcript
+      //   this.transcriptDisabled = false
+      // },
       transcriptConfirm() {
         this.testSettings.transcript = this.textArea
       },
