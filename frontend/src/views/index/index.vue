@@ -1,138 +1,201 @@
 <template>
   <div class="index-container">
-    <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-        <el-card class="card" shadow="never">
-          <div slot="header">
-            <span>M-SENA</span>
-          </div>
-          <el-carousel :interval="0" type="card" height="400px">
-            <el-carousel-item v-for="item in 3" :key="item"></el-carousel-item>
-          </el-carousel>
-        </el-card>
+    <center style="font-size: 38px; line-height: 60px; text-align: center">
+      M-SENA: All-in-One Platform for Multimodal Sentiment Analysis
+    </center>
+    <center style="font-size: 20px; line-height: 30px">
+      Developed by
+      <a ref="thuiar.github.io">THUIAR</a>
+      Team
+      <a ref="">@iyuge</a>
+      ,
+      <a ref="">@FlameSky-S</a>
+      ,
+      <a ref="">@Columbine21</a>
+      , Directed by
+      <a ref="">Professor Xu</a>
+    </center>
+    <el-row style="margin: 2% 2%">
+      <h2 class="header2">System Functionality</h2>
+      <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8" class="functionality">
+        <el-carousel
+          indicator-position="outside"
+          :autoplay="false"
+          height="540px"
+        >
+          <el-carousel-item>
+            <h3 class="header3">
+              <em>Section one</em>
+              : Data-End
+            </h3>
+            <div>
+              <div>
+                <a class="function_link" @click="handleClick">
+                  Dataset Management
+                </a>
+              </div>
+              <p class="description">
+                This is a paragraph of description of the functionality of
+                dataset Management.This is a paragraph of description of the
+                functionality of dataset Management.
+              </p>
+              <div style="margin: 3% 0%">
+                <a class="function_link" @click="handleClick">
+                  Dataset Annotation
+                </a>
+              </div>
+              <p class="description">
+                This is a paragraph of description of the functionality of
+                dataset Management.This is a paragraph of description of the
+                functionality of dataset Management.
+              </p>
+            </div>
+          </el-carousel-item>
+          <el-carousel-item>
+            <h3 class="header3">
+              <em>Section two</em>
+              : Model-End
+            </h3>
+            <div>
+              <div>
+                <a class="function_link" @click="handleClick">
+                  Dataset Management
+                </a>
+              </div>
+              <div style="margin: 3% 0%">
+                <a class="function_link" @click="handleClick">
+                  Dataset Annotation
+                </a>
+              </div>
+            </div>
+          </el-carousel-item>
+          <el-carousel-item>
+            <h3 class="header3">
+              <em>Section three</em>
+              : Analysis-End
+            </h3>
+            <div>
+              <div>
+                <a class="function_link" @click="handleClick">
+                  Dataset Management
+                </a>
+              </div>
+              <div style="margin: 3% 0%">
+                <a class="function_link" @click="handleClick">
+                  Dataset Annotation
+                </a>
+              </div>
+            </div>
+          </el-carousel-item>
+        </el-carousel>
       </el-col>
-
-      <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-        <el-card class="card" shadow="never">
-          <div slot="header">
-            <span>依赖信息</span>
-            <div style="float: right">部署时间:{{ updateTime }}</div>
-          </div>
-          <table class="table">
-            <tr>
-              <td>@vue/cli版本</td>
-              <td>{{ devDependencies['@vue/cli-service'] }}</td>
-              <td>vue版本</td>
-              <td>{{ dependencies['vue'] }}</td>
-            </tr>
-            <tr>
-              <td>vuex版本</td>
-              <td>{{ dependencies['vuex'] }}</td>
-              <td>vue-router版本</td>
-              <td>{{ dependencies['vue-router'] }}</td>
-            </tr>
-            <tr>
-              <td>element-ui版本</td>
-              <td>{{ dependencies['element-ui'] }}</td>
-              <td>axios版本</td>
-              <td>{{ dependencies['axios'] }}</td>
-            </tr>
-            <tr>
-              <td>eslint版本</td>
-              <td>{{ devDependencies['eslint'] }}</td>
-              <td>prettier版本</td>
-              <td>{{ devDependencies['prettier'] }}</td>
-            </tr>
-            <tr>
-              <td>sass版本</td>
-              <td>{{ devDependencies['sass'] }}</td>
-              <td>mockjs版本</td>
-              <td>{{ dependencies['mockjs'] }}</td>
-            </tr>
-            <tr>
-              <td>zx-layouts版本</td>
-              <td>{{ dependencies['zx-layouts'] }}</td>
-              <td>lodash版本</td>
-              <td>{{ dependencies['lodash'] }}</td>
-            </tr>
-          </table>
-        </el-card>
+      <el-col :xs="24" :sm="24" :md="24" :lg="16" :xl="16">
+        <img
+          loading="lazy"
+          src="@/assets/image.png"
+          width="92%"
+          style="margin-left: 4%"
+        />
+      </el-col>
+    </el-row>
+    <el-row style="margin: 2% 2%">
+      <el-col :xs="24" :sm="24" :md="24" :lg="14" :xl="12">
+        <div class="news">
+          <h2 class="header2">News</h2>
+          <p>[mm/dd/yyyy] TEMPLATE: New Features Completed for M-SENA</p>
+          <p>
+            [12/31/2020]
+            <span style="color: #ff0000">BREAKTHROUGH</span>
+            : M-SENA SYSTEM Verison one FINISHED.
+          </p>
+          <p>
+            [01/08/2021]
+            <span style="color: #00ff00">NEW FEATURES</span>
+            : Modalities Fusion Interpretation IS FINISHED.
+          </p>
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :md="24" :lg="10" :xl="12">
+        <div class="contributor">
+          <h2 class="header2">Contributors</h2>
+          <p style="font-size: 20px; line-height: 30px">
+            Developed by
+            <a ref="thuiar.github.io">THUIAR</a>
+            Team
+            <a ref="">@iyuge</a>
+            ,
+            <a ref="">@FlameSky-S</a>
+            ,
+            <a ref="">@Columbine21</a>
+          </p>
+          <p style="font-size: 20px; line-height: 30px">
+            Directed by
+            <a ref="">Professor Xu</a>
+          </p>
+        </div>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-  import { dependencies, devDependencies } from '../../../package.json'
   export default {
     name: 'Index',
     data() {
       return {
-        fullWidth: document.documentElement.clientWidth,
-        fullHeight: document.documentElement.clientHeight,
-        timer: 0,
         updateTime: process.env.VUE_APP_UPDATE_TIME,
         nodeEnv: process.env.NODE_ENV,
-        dependencies: dependencies,
-        devDependencies: devDependencies,
-        //更新日志
-        reverse: true,
-        //其他信息
-        userAgent: navigator.userAgent,
       }
-    },
-    created() {
-      // console.log(this.fullWidth)
-      // console.log(this.fullHeight)
     },
     methods: {},
   }
 </script>
 <style lang="scss" scoped>
-  .el-carousel__item h3 {
-    margin: 0;
-    font-size: 14px;
-    line-height: 300px;
-    color: #475669;
-    opacity: 0.75;
+  .carousel-title {
+    margin-left: 5%;
+  }
+  .news p {
+    margin: 0 0 20px 0;
+    font-size: 16px;
+  }
+  .news h2 {
+    margin: 0 0 10px 0;
+    fontsize: 24px;
+  }
+  .contributor h2 {
+    margin: 0 0 10px 0;
+    fontsize: 24px;
+  }
+  .header2 {
+    font-size: 24px;
+    line-height: 1.5em;
+    letter-spacing: 1px;
+    background-image: url('../../assets/border_h2.gif');
+    background-repeat: no-repeat;
+    background-position: bottom left;
+    background-size: 250px;
+  }
+  .functionality {
+    .header3 {
+      font-size: 20px;
+      line-height: 1em;
+      letter-spacing: 0.5px;
+    }
+    .function_link {
+      margin-left: 4%;
+      font-size: 20px;
+      line-height: 1em;
+    }
+    .description {
+      margin: 2% 8%;
+      font-size: 16px;
+      line-height: 1.6em;
+    }
   }
 
-  .el-carousel__item:nth-child(2n) {
-    background-color: #99a9bf;
-  }
-
-  .el-carousel__item:nth-child(2n + 1) {
-    background-color: #d3dce6;
-  }
   .index-container {
     padding: 0 !important;
     margin: 0 !important;
     background: #f5f7f8 !important;
-
-    .card {
-      min-height: 400px;
-    }
-
-    .table {
-      width: 100%;
-      color: #666;
-      border-collapse: collapse;
-      background-color: #fff;
-
-      td {
-        position: relative;
-        min-height: 20px;
-        padding: 9px 15px;
-        font-size: 14px;
-        line-height: 20px;
-        border: 1px solid #e6e6e6;
-
-        &:nth-child(odd) {
-          width: 20%;
-          text-align: right;
-          background-color: #f7f7f7;
-        }
-      }
-    }
   }
 </style>
