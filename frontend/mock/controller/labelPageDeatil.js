@@ -34,7 +34,7 @@ const LabelPageVideoList = [
   {
     sampleId: '03bSnISJMiM_15',
     difficulty: 'EASY',
-    prediction: 'Neutural',
+    prediction: 'neutral',
     manualLabel: 'Positive',
   },
   {

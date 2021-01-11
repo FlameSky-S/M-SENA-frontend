@@ -16,9 +16,9 @@ export function sampleResults(query) {
   })
 }
 
-export function liveResults(query) {
+export function runLive(query) {
   return request({
-    url: '/analysisEnd/liveResults',
+    url: '/analysisEnd/runLive',
     method: 'post',
     data: query,
   })

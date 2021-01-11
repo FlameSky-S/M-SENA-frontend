@@ -7,7 +7,7 @@ const result = {
   prediction: {
     predict: 'Positive',
     negative: '2.0%',
-    neutural: '9.1%',
+    neutral: '9.1%',
     positive: '88.9%',
   },
   v_url: 'https://cdn.jsdelivr.net/gh/chuzhixin/videos@master/video.mp4',

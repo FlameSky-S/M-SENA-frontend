@@ -1,4 +1,4 @@
-const sentiment = ['Positive', 'Neutural', 'Negative']
+const sentiment = ['Positive', 'neutral', 'Negative']
 
 const datasets = [
   {

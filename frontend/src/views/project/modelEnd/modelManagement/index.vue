@@ -180,3 +180,8 @@
     margin: 0% 2% 1% 2%;
   }
 </style>
+<style>
+  .el-table .cell {
+    word-break: keep-all;
+  }
+</style>

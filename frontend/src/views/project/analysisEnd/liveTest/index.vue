@@ -1,14 +1,5 @@
 <template>
   <div ref="container" class="liveTest-container">
-    <!-- <el-alert
-      v-for="alert in alertList"
-      :key="alert.id"
-      :title="alert.msg"
-      type="error"
-      center
-      show-icon
-      @close="alertClose"
-    ></el-alert> -->
     <h1>Live Demo</h1>
     <el-row v-loading="settingsLoading">
       <el-col :offset="col1Offset" :xs="14" :sm="11" :md="9" :lg="6" :xl="6">
@@ -86,10 +77,7 @@
             style="margin: 5%"
           >
             <el-form-item label="Primary Model:" style="font-weight: bold">
-              <el-select
-                v-model="testSettings.primary"
-                @change="onPrimaryChange"
-              >
+              <el-select v-model="testSettings.model" multiple collapse-tags>
                 <el-option
                   v-for="item in modelList"
                   :key="item"
@@ -98,42 +86,25 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Other Models:" style="font-weight: bold">
-              <el-select v-model="testSettings.other" multiple collapse-tags>
+            <el-form-item label="Language:" style="font-weight: bold">
+              <el-select v-model="testSettings.language">
                 <el-option
-                  v-for="item in otherList"
+                  v-for="item in langList"
                   :key="item"
                   :label="item"
                   :value="item"
                 ></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="Transcript:" style="font-weight: bold">
+              <el-input
+                v-model="testSettings.transcript"
+                type="textarea"
+                :autosize="{ minRows: 2, maxRows: 4 }"
+                resize="none"
+              ></el-input>
+            </el-form-item>
           </el-form>
-          <el-divider
-            class="hidden-md-and-down"
-            direction="horizontal"
-          ></el-divider>
-          <h3>Transcript:</h3>
-          <el-input
-            v-model="textArea"
-            type="textarea"
-            :autosize="{ minRows: 2, maxRows: 4 }"
-            resize="none"
-            :disabled="transcriptDisabled"
-          ></el-input>
-          <p style="text-align: right">
-            <el-button
-              type="primary"
-              :disabled="transcriptDisabled"
-              @click="transcriptConfirm"
-            >
-              <vab-icon :icon="['fas', 'check']"></vab-icon>
-              Confirm
-            </el-button>
-            <el-button :disabled="transcriptDisabled" @click="transcriptReset">
-              Reset
-            </el-button>
-          </p>
         </div>
       </el-col>
       <el-divider
@@ -188,7 +159,7 @@
               @click="onSubmit"
             >
               <vab-icon :icon="['fas', 'check']"></vab-icon>
-              Analyze
+              Go
             </el-button>
           </p>
           <!-- <a ref="downloadButton" class="button">download</a> -->
@@ -199,10 +170,9 @@
         class="right-divider hidden-md-and-down"
       ></el-divider>
       <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8">
-        <div v-loading="resultLoading" class="test-results">
+        <div class="test-results">
           <h3>Results:</h3>
-          <h3 style="text-align: center">{{ resultHeader }}</h3>
-          <el-table
+          <!-- <el-table
             v-loading="resultLoading"
             :data="testResults"
             :cell-style="addStyle"
@@ -226,25 +196,32 @@
             <el-table-column
               v-if="resultShow"
               key="positive"
-              prop="positive"
+              prop="probs.Positive"
               label="Positive"
               align="center"
             ></el-table-column>
             <el-table-column
               v-if="resultShow"
-              key="neutural"
-              prop="neutural"
-              label="Neutural"
+              key="neutral"
+              prop="probs.Neutral"
+              label="neutral"
               align="center"
             ></el-table-column>
             <el-table-column
               v-if="resultShow"
               key="negative"
-              prop="negative"
+              prop="probs.Negative"
               label="Negative"
               align="center"
             ></el-table-column>
-          </el-table>
+          </el-table> -->
+          <div
+            id="resultChart"
+            ref="resultChart"
+            v-loading="resultLoading"
+            style="width: 100%; height: 400px"
+            element-loading-text="Processing..."
+          ></div>
         </div>
       </el-col>
     </el-row>
@@ -253,7 +230,8 @@
 
 <script>
   import { getAllSettings } from '@/api/getSettings'
-  import { liveResults } from '@/api/analysisEnd'
+  import { runLive } from '@/api/analysisEnd'
+  import echarts from 'echarts'
   export default {
     name: 'LiveTest',
     components: {},
@@ -261,16 +239,17 @@
       return {
         deviceList: [],
         modelList: [],
+        langList: ['Chinese', 'English'],
         camSettings: {
           cam: '',
           mic: '',
         },
         testSettings: {
-          primary: '',
-          other: [],
-          v_url: '',
+          model: [],
           transcript: '',
+          language: 'Chinese',
         },
+        query: null,
         textArea: '',
         testResults: [],
         settingsLoading: false,
@@ -306,11 +285,10 @@
         recorder: null,
         recData: [],
         blob: null,
+        file: null,
         rec_url: '',
-        // alertList: [],
-        errId: 0,
-        resultHeader: '',
-        resultShow: false,
+        resultShow: true,
+        resultChart: null,
         screenWidth: 0,
         col1Offset: 0,
       }
@@ -328,12 +306,6 @@
         )
         return mics
       },
-      otherList: function () {
-        let options = this.modelList.filter(
-          (model) => model !== this.testSettings.primary
-        )
-        return options
-      },
     },
     watch: {
       camList: function (newValue) {
@@ -346,12 +318,6 @@
           this.camSettings.mic = newValue[0].deviceId
         }
       },
-      // alertList: function (newValue) {
-      //   if (newValue.length > 2) {
-      //     newValue.shift()
-      //     this.alertList = newValue
-      //   }
-      // },
       screenWidth: function (newValue) {
         if (newValue >= 1920) {
           //xl
@@ -383,9 +349,6 @@
       }
     },
     methods: {
-      // alertClose() {
-      //   // delete from alertList
-      // },
       async fetchSettings() {
         this.settingsLoading = true
         if (
@@ -402,11 +365,6 @@
               })
               test.getTracks().forEach((track) => track.stop())
             } catch (err) {
-              // this.$refs.container
-              // this.alertList.push({
-              //   id: ++this.errId,
-              //   msg: 'Video: ' + err.message,
-              // })
               this.$message({
                 message: 'Video: ' + err.message,
                 type: 'error',
@@ -422,10 +380,6 @@
               })
               test.getTracks().forEach((track) => track.stop())
             } catch (err) {
-              // this.alertList.push({
-              //   id: ++this.errId,
-              //   msg: 'Audio: ' + err.message,
-              // })
               this.$message({
                 message: 'Audio: ' + err.message,
                 type: 'error',
@@ -435,10 +389,6 @@
           this.deviceList = await navigator.mediaDevices.enumerateDevices() // check for devices again
           // console.log(this.deviceList)
         } else {
-          // this.alertList.push({
-          //   id: ++this.errId,
-          //   msg: 'MediaDevices unavailable, make sure you have https enabled',
-          // })
           this.$message({
             message:
               'MediaDevices unavailable, make sure you have https enabled',
@@ -446,10 +396,9 @@
           })
         }
         let { pretrained } = await getAllSettings()
-
         this.modelList = pretrained
         if (this.modelList == '') this.modelList = ['None']
-        this.testSettings.primary = this.modelList[0]
+        this.testSettings.model.push(this.modelList[0])
         this.settingsLoading = false
       },
       initCam() {
@@ -462,10 +411,6 @@
             this.constraints.audio.deviceId.exact = this.camSettings.mic
             this.startStream(this.constraints)
           } else {
-            // this.alertList.push({
-            //   id: ++this.errId,
-            //   msg: 'MediaDevices unavailable, make sure you have https enabled',
-            // })
             this.$message({
               message:
                 'MediaDevices unavailable, make sure you have https enabled',
@@ -479,10 +424,6 @@
         try {
           this.stream = await navigator.mediaDevices.getUserMedia(constraints)
         } catch (err) {
-          // this.alertList.push({
-          //   id: ++this.errId,
-          //   msg: err.message,
-          // })
           this.$message({
             message: err.message,
             type: 'error',
@@ -512,6 +453,7 @@
         if (this.streaming == true && this.stream.active) {
           if (this.recorder == null) {
             this.blob = null
+            this.file = null
             this.recorder = new MediaRecorder(this.stream)
             this.recorder.ondataavailable = (event) =>
               this.recData.push(event.data)
@@ -527,10 +469,6 @@
             return Promise.all([stopped])
           }
         } else {
-          // this.alertList.push({
-          //   id: ++this.errId,
-          //   msg: 'Stream not active',
-          // })
           this.$message({
             message: 'Stream not active',
             type: 'error',
@@ -541,6 +479,13 @@
         this.playing = false
         this.startRecording().then((recordedChunks) => {
           this.blob = new Blob(this.recData, { type: 'video/mp4' })
+          this.file = new File(
+            this.recData,
+            'Live-' + new Date().toISOString().replace(/:|\./g, '-') + '.mp4',
+            {
+              type: 'video/mp4',
+            }
+          )
           this.recData = []
           this.recorder = null
           this.rec_url = URL.createObjectURL(this.blob)
@@ -562,14 +507,94 @@
       },
       async onSubmit() {
         this.resultLoading = true
-        let { result } = await liveResults(this.testSettings)
+        this.query = new FormData()
+        this.query.append('recorded', this.file)
+        this.query.append('model', this.testSettings.model)
+        this.query.append('transcript', this.testSettings.transcript)
+        this.query.append('language', this.testSettings.language)
+        let { result } = await runLive(this.query)
         this.testResults = result
-        this.resultHeader =
-          'Test ' +
-          this.getLabel(this.modelList, this.testSettings.primary) +
-          ' on Recorded Video'
+        for (let i in this.testResults) {
+          for (let key in this.testResults[i].probs) {
+            this.testResults[i].probs[key] = parseFloat(
+              this.testResults[i].probs[key]
+            ).toFixed(4)
+          }
+        }
         this.resultShow = true
+
+        let data = [['Model']]
+        for (let key in this.testResults[0].probs) {
+          data[0].push(key)
+        }
+        for (let i in this.testResults) {
+          let y = []
+          y.push(this.testResults[i].model)
+          for (let key in this.testResults[i].probs) {
+            y.push(this.testResults[i].probs[key])
+          }
+          data.push(y)
+        }
+        if (this.$refs.resultChart.hasAttribute('_echarts_instance_')) {
+          this.resultChart.dispose()
+        }
+        this.resultChart = echarts.init(this.$refs.resultChart)
+        this.plotResult(this.resultChart, data)
         this.resultLoading = false
+      },
+      plotResult(instance, data) {
+        let series = []
+        for (let i in data[0]) {
+          series.push({ type: 'bar' })
+        }
+        series.pop()
+        instance.setOption({
+          legend: {},
+          tooltip: {},
+          toolbox: {
+            feature: {
+              dataView: {
+                show: true,
+                title: 'Show Table',
+                readOnly: true,
+                lang: [' ', 'Close', ''],
+                optionToContent: function (opt) {
+                  var data = opt.dataset[0].source
+                  var table =
+                    '<table style="width:100%;text-align:center"><tbody>'
+                  for (let i in data) {
+                    table += '<th>'
+                    for (let j in data[i]) {
+                      if (i == 0) table += '<th>' + data[i][j] + '</th>'
+                      else table += '<td>' + data[i][j] + '</td>'
+                    }
+                    table += '</tr>'
+                  }
+                  table += '</tbody></table>'
+                  return table
+                },
+              },
+            },
+          },
+          dataset: {
+            source: data,
+          },
+          grid: {},
+          xAxis: {
+            // name: 'Model',
+            type: 'category',
+          },
+          yAxis: {
+            // name: 'Prob',
+            axisPointer: {
+              show: true,
+              type: 'line',
+              snap: true,
+              triggerTooltip: false,
+            },
+          },
+          series: series,
+        })
       },
       // async fetchTranscript() {
       //   let { transcript } = await getTranscript(this.rec_url)
@@ -577,36 +602,14 @@
       //   this.textArea = this.testSettings.transcript
       //   this.transcriptDisabled = false
       // },
-      transcriptConfirm() {
-        this.testSettings.transcript = this.textArea
-      },
-      transcriptReset() {
-        this.textArea = this.testSettings.transcript
-      },
       addStyle({ row, column, rowIndex, columnIndex }) {
         if (columnIndex == 0) {
           return 'background: #FAFAFA; font-weight: bold'
         }
       },
-      onPrimaryChange() {
-        this.testSettings.other = []
-      },
-      getLabel(list, value) {
-        for (let i in list) {
-          if (list[i].value === value) {
-            return list[i].label
-          }
-        }
-      },
     },
   }
   // ref: https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_Recording_API/Recording_a_media_element
-  // todo:
-  // 最大值加粗
-  // primary model放最后一行
-  // 添加delta行
-  // 增加el-alert显示错误信息  Done!
-  // 分辨率适配，设置max-width和overflow: auto    Done!
 </script>
 
 <style lang="scss" scoped>
