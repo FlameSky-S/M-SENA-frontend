@@ -21,7 +21,7 @@
         <el-carousel
           indicator-position="outside"
           :autoplay="false"
-          height="540px"
+          height="400px"
         >
           <el-carousel-item>
             <h3 class="header3">
@@ -35,9 +35,10 @@
                 </a>
               </div>
               <p class="description">
-                This is a paragraph of description of the functionality of
-                dataset Management.This is a paragraph of description of the
-                functionality of dataset Management.
+                This section contains
+                <b>introduction and statistics about well-known datasets</b>
+                as well as
+                <b>raw instance (video) demonstration.</b>
               </p>
               <div style="margin: 3% 0%">
                 <a class="function_link" @click="handleClick">
@@ -45,9 +46,9 @@
                 </a>
               </div>
               <p class="description">
-                This is a paragraph of description of the functionality of
-                dataset Management.This is a paragraph of description of the
-                functionality of dataset Management.
+                This section includes
+                <b>data annotation strategy</b>
+                based on both active learning and human labeling.
               </p>
             </div>
           </el-carousel-item>
@@ -59,14 +60,15 @@
             <div>
               <div>
                 <a class="function_link" @click="handleClick">
-                  Dataset Management
+                  Model Management & Training
                 </a>
               </div>
-              <div style="margin: 3% 0%">
-                <a class="function_link" @click="handleClick">
-                  Dataset Annotation
-                </a>
-              </div>
+              <p class="description">
+                This section provides a rich set of tools and recipes to test
+                existing sentiment analysis frameworks of different types,
+                enabling researchers to compare widely different approaches
+                under the same condition.
+              </p>
             </div>
           </el-carousel-item>
           <el-carousel-item>
@@ -77,14 +79,33 @@
             <div>
               <div>
                 <a class="function_link" @click="handleClick">
-                  Dataset Management
+                  Result Analysis
                 </a>
               </div>
+              <p class="description">
+                This section consists
+                <b>detailed model training results</b>
+              </p>
               <div style="margin: 3% 0%">
+                <a class="function_link" @click="handleClick">Batch Test</a>
+              </div>
+              <p class="description">
+                This section provides
+                <b>
+                  fair comparison of the results of each model in the same
+                  experimental environment.
+                </b>
+              </p>
+              <div>
                 <a class="function_link" @click="handleClick">
-                  Dataset Annotation
+                  Real Time Presentation
                 </a>
               </div>
+              <p class="description">
+                This section gives us
+                <b>an intuitive end to end evaluation means</b>
+                to assess existing model.
+              </p>
             </div>
           </el-carousel-item>
         </el-carousel>
@@ -143,6 +164,7 @@
     name: 'Index',
     data() {
       return {
+        fullHeight: document.documentElement.clientHeight,
         updateTime: process.env.VUE_APP_UPDATE_TIME,
         nodeEnv: process.env.NODE_ENV,
       }
@@ -160,11 +182,11 @@
   }
   .news h2 {
     margin: 0 0 10px 0;
-    fontsize: 24px;
+    font-size: 24px;
   }
   .contributor h2 {
     margin: 0 0 10px 0;
-    fontsize: 24px;
+    font-size: 24px;
   }
   .header2 {
     font-size: 24px;
@@ -182,12 +204,12 @@
       letter-spacing: 0.5px;
     }
     .function_link {
-      margin-left: 4%;
+      margin-left: 10%;
       font-size: 20px;
       line-height: 1em;
     }
     .description {
-      margin: 2% 8%;
+      margin: 3% 15%;
       font-size: 16px;
       line-height: 1.6em;
     }
