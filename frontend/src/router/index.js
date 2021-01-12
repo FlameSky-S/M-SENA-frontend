@@ -46,15 +46,6 @@ export const constantRoutes = [
           title: 'Dataset Management',
         },
       },
-      // {
-      //   path: 'createDataset',
-      //   name: 'Create Dataset',
-      //   component: () => import('@/views/project/dataEnd/createDataset/index'),
-      //   meta: {
-      //     title: 'Create Dataset',
-      //   },
-      //   hidden: true,
-      // },
       {
         path: 'datasetDetail',
         name: 'Dataset Details',
@@ -103,23 +94,6 @@ export const constantRoutes = [
           title: 'Model Management',
         },
       },
-      // {
-      //   path: 'modelResults',
-      //   name: ' Model Results',
-      //   component: () => import('@/views/project/modelEnd/modelResults/index'),
-      //   meta: {
-      //     title: 'Model Results',
-      //   },
-      // },
-      // {
-      //   path: 'resultDetail',
-      //   name: 'Result Details',
-      //   component: () => import('@/views/project/modelEnd/resultDetails/index'),
-      //   meta: {
-      //     title: 'Result Details',
-      //   },
-      //   hidden: true,
-      // },
       {
         path: 'modelTraining',
         name: ' Model Training',
@@ -160,11 +134,12 @@ export const constantRoutes = [
         hidden: true,
       },
       {
-        path: 'batchTest',
-        name: 'Batch Test',
-        component: () => import('@/views/project/analysisEnd/batchTest/index'),
+        path: 'batchAnalysis',
+        name: 'Batch Analysis',
+        component: () =>
+          import('@/views/project/analysisEnd/batchAnalysis/index'),
         meta: {
-          title: 'Batch Test',
+          title: 'Batch Analysis',
         },
       },
       {
@@ -172,7 +147,7 @@ export const constantRoutes = [
         name: ' Live Test',
         component: () => import('@/views/project/analysisEnd/liveTest/index'),
         meta: {
-          title: 'Real Time Presentation',
+          title: 'Live Demo',
         },
       },
     ],

@@ -124,15 +124,6 @@
         <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="6">
           <el-card shadow="hover">
             <div
-              id="featureM"
-              ref="featureM"
-              style="width: 100%; height: 300px"
-            ></div>
-          </el-card>
-        </el-col>
-        <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="6">
-          <el-card shadow="hover">
-            <div
               id="featureT"
               ref="featureT"
               style="width: 100%; height: 300px"
@@ -153,6 +144,15 @@
             <div
               id="featureV"
               ref="featureV"
+              style="width: 100%; height: 300px"
+            ></div>
+          </el-card>
+        </el-col>
+        <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="6">
+          <el-card shadow="hover">
+            <div
+              id="featureM"
+              ref="featureM"
               style="width: 100%; height: 300px"
             ></div>
           </el-card>
@@ -225,7 +225,22 @@
           width="auto"
           min-width="100px"
           align="center"
-        ></el-table-column>
+        >
+          <template slot-scope="scope">
+            <el-tag
+              :type="
+                scope.row.label_value == 'Negative'
+                  ? 'warning'
+                  : scope.row.label_value == 'Neutral'
+                  ? 'primary'
+                  : 'success'
+              "
+              disable-transitions
+            >
+              {{ scope.row.label_value }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column
           show-overflow-tooltip
           label="Predict"
@@ -233,7 +248,22 @@
           width="auto"
           min-width="100px"
           align="center"
-        ></el-table-column>
+        >
+          <template slot-scope="scope">
+            <el-tag
+              :type="
+                scope.row.predict_value == 'Negative'
+                  ? 'warning'
+                  : scope.row.predict_value == 'Neutral'
+                  ? 'primary'
+                  : 'success'
+              "
+              disable-transitions
+            >
+              {{ scope.row.predict_value }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column
           show-overflow-tooltip
           label="Text"
@@ -244,7 +274,7 @@
         ></el-table-column>
         <el-table-column
           show-overflow-tooltip
-          label="Type of Dataset"
+          label="Data Type"
           prop="data_mode"
           width="auto"
           min-width="120px"
@@ -355,6 +385,15 @@
           },
           argDisplay: null,
         },
+        // charts: {
+        //   loss: null,
+        //   acc: null,
+        //   f1: null,
+        //   feature_M: null,
+        //   feature_T: null,
+        //   feature_A: null,
+        //   feature_V: null,
+        // },
         sampleList: [],
       }
     },
@@ -548,7 +587,7 @@
       },
       plotFeature2D(dom, title, data) {
         if (dom.hasAttribute('_echarts_instance_')) {
-          console.log('removing old canvas')
+          // console.log('removing old canvas')
           dom.removeAttribute('_echarts_instance_')
         }
         let featureChart = echarts.init(dom)
@@ -646,6 +685,7 @@
       async fetchSample() {
         this.sampleLoading = true
         let { results, totalCount } = await getSampleDetails(this.query3)
+        this.total = totalCount
         this.sampleList = results
         this.sampleLoading = false
       },

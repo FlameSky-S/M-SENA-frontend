@@ -97,13 +97,6 @@
                       ></el-input>
                     </el-form-item>
                     <el-form-item label="Notes:">
-                      <!-- <el-input
-                        v-model="props.row.description"
-                        type="textarea"
-                        resize="none"
-                        :autosize="{ minRows: 1, maxRows: 3 }"
-                        readonly
-                      ></el-input> -->
                       <span>{{ props.row.description }}</span>
                     </el-form-item>
                   </el-form>
