@@ -1,0 +1,108 @@
+<template>
+  <el-dialog
+    :title="title"
+    :visible.sync="dialogFormVisible"
+    width="70%"
+    @close="close"
+  >
+    <el-card shadow="hover">
+      <div slot="header">SampleID : {{ form.clipInfo.sampleID }}</div>
+      <el-row>
+        <el-col :xs="24" :sm="24" :md="17" :lg="17" :xl="17">
+          <video :src="form.videoconfig.url" controls width="100%"></video>
+        </el-col>
+
+        <el-col :xs="24" :sm="24" :md="7" :lg="7" :xl="7">
+          <el-form
+            :label-position="labelPosition"
+            label-width="120px"
+            class="detail-form"
+            :model="form.clipInfo"
+          >
+            <el-form-item label="Transcripts">
+              <el-input
+                v-model="form.clipInfo.transcript"
+                type="textarea"
+                :rows="3"
+                disabled
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="Belonging">
+              <el-input v-model="form.clipInfo.belonging" disabled></el-input>
+            </el-form-item>
+            <el-form-item label="M Label">
+              <el-input v-model="form.clipInfo.M_label" disabled></el-input>
+            </el-form-item>
+          </el-form>
+        </el-col>
+      </el-row>
+    </el-card>
+  </el-dialog>
+</template>
+
+<script>
+  export default {
+    name: 'Preview',
+    data() {
+      return {
+        fullWidth: document.documentElement.clientWidth,
+        fullHeight: document.documentElement.clientHeight,
+        form: {
+          clipInfo: {
+            clipID: null,
+            belonging: null,
+            M_label: null,
+
+            M_label_type: null,
+          },
+          videoconfig: {
+            url:
+              'https://cdn.jsdelivr.net/gh/chuzhixin/videos@master/video.mp4',
+          },
+          translate: 'This is the original transcipt for the video',
+        },
+        title: '',
+        dialogFormVisible: false,
+      }
+    },
+    computed: {
+      labelPosition() {
+        if (this.fullWidth >= 992) {
+          return 'top'
+        } else {
+          return 'right'
+        }
+      },
+    },
+    created() {},
+
+    methods: {
+      showPreview(row) {
+        this.title = 'Preview Video Clips'
+        this.form.videoconfig.url = row.video_url
+
+        this.form.clipInfo.sampleID = row.sample_id
+        this.form.clipInfo.belonging = row.data_mode
+        this.form.clipInfo.transcript = row.text
+
+        this.form.clipInfo.M_label = row.label_value
+
+        this.dialogFormVisible = true
+      },
+      close() {
+        this.dialogFormVisible = false
+        this.$emit('fetch-data')
+      },
+    },
+  }
+</script>
+<style lang="scss" scoped>
+  .preview-divider {
+    position: absolute;
+    left: 70%;
+    height: 100%;
+  }
+  .detail-form {
+    margin-left: 10%;
+  }
+</style>

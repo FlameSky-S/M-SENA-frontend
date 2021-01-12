@@ -1,67 +1,48 @@
+'use strict'
 const path = require('path')
-const {
-  publicPath,
-  assetsDir,
-  outputDir,
-  lintOnSave,
-  transpileDependencies,
-  title,
-  abbreviation,
-  devPort,
-  providePlugin,
-  build7z,
-  donation,
-} = require('./src/config/settings')
-// const { webpackBarName, webpackBanner, donationConsole } = require('zx-layouts')
 
-const { version, author } = require('./package.json')
-const Webpack = require('webpack')
-const WebpackBar = require('webpackbar')
-const FileManagerPlugin = require('filemanager-webpack-plugin')
-const dayjs = require('dayjs')
-const date = dayjs().format('YYYY_M_D')
-const time = dayjs().format('YYYY-M-D HH:mm:ss')
-const productionGzipExtensions = ['html', 'js', 'css', 'svg']
-process.env.VUE_APP_TITLE = 'M-SENA-SYSTEM'
-process.env.VUE_APP_AUTHOR = ''
-process.env.VUE_APP_UPDATE_TIME = time
-process.env.VUE_APP_VERSION = version
+function resolve(dir) {
+  return path.join(__dirname, dir)
+}
 
-const resolve = (dir) => path.join(__dirname, dir)
+process.env.VUE_APP_TITLE = 'M-SENA System'
+process.env.VUE_APP_AUTHOR = 'THU-IAR'
+process.env.VUE_APP_VERSION = 0.8
 
 module.exports = {
+  /**
+   * You will need to set publicPath if you plan to deploy your site under a sub path,
+   * for example GitHub Pages. If you plan to deploy your site to https://foo.github.io/bar/,
+   * then publicPath should be set to "/bar/".
+   * In most cases please use '/' !!!
+   * Detail: https://cli.vuejs.org/config/#publicpath
+   */
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
-  transpileDependencies,
   devServer: {
-    hot: true,
-    port: 1024,
+    port: 8080,
     open: true,
-    noInfo: false,
     overlay: {
-      warnings: true,
+      warnings: false,
       errors: true,
     },
   },
-  configureWebpack() {
-    return {
-      resolve: {
-        alias: {
-          '@': resolve('src'),
-        },
+  configureWebpack: {
+    // provide the app's title in webpack's name field, so that
+    // it can be accessed in index.html to inject the correct title.
+    name: 'M-SENA System',
+    resolve: {
+      alias: {
+        '@': resolve('src'),
       },
-      // plugins: [
-      //   new Webpack.ProvidePlugin(providePlugin),
-      //   new WebpackBar({
-      //     name: webpackBarName,
-      //   }),
-      // ],
-    }
+    },
   },
   chainWebpack(config) {
+    // it can improve the speed of the first screen, it is recommended to turn on preload
+    // it can improve the speed of the first screen, it is recommended to turn on preload
     config.plugin('preload').tap(() => [
       {
         rel: 'preload',
@@ -112,28 +93,5 @@ module.exports = {
       // https:// webpack.js.org/configuration/optimization/#optimizationruntimechunk
       config.optimization.runtimeChunk('single')
     })
-  },
-  // runtimeCompiler: true,
-  css: {
-    requireModuleExtension: true,
-    sourceMap: true,
-    loaderOptions: {
-      scss: {
-        /*sass-loader 8.0语法 */
-        //prependData: '@import "~@/styles/variables.scss";',
-
-        /*sass-loader 9.0写法，感谢github用户 shaonialife*/
-        additionalData(content, loaderContext) {
-          const { resourcePath, rootContext } = loaderContext
-          const relativePath = path.relative(rootContext, resourcePath)
-          if (
-            relativePath.replace(/\\/g, '/') !== 'src/styles/variables.scss'
-          ) {
-            return '@import "~@/styles/variables.scss";' + content
-          }
-          return content
-        },
-      },
-    },
   },
 }

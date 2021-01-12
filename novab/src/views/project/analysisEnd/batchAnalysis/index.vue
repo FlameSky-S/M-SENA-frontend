@@ -68,7 +68,7 @@
 <script>
   import { getAllSettings } from '@/api/getSettings'
   import { batchResults } from '@/api/analysisEnd'
-  // import echarts from 'echarts'
+  import echarts from 'echarts'
   export default {
     name: 'BatchTest',
     components: {},

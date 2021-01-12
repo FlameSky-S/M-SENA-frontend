@@ -1,13 +1,12 @@
 <template>
-  <section v-if="routerView" class="app-main-container">
+  <section class="app-main-container">
     <transition mode="out-in" name="fade-transform">
-      <keep-alive :include="cachedRoutes" :max="keepAliveMaxNum">
-        <router-view :key="key" class="app-main-height" />
-      </keep-alive>
+      <!-- <keep-alive :include="cachedRoutes" :max="keepAliveMaxNum"> -->
+      <router-view :key="key" class="app-main-height" />
+      <!-- </keep-alive> -->
     </transition>
-    <footer v-show="footerCopyright" class="footer-copyright">
-      Copyright
-      <vab-icon :icon="['fas', 'copyright']"></vab-icon>
+    <footer class="footer-copyright">
+      <i class="el-icon-info"></i>
       THUIAR M-SENA Project {{ fullYear }}
     </footer>
   </section>
@@ -15,24 +14,24 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import {
-    copyright,
-    footerCopyright,
-    keepAliveMaxNum,
-    title,
-  } from '@/config/settings'
+  // import {
+  // copyright,
+  // footerCopyright,
+  // keepAliveMaxNum,
+  // title,
+  // } from '@/config/settings'
 
   export default {
     name: 'AppMain',
     data() {
       return {
-        show: false,
+        // show: false,
         fullYear: new Date().getFullYear(),
-        copyright,
-        title,
-        keepAliveMaxNum,
-        routerView: true,
-        footerCopyright,
+        // copyright,
+        // title,
+        // keepAliveMaxNum,
+        // routerView: true,
+        // footerCopyright,
       }
     },
     computed: {
@@ -63,12 +62,12 @@
     },
     created() {
       //重载所有路由
-      this.$baseEventBus.$on('reload-routerview', () => {
-        this.routerView = false
-        this.$nextTick(() => {
-          this.routerView = true
-        })
-      })
+      // this.$baseEventBus.$on('reload-routerview', () => {
+      //   this.routerView = false
+      //   this.$nextTick(() => {
+      //     this.routerView = true
+      //   })
+      // })
     },
     mounted() {},
     methods: {

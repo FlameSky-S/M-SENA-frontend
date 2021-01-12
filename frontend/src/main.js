@@ -2,24 +2,25 @@ import Vue from 'vue'
 import App from './App'
 import store from './store'
 import router from './router'
+
+import ElementUI from 'element-ui'
+import '@/styles/element-variables.scss'
+import enLang from 'element-ui/lib/locale/lang/en'
+
+import 'normalize.css/normalize.css' // a modern alternative to CSS resets
+import './styles/index.scss' // global css
+
 import './plugins'
-import echarts from 'echarts'
 
-/**
- * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
- * @description 生产环境默认都使用mock，如果正式用于生产环境时，记得去掉
- */
+Vue.use(ElementUI, {
+  size: 'small',
+  locale: enLang,
+})
 
-if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('@/utils/static')
-  mockXHR()
-}
-
-Vue.prototype.$echarts = echarts
 Vue.config.productionTip = false
 
 new Vue({
-  el: '#vue-admin-beautiful',
+  el: '#m-sena-app',
   router,
   store,
   render: (h) => h(App),
