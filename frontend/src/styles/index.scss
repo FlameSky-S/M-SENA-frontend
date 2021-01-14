@@ -58,6 +58,10 @@ html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
+    #m-sena-app {
+      min-width: 600px;
+    }
+
     @include base-scrollbar;
 
     div {
@@ -137,6 +141,13 @@ html {
     //     box-shadow: 0 0 10px $base-color-blue, 0 0 5px $base-color-blue !important;
     //   }
     // }
+
+    .el-button {
+      font-size: $base-font-size-default;
+      i {
+        font-size: $base-font-size-big;
+      }
+    }
 
     .el-table {
       .el-table__body-wrapper {

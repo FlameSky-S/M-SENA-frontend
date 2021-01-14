@@ -1,4 +1,4 @@
-import defaultSettings from '@/config/settings'
+// import defaultSettings from '@/config/settings'
 
 // const { tabsBar, logo, layout, header, themeBar } = defaultSettings
 // const theme =

@@ -47,13 +47,7 @@
               <td>sass版本</td>
               <td>{{ devDependencies['sass'] }}</td>
               <td>mockjs版本</td>
-              <td>{{ dependencies['mockjs'] }}</td>
-            </tr>
-            <tr>
-              <td>zx-layouts版本</td>
-              <td>{{ dependencies['zx-layouts'] }}</td>
-              <td>lodash版本</td>
-              <td>{{ dependencies['lodash'] }}</td>
+              <td></td>
             </tr>
           </table>
         </el-card>

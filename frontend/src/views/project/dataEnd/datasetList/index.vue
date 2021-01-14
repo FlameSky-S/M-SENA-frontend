@@ -5,17 +5,15 @@
     <el-row>
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <div class="dataset-table">
-          <vab-query-form>
-            <vab-query-form-left-panel>
-              <el-button
-                icon="el-icon-plus"
-                type="primary"
-                @click="handleRescan"
-              >
-                Rescan
-              </el-button>
-            </vab-query-form-left-panel>
-          </vab-query-form>
+          <!-- <vab-query-form>
+            <vab-query-form-left-panel> -->
+          <el-form>
+            <el-button icon="el-icon-plus" type="primary" @click="handleRescan">
+              Rescan
+            </el-button>
+          </el-form>
+          <!-- </vab-query-form-left-panel>
+          </vab-query-form> -->
           <el-table
             ref="datasetTable"
             v-loading="listLoading"

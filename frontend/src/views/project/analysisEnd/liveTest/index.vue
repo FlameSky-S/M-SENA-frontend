@@ -50,7 +50,7 @@
                 :disabled="streaming"
                 @click="initCam"
               >
-                <vab-icon :icon="['fas', 'check']"></vab-icon>
+                <i class="el-icon-circle-check"></i>
                 Confirm
               </el-button>
               <el-button
@@ -60,6 +60,7 @@
                 :disabled="!streaming"
                 @click="stopCam"
               >
+                <i class="el-icon-remove-outline"></i>
                 Shutdown
               </el-button>
             </el-form-item>
@@ -131,12 +132,9 @@
               :disabled="!streaming"
               @click="recording == false ? RecordBtn() : stopCam()"
             >
-              <vab-icon
-                v-if="!recording"
-                :icon="['fas', 'dot-circle']"
-              ></vab-icon>
-              <vab-icon v-else :icon="['fas', 'stop']"></vab-icon>
-              {{ recording == false ? 'Record' : 'Stop' }}
+              <i v-if="!recording" class="el-icon-video-camera"></i>
+              <i v-else class="el-icon-check"></i>
+              {{ recording == false ? 'Record' : 'Finish' }}
             </el-button>
             <el-button
               ref="playbackBtn"
@@ -147,8 +145,8 @@
               :disabled="streaming || recording || blob == null"
               @click="playing == false ? startPlayback() : stopPlayback()"
             >
-              <vab-icon v-if="!playing" :icon="['fas', 'play']"></vab-icon>
-              <vab-icon v-else :icon="['fas', 'stop']"></vab-icon>
+              <i v-if="!playing" class="el-icon-video-play"></i>
+              <i v-else class="el-icon-video-pause"></i>
               {{ playing == false ? 'Playback' : 'Stop' }}
             </el-button>
             <el-button
@@ -158,7 +156,7 @@
               :disabled="streaming || recording || blob == null"
               @click="onSubmit"
             >
-              <vab-icon :icon="['fas', 'check']"></vab-icon>
+              <i class="el-icon-data-analysis"></i>
               Go
             </el-button>
           </p>

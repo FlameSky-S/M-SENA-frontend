@@ -4,26 +4,14 @@
       <el-row :gutter="20">
         <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
           <div class="pic-error">
-            <img
-              alt="401"
-              class="pic-error-parent"
-              src="@/assets/error_images/401.png"
-            />
+            <img alt="401" class="pic-error-parent" src="@/assets/401.png" />
             <img
               alt="401"
               class="pic-error-child left"
-              src="@/assets/error_images/cloud.png"
+              src="@/assets/cloud.png"
             />
-            <img
-              alt="401"
-              class="pic-error-child"
-              src="@/assets/error_images/cloud.png"
-            />
-            <img
-              alt="401"
-              class="pic-error-child"
-              src="@/assets/error_images/cloud.png"
-            />
+            <img alt="401" class="pic-error-child" src="@/assets/cloud.png" />
+            <img alt="401" class="pic-error-child" src="@/assets/cloud.png" />
           </div>
         </el-col>
 
@@ -48,10 +36,10 @@
     data() {
       return {
         jumpTime: 5,
-        oops: '抱歉!',
-        headline: '您没有操作权限...',
-        info: '当前帐号没有操作权限,请联系管理员。',
-        btn: '返回',
+        oops: 'Oops!',
+        headline: 'Permission Denied...',
+        info: 'Please contact administrator',
+        btn: 'Back',
         timer: 0,
       }
     },

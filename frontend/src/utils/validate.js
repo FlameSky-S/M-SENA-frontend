@@ -1,9 +1,3 @@
-/**
- * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
- * @description 判读是否为外链
- * @param path
- * @returns {boolean}
- */
 export function isExternal(path) {
   return /^(https?:|mailto:|tel:)/.test(path)
 }

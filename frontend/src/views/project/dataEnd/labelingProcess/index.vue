@@ -137,39 +137,39 @@
     <el-row style="margin-top: 2%">
       <el-col :span="24">
         <div class="video-list">
-          <vab-query-form>
-            <el-form ref="filter" :model="filter" :inline="true">
-              <el-form-item label="Difficulty:" style="font-weight: bold">
-                <el-select v-model="filter.difficulty" style="width: 150px">
-                  <el-option
-                    v-for="item in filter.difficulty_list"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="Sentiment:" style="font-weight: bold">
-                <el-select v-model="filter.sentiment" style="width: 150px">
-                  <el-option
-                    v-for="item in filter.sentiment_list"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  icon="el-icon-search"
-                  type="primary"
-                  @click="applyFilter"
-                >
-                  Apply
-                </el-button>
-              </el-form-item>
-            </el-form>
-          </vab-query-form>
+          <!-- <vab-query-form> -->
+          <el-form ref="filter" :model="filter" :inline="true">
+            <el-form-item label="Difficulty:" style="font-weight: bold">
+              <el-select v-model="filter.difficulty" style="width: 150px">
+                <el-option
+                  v-for="item in filter.difficulty_list"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Sentiment:" style="font-weight: bold">
+              <el-select v-model="filter.sentiment" style="width: 150px">
+                <el-option
+                  v-for="item in filter.sentiment_list"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                icon="el-icon-search"
+                type="primary"
+                @click="applyFilter"
+              >
+                Apply
+              </el-button>
+            </el-form-item>
+          </el-form>
+          <!-- </vab-query-form> -->
           <el-table
             ref="tableSort"
             v-loading="listLoading"

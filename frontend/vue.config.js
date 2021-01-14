@@ -17,11 +17,11 @@ const {
 const { version, author } = require('./package.json')
 const Webpack = require('webpack')
 const WebpackBar = require('webpackbar')
-const FileManagerPlugin = require('filemanager-webpack-plugin')
+// const FileManagerPlugin = require('filemanager-webpack-plugin')
 const dayjs = require('dayjs')
-const date = dayjs().format('YYYY_M_D')
+// const date = dayjs().format('YYYY_M_D')
 const time = dayjs().format('YYYY-M-D HH:mm:ss')
-const productionGzipExtensions = ['html', 'js', 'css', 'svg']
+// const productionGzipExtensions = ['html', 'js', 'css', 'svg']
 process.env.VUE_APP_TITLE = 'M-SENA-SYSTEM'
 process.env.VUE_APP_AUTHOR = ''
 process.env.VUE_APP_UPDATE_TIME = time
@@ -53,12 +53,7 @@ module.exports = {
           '@': resolve('src'),
         },
       },
-      // plugins: [
-      //   new Webpack.ProvidePlugin(providePlugin),
-      //   new WebpackBar({
-      //     name: webpackBarName,
-      //   }),
-      // ],
+      plugins: [new Webpack.ProvidePlugin(providePlugin), new WebpackBar()],
     }
   },
   chainWebpack(config) {
