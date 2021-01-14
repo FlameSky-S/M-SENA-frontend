@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Layout from '@/layouts'
-// import EmptyLayout from '@/layouts/EmptyLayout'
-// import { publicPath, routerMode } from '@/config/settings'
 
 Vue.use(VueRouter)
 export const constantRoutes = [
