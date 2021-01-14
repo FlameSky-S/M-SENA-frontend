@@ -5,7 +5,6 @@
     <el-row>
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <div class="results-table">
-          <!-- <vab-query-form> -->
           <el-form ref="filter" :model="filter" :inline="true">
             <el-col :span="23">
               <el-form-item label="Model:" style="font-weight: bold">
@@ -66,7 +65,6 @@
               </el-form-item>
             </el-col>
           </el-form>
-          <!-- </vab-query-form> -->
           <el-table
             ref="table"
             v-loading="resultLoading"

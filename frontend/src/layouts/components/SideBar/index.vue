@@ -112,16 +112,6 @@
 
       .el-menu {
         border: 0;
-
-        // .vab-fas-icon {
-        //   padding-right: 3px;
-        //   font-size: $base-font-size-default;
-        // }
-
-        // .vab-remix-icon {
-        //   padding-right: 3px;
-        //   font-size: $base-font-size-default + 2;
-        // }
       }
 
       .el-menu-item,

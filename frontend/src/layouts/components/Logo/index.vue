@@ -1,8 +1,6 @@
 <template>
   <div class="logo-container">
     <router-link to="/">
-      <!-- 这里是logo变更的位置 -->
-      <!-- <vab-remix-icon class="logo" :icon-class="logo" /> -->
       <el-image class="logo" src="./favicon.ico" />
       <span class="title" :title="title">
         {{ title }}
@@ -18,7 +16,7 @@
     name: 'Logo',
     data() {
       return {
-        title: this.$baseTitle,
+        title: 'M-SENA-System',
       }
     },
     computed: {

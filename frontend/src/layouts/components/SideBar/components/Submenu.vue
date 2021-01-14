@@ -6,11 +6,6 @@
   >
     <template slot="title">
       <i v-if="item.meta && item.meta.icon" :class="item.meta.icon" />
-      <!-- <vab-remix-icon
-        v-if="item.meta && item.meta.remixIcon"
-        :icon-class="item.meta.remixIcon"
-        class="vab-remix-icon"
-      /> -->
       <span>{{ item.meta.title }}</span>
     </template>
     <slot></slot>

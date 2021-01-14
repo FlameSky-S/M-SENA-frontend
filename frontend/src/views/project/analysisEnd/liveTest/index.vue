@@ -229,7 +229,7 @@
 <script>
   import { getAllSettings } from '@/api/getSettings'
   import { runLive } from '@/api/analysisEnd'
-  // import echarts from 'echarts'
+  import * as echarts from 'echarts'
   export default {
     name: 'LiveTest',
     components: {},

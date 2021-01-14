@@ -92,7 +92,6 @@
     <el-row style="margin-top: 3%">
       <div class="top-row">
         <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-          <!-- <vab-query-form> -->
           <el-form ref="filter" :model="filter" :inline="true">
             <el-form-item label="Sentiment:" style="font-weight: bold">
               <el-select v-model="filter.sentiment" style="width: 150px">
@@ -124,7 +123,6 @@
               </el-button>
             </el-form-item>
           </el-form>
-          <!-- </vab-query-form> -->
           <el-table
             ref="tableSort"
             v-loading="listLoading"

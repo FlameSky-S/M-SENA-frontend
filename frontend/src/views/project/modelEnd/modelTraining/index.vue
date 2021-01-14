@@ -94,7 +94,6 @@
 </template>
 
 <script>
-  // import VabMarkdownEditor from '@/plugins/vabMarkdownEditor'
   import { startTraining, getArgs } from '@/api/modelEnd'
   import { getAllSettings } from '@/api/getSettings'
   export default {

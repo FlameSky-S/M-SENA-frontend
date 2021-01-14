@@ -93,10 +93,6 @@
 </script>
 
 <style lang="scss" scoped>
-  // .vab-nav-icon {
-  //   margin-right: 4px;
-  // }
-
   ::v-deep {
     .el-tag {
       float: right;

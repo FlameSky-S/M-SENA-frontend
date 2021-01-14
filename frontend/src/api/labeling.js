@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-// import { method } from 'lodash'
 
 // Functions used in datasetDetails Page.
 export function startActiveLearning(data) {

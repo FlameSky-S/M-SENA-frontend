@@ -1,28 +1,5 @@
 <template>
   <div class="m-sena-system-wrapper" :class="classObj">
-    <!-- <div
-      v-if="'horizontal' === layout"
-      class="layout-container-horizontal"
-      :class="{
-        fixed: header === 'fixed',
-        'no-tabs-bar': tabsBar === 'false' || tabsBar === false,
-      }"
-    >
-      <div :class="header === 'fixed' ? 'fixed-header' : ''">
-        <top-bar></top-bar>
-        <div
-          v-if="tabsBar === 'true' || tabsBar === true"
-          :class="{ 'tag-view-show': tabsBar }"
-        >
-          <div class="vab-main">
-            <tabs-bar></tabs-bar>
-          </div>
-        </div>
-      </div>
-      <div class="vab-main main-padding">
-        <app-main></app-main>
-      </div>
-    </div> -->
     <div class="layout-container-vertical fixed">
       <div
         v-if="device === 'mobile' && collapse === false"
@@ -45,7 +22,6 @@
 <script>
   import { AppMain, NavBar, SideBar } from './components'
   import { mapActions, mapGetters } from 'vuex'
-  // import { tokenName } from '@/config/settings'
   export default {
     name: 'Layout',
     components: {
@@ -54,7 +30,7 @@
       AppMain,
     },
     data() {
-      return { oldLayout: '' }
+      return {}
     },
     computed: {
       ...mapGetters({
@@ -75,8 +51,6 @@
       window.removeEventListener('resize', this.handleResize)
     },
     mounted() {
-      // this.oldLayout = this.layout
-
       const isMobile = this.handleIsMobile()
       if (isMobile) {
         this.$store.dispatch('settings/toggleDevice', 'mobile')
@@ -86,17 +60,6 @@
       } else {
         this.$store.dispatch('settings/openSideBar')
       }
-      // this.$nextTick(() => {
-      //   window.addEventListener(
-      //     'storage',
-      //     (e) => {
-      //       if (e.key === tokenName || e.key === null) window.location.reload()
-      //       if (e.key === tokenName && e.value === null)
-      //         window.location.reload()
-      //     },
-      //     false
-      //   )
-      // })
     },
     methods: {
       ...mapActions({
@@ -202,7 +165,7 @@
       }
     }
 
-    /* 手机端开始 */
+    /* mobile */
     &.mobile {
       ::v-deep {
         .el-pager,
@@ -230,6 +193,6 @@
       }
     }
 
-    /* 手机端结束 */
+    /* end mobile */
   }
 </style>

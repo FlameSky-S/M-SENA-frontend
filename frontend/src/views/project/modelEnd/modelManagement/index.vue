@@ -7,8 +7,6 @@
     <el-row>
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <div class="model-table">
-          <!-- <vab-query-form> -->
-          <!-- <vab-query-form-left-panel> -->
           <el-form ref="form" :model="queryForm" :inline="true">
             <el-form-item>
               <el-button
@@ -20,8 +18,6 @@
               </el-button>
             </el-form-item>
           </el-form>
-          <!-- </vab-query-form-left-panel> -->
-          <!-- </vab-query-form> -->
 
           <el-table
             v-loading="modelLoading"

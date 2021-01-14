@@ -316,7 +316,7 @@
     getFeatureDetails,
   } from '@/api/analysisEnd'
   import Preview from './components/Preview'
-  var echarts = require('echarts')
+  import * as echarts from 'echarts'
   import 'echarts-gl'
   export default {
     name: 'DatasetDetails',

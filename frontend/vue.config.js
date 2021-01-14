@@ -1,31 +1,11 @@
 const path = require('path')
-const {
-  publicPath,
-  assetsDir,
-  outputDir,
-  lintOnSave,
-  transpileDependencies,
-  title,
-  abbreviation,
-  devPort,
-  providePlugin,
-  build7z,
-  donation,
-} = require('./src/config/settings')
-// const { webpackBarName, webpackBanner, donationConsole } = require('zx-layouts')
 
-const { version, author } = require('./package.json')
-const Webpack = require('webpack')
 const WebpackBar = require('webpackbar')
-// const FileManagerPlugin = require('filemanager-webpack-plugin')
 const dayjs = require('dayjs')
-// const date = dayjs().format('YYYY_M_D')
 const time = dayjs().format('YYYY-M-D HH:mm:ss')
-// const productionGzipExtensions = ['html', 'js', 'css', 'svg']
 process.env.VUE_APP_TITLE = 'M-SENA-SYSTEM'
 process.env.VUE_APP_AUTHOR = ''
 process.env.VUE_APP_UPDATE_TIME = time
-process.env.VUE_APP_VERSION = version
 
 const resolve = (dir) => path.join(__dirname, dir)
 
@@ -35,7 +15,7 @@ module.exports = {
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
-  transpileDependencies,
+  transpileDependencies: ['vue-echarts', 'resize-detector'],
   devServer: {
     hot: true,
     port: 1024,
@@ -53,7 +33,7 @@ module.exports = {
           '@': resolve('src'),
         },
       },
-      plugins: [new Webpack.ProvidePlugin(providePlugin), new WebpackBar()],
+      plugins: [new WebpackBar()],
     }
   },
   chainWebpack(config) {
@@ -114,10 +94,6 @@ module.exports = {
     sourceMap: true,
     loaderOptions: {
       scss: {
-        /*sass-loader 8.0语法 */
-        //prependData: '@import "~@/styles/variables.scss";',
-
-        /*sass-loader 9.0写法，感谢github用户 shaonialife*/
         additionalData(content, loaderContext) {
           const { resourcePath, rootContext } = loaderContext
           const relativePath = path.relative(rootContext, resourcePath)

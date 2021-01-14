@@ -137,7 +137,6 @@
     <el-row style="margin-top: 2%">
       <el-col :span="24">
         <div class="video-list">
-          <!-- <vab-query-form> -->
           <el-form ref="filter" :model="filter" :inline="true">
             <el-form-item label="Difficulty:" style="font-weight: bold">
               <el-select v-model="filter.difficulty" style="width: 150px">
@@ -169,7 +168,6 @@
               </el-button>
             </el-form-item>
           </el-form>
-          <!-- </vab-query-form> -->
           <el-table
             ref="tableSort"
             v-loading="listLoading"
