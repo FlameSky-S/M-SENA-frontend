@@ -3,11 +3,12 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+import 'normalize.css/normalize.css' // a modern alternative to CSS resets
+
 import ElementUI from 'element-ui'
 import '@/styles/element-variables.scss'
 import enLang from 'element-ui/lib/locale/lang/en'
 
-import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 import './styles/index.scss' // global css
 
 import './plugins'

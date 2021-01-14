@@ -1,10 +1,9 @@
 <template>
   <span>
-    <vab-icon
-      title="Tasks"
-      :icon="['fas', 'calendar-check']"
-      @click="handleOpenTaskBar"
-    />
+    <div class="task-btn" @click="handleOpenTaskBar">
+      <i class="el-icon-s-claim" />
+      <span>Task List</span>
+    </div>
     <el-drawer
       title="Task List"
       :visible.sync="drawerVisible"
@@ -423,17 +422,21 @@
   }
 </style>
 <style lang="scss">
+  .task-btn {
+    font-size: 16px;
+    margin-right: 15px;
+    color: rgba(0, 0, 0, 0.65);
+    cursor: pointer;
+    i {
+      font-size: 20px;
+      margin-right: 5px;
+    }
+  }
   .el-drawer__wrapper {
     outline: none !important;
 
     * {
       outline: none !important;
-    }
-  }
-
-  .vab-color-picker {
-    .el-color-dropdown__link-btn {
-      display: none;
     }
   }
 </style>

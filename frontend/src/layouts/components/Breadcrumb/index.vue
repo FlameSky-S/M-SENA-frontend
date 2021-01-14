@@ -17,6 +17,7 @@
     watch: {
       $route() {
         this.list = this.getBreadcrumb()
+        console.log(this.list)
       },
     },
     methods: {
@@ -32,7 +33,7 @@
 <style lang="scss" scoped>
   .breadcrumb-container {
     height: $base-nav-bar-height;
-    font-size: $base-font-size-default;
+    font-size: 16px;
     line-height: $base-nav-bar-height;
 
     ::v-deep {

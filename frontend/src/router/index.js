@@ -1,13 +1,8 @@
-/**
- * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
- * @description router全局配置
- */
-
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Layout from '@/layouts'
-import EmptyLayout from '@/layouts/EmptyLayout'
-import { publicPath, routerMode } from '@/config/settings'
+// import EmptyLayout from '@/layouts/EmptyLayout'
+// import { publicPath, routerMode } from '@/config/settings'
 
 Vue.use(VueRouter)
 export const constantRoutes = [
@@ -22,7 +17,7 @@ export const constantRoutes = [
         component: () => import('@/views/index/index'),
         meta: {
           title: 'Home',
-          icon: 'home',
+          icon: 'el-icon-s-home',
           affix: true,
         },
       },
@@ -35,7 +30,7 @@ export const constantRoutes = [
     name: 'Dataset',
     meta: {
       title: 'Dataset',
-      icon: 'shopping-cart',
+      icon: 'el-icon-s-data',
     },
     children: [
       {
@@ -44,6 +39,7 @@ export const constantRoutes = [
         component: () => import('@/views/project/dataEnd/datasetList/index'),
         meta: {
           title: 'Dataset Management',
+          icon: 'el-icon-s-shop',
         },
       },
       {
@@ -61,6 +57,7 @@ export const constantRoutes = [
         component: () => import('@/views/project/dataEnd/labeling/index'),
         meta: {
           title: 'Dataset Labeling',
+          icon: 'el-icon-s-flag',
         },
       },
       {
@@ -82,7 +79,7 @@ export const constantRoutes = [
     name: 'Model',
     meta: {
       title: 'Model',
-      icon: 'users-cog',
+      icon: 'el-icon-menu',
     },
     children: [
       {
@@ -92,6 +89,7 @@ export const constantRoutes = [
           import('@/views/project/modelEnd/modelManagement/index'),
         meta: {
           title: 'Model Management',
+          icon: 'el-icon-s-management',
         },
       },
       {
@@ -100,6 +98,7 @@ export const constantRoutes = [
         component: () => import('@/views/project/modelEnd/modelTraining/index'),
         meta: {
           title: 'Model Training',
+          icon: 'el-icon-s-order',
         },
       },
     ],
@@ -111,7 +110,7 @@ export const constantRoutes = [
     name: 'Analysis',
     meta: {
       title: 'Analysis',
-      icon: 'box-open',
+      icon: 'el-icon-s-marketing',
     },
     children: [
       {
@@ -121,6 +120,7 @@ export const constantRoutes = [
           import('@/views/project/analysisEnd/resultAnalysis/index'),
         meta: {
           title: 'Result Analysis',
+          icon: 'el-icon-s-help',
         },
       },
       {
@@ -140,6 +140,7 @@ export const constantRoutes = [
           import('@/views/project/analysisEnd/batchAnalysis/index'),
         meta: {
           title: 'Batch Analysis',
+          icon: 'el-icon-s-grid',
         },
       },
       {
@@ -148,6 +149,8 @@ export const constantRoutes = [
         component: () => import('@/views/project/analysisEnd/liveTest/index'),
         meta: {
           title: 'Live Demo',
+          icon: 'el-icon-video-camera-solid',
+          badge: 'New',
         },
       },
     ],
@@ -157,18 +160,14 @@ export const constantRoutes = [
     component: Layout,
     redirect: 'noRedirect',
     name: 'Wiki',
-    meta: {
-      title: 'System Documents',
-      icon: 'box-open',
-    },
     children: [
       {
         path: 'docs',
         name: 'System Docs',
-        component: () => import('@/views/project/Wiki/docs/index'),
+        component: () => import('@/views/project/Wiki/index'),
         meta: {
-          title: 'System Documents',
-          icon: 'shopping-cart',
+          title: 'About Us',
+          icon: 'el-icon-s-promotion',
         },
       },
     ],
@@ -193,8 +192,8 @@ export const constantRoutes = [
 ]
 
 const router = new VueRouter({
-  base: publicPath,
-  mode: routerMode,
+  base: '/',
+  mode: 'hash',
   scrollBehavior: () => ({
     y: 0,
   }),

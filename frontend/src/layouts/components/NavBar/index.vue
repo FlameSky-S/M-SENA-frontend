@@ -14,15 +14,7 @@
       </el-col>
       <el-col :xs="20" :sm="12" :md="12" :lg="12" :xl="12">
         <div class="right-panel">
-          <full-screen-bar @refresh="refreshRoute"></full-screen-bar>
-          <theme-bar class="hidden-xs-only"></theme-bar>
-          <vab-icon
-            title="Reload Routes"
-            :pulse="pulse"
-            :icon="['fas', 'redo']"
-            @click="refreshRoute"
-          ></vab-icon>
-          <avatar></avatar>
+          <task-bar class="hidden-xs-only"></task-bar>
         </div>
       </el-col>
     </el-row>
@@ -31,33 +23,24 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
-
-  import {
-    Avatar,
-    Breadcrumb,
-    FullScreenBar,
-    ThemeBar,
-  } from '@/layouts/components'
-
+  import { Breadcrumb, TaskBar } from '@/layouts/components'
   export default {
     name: 'NavBar',
     components: {
-      Avatar,
       Breadcrumb,
-      FullScreenBar,
-      ThemeBar,
+      TaskBar,
     },
     data() {
       return {
-        pulse: false,
+        // pulse: false,
       }
     },
     computed: {
       ...mapGetters({
         collapse: 'settings/collapse',
-        visitedRoutes: 'tabsBar/visitedRoutes',
-        device: 'settings/device',
-        routes: 'routes/routes',
+        // visitedRoutes: 'tabsBar/visitedRoutes',
+        // device: 'settings/device',
+        // routes: 'routes/routes',
       }),
     },
     methods: {
@@ -67,13 +50,13 @@
       handleCollapse() {
         this.changeCollapse()
       },
-      async refreshRoute() {
-        this.$baseEventBus.$emit('reload-routerview')
-        this.pulse = true
-        setTimeout(() => {
-          this.pulse = false
-        }, 1000)
-      },
+      // async refreshRoute() {
+      //   this.$baseEventBus.$emit('reload-routerview')
+      //   this.pulse = true
+      //   setTimeout(() => {
+      //     this.pulse = false
+      //   }, 1000)
+      // },
     },
   }
 </script>
@@ -98,11 +81,12 @@
       .fold-unfold {
         color: $base-color-gray;
         cursor: pointer;
+        font-size: 20px;
       }
 
       ::v-deep {
         .breadcrumb-container {
-          margin-left: 10px;
+          margin-left: 15px;
         }
       }
     }
@@ -114,30 +98,30 @@
       justify-content: flex-end;
       height: $base-nav-bar-height;
 
-      ::v-deep {
-        svg {
-          width: 1em;
-          height: 1em;
-          margin-right: 15px;
-          font-size: $base-font-size-small;
-          color: $base-color-gray;
-          cursor: pointer;
-          fill: $base-color-gray;
-        }
+      // ::v-deep {
+      //   svg {
+      //     width: 20px;
+      //     height: 20px;
+      //     margin-right: 15px;
+      //     font-size: $base-font-size-small;
+      //     color: $base-color-gray;
+      //     cursor: pointer;
+      //     fill: $base-color-gray;
+      //   }
 
-        button {
-          svg {
-            margin-right: 0;
-            color: $base-color-white;
-            cursor: pointer;
-            fill: $base-color-white;
-          }
-        }
+      //   button {
+      //     svg {
+      //       margin-right: 0;
+      //       color: $base-color-white;
+      //       cursor: pointer;
+      //       fill: $base-color-white;
+      //     }
+      //   }
 
-        .el-badge {
-          margin-right: 15px;
-        }
-      }
+      //   .el-badge {
+      //     margin-right: 15px;
+      //   }
+      // }
     }
   }
 </style>

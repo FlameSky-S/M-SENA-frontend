@@ -7,7 +7,7 @@
     </transition>
     <footer class="footer-copyright">
       <i class="el-icon-info"></i>
-      THUIAR M-SENA Project {{ fullYear }}
+      THUIAR M-SENA Project 2021
     </footer>
   </section>
 </template>
@@ -26,7 +26,7 @@
     data() {
       return {
         // show: false,
-        fullYear: new Date().getFullYear(),
+        // fullYear: new Date().getFullYear(),
         // copyright,
         // title,
         // keepAliveMaxNum,
@@ -36,18 +36,18 @@
     },
     computed: {
       ...mapGetters({
-        visitedRoutes: 'tabsBar/visitedRoutes',
+        // visitedRoutes: 'tabsBar/visitedRoutes',
         device: 'settings/device',
       }),
-      cachedRoutes() {
-        const cachedRoutesArr = []
-        this.visitedRoutes.forEach((item) => {
-          if (!item.meta.noKeepAlive) {
-            cachedRoutesArr.push(item.name)
-          }
-        })
-        return cachedRoutesArr
-      },
+      // cachedRoutes() {
+      //   const cachedRoutesArr = []
+      //   this.visitedRoutes.forEach((item) => {
+      //     if (!item.meta.noKeepAlive) {
+      //       cachedRoutesArr.push(item.name)
+      //     }
+      //   })
+      //   return cachedRoutesArr
+      // },
       key() {
         return this.$route.path
       },
@@ -83,9 +83,9 @@
     position: relative;
     width: 100%;
     overflow: hidden;
-    .vab-keel {
-      margin: $base-padding;
-    }
+    // .vab-keel {
+    //   margin: $base-padding;
+    // }
     .app-main-height {
       min-height: $base-app-main-height;
     }
