@@ -1,132 +1,258 @@
 <template>
   <div class="index-container">
+    <el-card class="top" shadow="never">
+      <h1 class="top-header">M-SENA System</h1>
+      <p class="top-text">
+        The M-SENA System is an all-in-one platform for Multimodal Sentiment
+        Analysis tasks
+      </p>
+      <p class="top-phrases">Open source, Easy to use, Free of charge</p>
+      <p class="top-buttons">
+        <el-button
+          type="primary"
+          style="font-weight: bold"
+          @click="openNewTab('https://github.com/thuiar/M-SENA')"
+        >
+          <v-icon name="play"></v-icon>
+          Get Started
+        </el-button>
+        <el-button
+          plain
+          @click="openNewTab('https://github.com/thuiar/M-SENA')"
+        >
+          <v-icon name="brands/github" scale="1.1" />
+          Download
+        </el-button>
+      </p>
+    </el-card>
     <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-        <el-card class="card" shadow="never">
-          <div slot="header">
-            <span>M-SENA</span>
-          </div>
-          <el-carousel :interval="0" type="card" height="400px">
-            <el-carousel-item v-for="item in 3" :key="item"></el-carousel-item>
-          </el-carousel>
+      <el-col :xs="11" :sm="10" :md="10" :lg="5" :xl="5" :offset="offset1">
+        <el-card
+          class="mid"
+          shadow="never"
+          @click.native="setCarousel('manage')"
+        >
+          <v-icon name="manage" scale="3"></v-icon>
+          <p>Easy Management</p>
         </el-card>
       </el-col>
-
-      <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-        <el-card class="card" shadow="never">
-          <div slot="header">
-            <span>依赖信息</span>
-            <div style="float: right">部署时间:{{ updateTime }}</div>
-          </div>
-          <table class="table">
-            <tr>
-              <td>@vue/cli版本</td>
-              <td>{{ devDependencies['@vue/cli-service'] }}</td>
-              <td>vue版本</td>
-              <td>{{ dependencies['vue'] }}</td>
-            </tr>
-            <tr>
-              <td>vuex版本</td>
-              <td>{{ dependencies['vuex'] }}</td>
-              <td>vue-router版本</td>
-              <td>{{ dependencies['vue-router'] }}</td>
-            </tr>
-            <tr>
-              <td>element-ui版本</td>
-              <td>{{ dependencies['element-ui'] }}</td>
-              <td>axios版本</td>
-              <td>{{ dependencies['axios'] }}</td>
-            </tr>
-            <tr>
-              <td>eslint版本</td>
-              <td>{{ devDependencies['eslint'] }}</td>
-              <td>prettier版本</td>
-              <td>{{ devDependencies['prettier'] }}</td>
-            </tr>
-            <tr>
-              <td>sass版本</td>
-              <td>{{ devDependencies['sass'] }}</td>
-              <td>mockjs版本</td>
-              <td></td>
-            </tr>
-          </table>
+      <el-col :xs="11" :sm="10" :md="10" :lg="5" :xl="5">
+        <el-card
+          class="mid"
+          shadow="never"
+          @click.native="setCarousel('label')"
+        >
+          <v-icon name="labels" scale="3"></v-icon>
+          <p>Auto Labeling</p>
         </el-card>
       </el-col>
+      <el-col :xs="11" :sm="10" :md="10" :lg="5" :xl="5" :offset="offset2">
+        <el-card
+          class="mid"
+          shadow="never"
+          @click.native="setCarousel('analysis')"
+        >
+          <v-icon name="analysis" scale="3"></v-icon>
+          <p>Visual Analysis</p>
+        </el-card>
+      </el-col>
+      <el-col :xs="11" :sm="10" :md="10" :lg="5" :xl="5">
+        <el-card class="mid" shadow="never" @click.native="setCarousel('doc')">
+          <v-icon name="docs" scale="3"></v-icon>
+          <p>Fully Documented</p>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-card class="bottom" shadow="never">
+        <el-carousel ref="carousel" :interval="0" :type="card" height="500px">
+          <el-carousel-item key="manage" name="manage">
+            <div align="center" style="height: 100%">
+              <el-row>
+                <h3>Easy Management</h3>
+                <el-image :src="require('@/assets/test2.gif')"></el-image>
+                <p>Manage datasets and models with our uniquely designed UI.</p>
+                <p>Import your own data/model and start training!</p>
+              </el-row>
+            </div>
+          </el-carousel-item>
+          <el-carousel-item key="label" name="label">
+            <div align="center" style="height: 100%">
+              <el-row>
+                <h3>Auto Labeling</h3>
+                <el-image :src="require('@/assets/test2.gif')"></el-image>
+                <p>Strugging with data-labeling?</p>
+                <p>
+                  Try out our auto labeling feature based on active learning
+                  algrithms.
+                </p>
+              </el-row>
+            </div>
+          </el-carousel-item>
+          <el-carousel-item key="analysis" name="analysis">
+            <div align="center" style="height: 100%">
+              <el-row>
+                <h3>Visual Analysis</h3>
+                <el-image :src="require('@/assets/test2.gif')"></el-image>
+                <p>To help you better understand your model,</p>
+                <p>
+                  M-SENA provides data visualization as well as feature
+                  visualization.
+                </p>
+              </el-row>
+            </div>
+          </el-carousel-item>
+          <el-carousel-item key="doc" name="doc">
+            <div align="center" style="height: 100%">
+              <el-row>
+                <h3>Fully Documented</h3>
+                <el-image :src="require('@/assets/test2.gif')"></el-image>
+                <p>Having problems with the system?</p>
+                <p>
+                  Find solutions in our support documents. Also feel free to
+                  submit issues on Github
+                </p>
+              </el-row>
+            </div>
+          </el-carousel-item>
+        </el-carousel>
+      </el-card>
     </el-row>
   </div>
 </template>
 
 <script>
-  import { dependencies, devDependencies } from '../../../package.json'
   export default {
     name: 'Index',
     data() {
       return {
-        fullWidth: document.documentElement.clientWidth,
-        fullHeight: document.documentElement.clientHeight,
-        timer: 0,
-        updateTime: process.env.VUE_APP_UPDATE_TIME,
-        nodeEnv: process.env.NODE_ENV,
-        dependencies: dependencies,
-        devDependencies: devDependencies,
-        //更新日志
-        reverse: true,
-        //其他信息
-        userAgent: navigator.userAgent,
+        offset1: 2,
+        offset2: 0,
+        card: 'card',
+        // testImg: '@/assets/poster.jpg',
       }
     },
-    created() {
-      // console.log(this.fullWidth)
-      // console.log(this.fullHeight)
+    beforeMount() {
+      window.addEventListener('resize', this.handleResize)
     },
-    methods: {},
+    beforeDestroy() {
+      window.removeEventListener('resize', this.handleResize)
+    },
+    created() {},
+    methods: {
+      setCarousel(name) {
+        this.$refs.carousel.setActiveItem(name)
+      },
+      openNewTab(url) {
+        window.open(url)
+      },
+      handleResize() {
+        let width = document.body.clientWidth + 13
+        if (width >= 1920) {
+          //xl
+          this.offset1 = 2
+          this.offset2 = 0
+          this.card = 'card'
+        } else if (width >= 1200) {
+          //lg
+          this.offset1 = 2
+          this.offset2 = 0
+          this.card = 'card'
+        } else if (width >= 992) {
+          //md
+          this.offset1 = 2
+          this.offset2 = 2
+          this.card = ''
+        } else if (width >= 768) {
+          //sm
+          this.offset1 = 2
+          this.offset2 = 2
+          this.card = ''
+        } else {
+          //xs
+          this.offset1 = 1
+          this.offset2 = 1
+          this.card = ''
+        }
+      },
+    },
   }
 </script>
 <style lang="scss" scoped>
-  .el-carousel__item h3 {
-    margin: 0;
-    font-size: 14px;
-    line-height: 300px;
-    color: #475669;
-    opacity: 0.75;
-  }
-
-  .el-carousel__item:nth-child(2n) {
-    background-color: #99a9bf;
-  }
-
-  .el-carousel__item:nth-child(2n + 1) {
-    background-color: #d3dce6;
-  }
   .index-container {
     padding: 0 !important;
-    margin: 0 !important;
-    background: #f5f7f8 !important;
 
-    .card {
-      min-height: 400px;
-    }
+    .top {
+      background-color: $base-menu-background;
+      color: $base-menu-color;
+      margin-top: 30px;
+      border: none;
+      padding: 80px 0px;
+      .top-header {
+        text-align: center;
+        font-size: 35px;
+      }
+      .top-text {
+        text-align: center;
+        font-size: 20px;
+      }
+      .top-phrases {
+        text-align: center;
+        font-size: 18px;
+        color: #828386;
+      }
+      .top-buttons {
+        text-align: center;
 
-    .table {
-      width: 100%;
-      color: #666;
-      border-collapse: collapse;
-      background-color: #fff;
-
-      td {
-        position: relative;
-        min-height: 20px;
-        padding: 9px 15px;
-        font-size: 14px;
-        line-height: 20px;
-        border: 1px solid #e6e6e6;
-
-        &:nth-child(odd) {
-          width: 20%;
-          text-align: right;
-          background-color: #f7f7f7;
+        .el-button {
+          font-size: 16px;
+          padding: 12px 16px;
+          // line-height: 22px;
         }
       }
     }
+
+    .mid {
+      border: none;
+      min-height: 120px;
+      text-align: center;
+      font-size: 18px;
+      cursor: pointer;
+      .fa-icon {
+        width: auto;
+        height: 1em;
+      }
+    }
+
+    .bottom {
+      border: none;
+      height: 550px;
+    }
+  }
+
+  .el-carousel__item {
+    .el-image {
+      margin: 0% 8%;
+      max-width: 600px;
+    }
+    h3 {
+      margin-top: 30px;
+      font-size: 20px;
+      // color: #475669;
+      color: $base-font-color;
+    }
+    p {
+      margin: 1% 8%;
+      font-size: 18px;
+      color: $base-font-color;
+    }
+  }
+
+  .el-carousel__item:nth-child(2n) {
+    background-color: #dcdfe6;
+  }
+
+  .el-carousel__item:nth-child(2n + 1) {
+    background-color: #e3e6ec;
   }
 </style>

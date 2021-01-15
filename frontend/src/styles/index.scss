@@ -55,6 +55,7 @@ html {
     font-size: $base-font-size-default;
     color: #2c3e50;
     background: #f6f8f9;
+    word-break: keep-all;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
@@ -75,49 +76,6 @@ html {
       }
     }
 
-    // /* el-tag开始 */
-    // .el-tag + .el-tag {
-    //   margin-left: 10px;
-    // }
-
-    // /* el-tag结束 */
-
-    // /* markdown编辑器开始 */
-    // .editor-toolbar {
-    //   .no-mobile,
-    //   .fa-question-circle {
-    //     display: none;
-    //   }
-    // }
-
-    /* markdown编辑器结束 */
-
-    /* 间隔线开始 */
-    // .el-divider--horizontal {
-    //   margin: 10px 0 25px 0;
-
-    //   .el-divider__text {
-    //     display: -webkit-box;
-    //     overflow: hidden;
-    //     text-overflow: ellipsis;
-    //     -webkit-line-clamp: 1;
-    //     -webkit-box-orient: vertical;
-    //   }
-    // }
-
-    /* 间隔线结束 */
-
-    /* 大图展示开始 */
-    // .el-image-viewer {
-    //   &__close {
-    //     .el-icon-circle-close {
-    //       color: $base-color-white;
-    //     }
-    //   }
-    // }
-
-    /* 大图展示结束 */
-
     .m-sena-system-wrapper {
       .app-main-container {
         @include base-scrollbar;
@@ -129,24 +87,11 @@ html {
       }
     }
 
-    // #nprogress {
-    //   position: fixed;
-    //   z-index: $base-z-index;
-
-    //   .bar {
-    //     background: $base-color-blue !important;
-    //   }
-
-    //   .peg {
-    //     box-shadow: 0 0 10px $base-color-blue, 0 0 5px $base-color-blue !important;
-    //   }
-    // }
-
     .el-button {
       font-size: $base-font-size-default;
-      i {
-        font-size: $base-font-size-big;
-      }
+      // i {
+      //   font-size: $base-font-size-big;
+      // }
     }
 
     .el-table {
@@ -167,7 +112,7 @@ html {
 
         .cell {
           font-size: $base-font-size-default;
-          // color: #606266;
+          word-break: keep-all;
 
           .el-image {
             width: 50px;
@@ -232,19 +177,5 @@ html {
         padding: $base-padding;
       }
     }
-
-    // .select-tree-popper {
-    //   .el-scrollbar {
-    //     .el-scrollbar__view {
-    //       .el-select-dropdown__item {
-    //         height: auto;
-    //         max-height: 274px;
-    //         padding: 0;
-    //         overflow-y: auto;
-    //         line-height: 26px;
-    //       }
-    //     }
-    //   }
-    // }
   }
 }

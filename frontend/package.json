@@ -28,6 +28,7 @@
     "normalize.css": "^8.0.1",
     "qs": "^6.9.4",
     "vue": "^2.6.12",
+    "vue-awesome": "^4.1.0",
     "vue-router": "^3.4.7",
     "vuex": "^3.5.1"
   },

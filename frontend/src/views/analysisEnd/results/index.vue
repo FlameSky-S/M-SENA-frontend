@@ -526,9 +526,3 @@
     font-weight: normal;
   }
 </style>
-
-<style>
-  .el-table .cell {
-    word-break: keep-all;
-  }
-</style>

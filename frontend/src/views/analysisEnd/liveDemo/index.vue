@@ -118,7 +118,7 @@
           <video
             ref="cameraView"
             width="100%"
-            poster="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1604575385384&di=fc0d7111bbc20e2212e7b7745ee88168&imgtype=0&src=http%3A%2F%2Fdl.ppt123.net%2Fpptbj%2F201603%2F2016030410313030.jpg"
+            poster="@/assets/poster.jpg"
             autoplay
             controls
           ></video>

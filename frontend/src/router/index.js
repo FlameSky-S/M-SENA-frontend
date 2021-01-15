@@ -34,7 +34,7 @@ export const constantRoutes = [
       {
         path: 'datasetList',
         name: 'Dataset List',
-        component: () => import('@/views/project/dataEnd/datasetList/index'),
+        component: () => import('@/views/dataEnd/datasetList/index'),
         meta: {
           title: 'Dataset Management',
           icon: 'el-icon-s-shop',
@@ -43,7 +43,7 @@ export const constantRoutes = [
       {
         path: 'datasetDetail',
         name: 'Dataset Details',
-        component: () => import('@/views/project/dataEnd/datasetDetails/index'),
+        component: () => import('@/views/dataEnd/datasetDetails/index'),
         meta: {
           title: 'Dataset Details',
         },
@@ -52,7 +52,7 @@ export const constantRoutes = [
       {
         path: 'labeling',
         name: 'Dataset Labeling',
-        component: () => import('@/views/project/dataEnd/labeling/index'),
+        component: () => import('@/views/dataEnd/labeling/index'),
         meta: {
           title: 'Dataset Labeling',
           icon: 'el-icon-s-flag',
@@ -61,8 +61,7 @@ export const constantRoutes = [
       {
         path: 'labelingDetail',
         name: 'Labeling Process',
-        component: () =>
-          import('@/views/project/dataEnd/labelingProcess/index'),
+        component: () => import('@/views/dataEnd/labelingProcess/index'),
         meta: {
           title: 'Dataset Labeling',
         },
@@ -83,8 +82,7 @@ export const constantRoutes = [
       {
         path: 'modelList',
         name: 'Model List',
-        component: () =>
-          import('@/views/project/modelEnd/modelManagement/index'),
+        component: () => import('@/views/modelEnd/modelManagement/index'),
         meta: {
           title: 'Model Management',
           icon: 'el-icon-s-management',
@@ -93,7 +91,7 @@ export const constantRoutes = [
       {
         path: 'modelTraining',
         name: ' Model Training',
-        component: () => import('@/views/project/modelEnd/modelTraining/index'),
+        component: () => import('@/views/modelEnd/modelTraining/index'),
         meta: {
           title: 'Model Training',
           icon: 'el-icon-s-order',
@@ -112,39 +110,36 @@ export const constantRoutes = [
     },
     children: [
       {
-        path: 'resultAnalysis',
-        name: 'Result Analysis',
-        component: () =>
-          import('@/views/project/analysisEnd/resultAnalysis/index'),
+        path: 'results',
+        name: 'Results',
+        component: () => import('@/views/analysisEnd/results/index'),
         meta: {
-          title: 'Result Analysis',
+          title: 'Results',
           icon: 'el-icon-s-help',
         },
       },
       {
         path: 'resultDetails',
         name: 'Result Details',
-        component: () =>
-          import('@/views/project/analysisEnd/resultDetails/index'),
+        component: () => import('@/views/analysisEnd/resultDetails/index'),
         meta: {
           title: 'Result Details',
         },
         hidden: true,
       },
       {
-        path: 'batchAnalysis',
-        name: 'Batch Analysis',
-        component: () =>
-          import('@/views/project/analysisEnd/batchAnalysis/index'),
+        path: 'modelComparison',
+        name: 'Model Comparison',
+        component: () => import('@/views/analysisEnd/modelComparison/index'),
         meta: {
-          title: 'Batch Analysis',
+          title: 'Model Comparison',
           icon: 'el-icon-s-grid',
         },
       },
       {
-        path: 'liveTest',
-        name: ' Live Test',
-        component: () => import('@/views/project/analysisEnd/liveTest/index'),
+        path: 'liveDemo',
+        name: ' Live Demo',
+        component: () => import('@/views/analysisEnd/liveDemo/index'),
         meta: {
           title: 'Live Demo',
           icon: 'el-icon-video-camera-solid',
@@ -154,7 +149,7 @@ export const constantRoutes = [
     ],
   },
   {
-    path: '/wiki',
+    path: '/aboutUs',
     component: Layout,
     redirect: 'noRedirect',
     name: 'Wiki',
@@ -162,7 +157,7 @@ export const constantRoutes = [
       {
         path: 'docs',
         name: 'System Docs',
-        component: () => import('@/views/project/Wiki/index'),
+        component: () => import('@/views/Wiki/index'),
         meta: {
           title: 'About Us',
           icon: 'el-icon-s-promotion',
