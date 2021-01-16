@@ -1,6 +1,6 @@
 <template>
   <div class="batchTest-container">
-    <h1 style="margin-left: 2%">Batch Analysis</h1>
+    <h1 style="margin-left: 2%">Model Comparison</h1>
     <el-row style="margin: 0% 5%">
       <el-form ref="testSettings" :model="testSettings" inline>
         <el-form-item label="Models:" style="font-weight: bold">
@@ -174,9 +174,15 @@
         this.resultLoading = false
       },
       plotResult(instance, title, data) {
+        // transpose data
+        var newData = data[0].map(function (col, i) {
+          return data.map(function (row) {
+            return row[i]
+          })
+        })
         let series = []
-        for (let i in data) {
-          series.push({ type: 'line', seriesLayoutBy: 'row' })
+        for (let i in newData[0]) {
+          series.push({ type: 'line' })
         }
         series.pop()
         instance.setOption({
@@ -227,11 +233,11 @@
             },
           ],
           dataset: {
-            source: data,
+            source: newData,
           },
           grid: {
             x: '8%',
-            y: '10%',
+            y: '15%',
             x2: '0%',
             y2: '18%',
           },
