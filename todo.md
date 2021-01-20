@@ -53,6 +53,7 @@
    4. ~~ModelResult 页面批量删除，复选框~~
    5. ModelResult 页面排序功能，后端配合
    6. dataDetails 页面增加 VideoID 过滤框
+   7. Model Comparison 页面 echarts 增加最大/最小值
 
 4. 风格统一：
 
