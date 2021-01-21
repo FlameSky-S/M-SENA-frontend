@@ -1,13 +1,11 @@
 <template>
   <div class="modelManagement-container">
     <h1 style="margin-left: 2%">Model Management</h1>
-    <div class="tips">
-      <p></p>
-    </div>
+    <p class="tips"></p>
     <el-row>
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <div class="model-table">
-          <el-form ref="form" :model="queryForm" :inline="true">
+          <el-form inline>
             <el-form-item>
               <el-button
                 icon="el-icon-refresh-left"
@@ -18,7 +16,6 @@
               </el-button>
             </el-form-item>
           </el-form>
-
           <el-table
             v-loading="modelLoading"
             :data="modelList"
@@ -56,7 +53,8 @@
               label="Description"
               prop="description"
               align="center"
-              min-width="250"
+              min-width="200"
+              show-overflow-tooltip
             ></el-table-column>
             <el-table-column label="Operations" align="center" min-width="150">
               <template slot-scope="scope">
@@ -72,6 +70,15 @@
               </template>
             </el-table-column>
           </el-table>
+          <!-- <el-pagination
+            :background="true"
+            :current-page="queryForm.pageNo"
+            layout="total, sizes, prev, pager, next, jumper"
+            :page-size="queryForm.pageSize"
+            :total="total"
+            @current-change="handleCurrentChange"
+            @size-change="handleSizeChange"
+          ></el-pagination> -->
         </div>
       </el-col>
     </el-row>
@@ -87,10 +94,11 @@
       return {
         modelList: [],
         modelLoading: true,
-        queryForm: {
-          pageNo: 1,
-          pageSize: 10,
-        },
+        // queryForm: {
+        //   pageNo: 1,
+        //   pageSize: 10,
+        // },
+        // total: 0,
       }
     },
     computed: {},
@@ -107,18 +115,19 @@
       }
     },
     methods: {
-      handleSizeChange(val) {
-        this.queryForm.pageSize = val
-        this.fetchModelList()
-      },
-      handleCurrentChange(val) {
-        this.queryForm.pageNo = val
-        this.fetchModelList()
-      },
+      // handleSizeChange(val) {
+      //   this.queryForm.pageSize = val
+      //   this.fetchModelList()
+      // },
+      // handleCurrentChange(val) {
+      //   this.queryForm.pageNo = val
+      //   this.fetchModelList()
+      // },
       async fetchModelList() {
         this.modelLoading = true
         let { modelList } = await getModelList()
         this.modelList = modelList
+        // this.total = totalCount
         this.modelLoading = false
       },
       async scanModel() {

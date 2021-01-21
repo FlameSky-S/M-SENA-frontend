@@ -77,7 +77,7 @@
             label-position="left"
             style="margin: 5%"
           >
-            <el-form-item label="Primary Model:" style="font-weight: bold">
+            <el-form-item label="Models:" style="font-weight: bold">
               <el-select v-model="testSettings.model" multiple collapse-tags>
                 <el-option
                   v-for="item in modelList"

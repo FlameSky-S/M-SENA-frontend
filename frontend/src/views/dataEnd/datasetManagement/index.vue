@@ -1,14 +1,20 @@
 <template>
   <div class="datasetList-container">
-    <h1>Dataset Management</h1>
+    <h1 style="margin-left: 2%">Dataset Management</h1>
     <p class="tips"></p>
     <el-row>
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <div class="dataset-table">
-          <el-form>
-            <el-button icon="el-icon-plus" type="primary" @click="handleRescan">
-              Rescan
-            </el-button>
+          <el-form inline>
+            <el-form-item>
+              <el-button
+                icon="el-icon-refresh-left"
+                type="primary"
+                @click="handleRescan"
+              >
+                Rescan
+              </el-button>
+            </el-form-item>
           </el-form>
           <el-table
             ref="datasetTable"
@@ -61,6 +67,7 @@
               align="center"
               :width="tableWidth()"
               min-width="260px"
+              show-overflow-tooltip
             ></el-table-column>
             <el-table-column
               label="Operations"
@@ -80,15 +87,15 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-pagination
-            :background="background"
+          <!-- <el-pagination
+            :background="true"
             :current-page="queryForm.pageNo"
-            :layout="layout"
+            layout="total, sizes, prev, pager, next, jumper"
             :page-size="queryForm.pageSize"
             :total="total"
             @current-change="handleCurrentChange"
             @size-change="handleSizeChange"
-          ></el-pagination>
+          ></el-pagination> -->
         </div>
       </el-col>
     </el-row>
@@ -120,15 +127,13 @@
         fullHeight: document.documentElement.clientHeight,
         list: [],
         listLoading: true,
-        layout: 'total, sizes, prev, pager, next, jumper',
-        background: true,
-        total: 0,
+        // total: 0,
         selectRows: '',
         elementLoadingText: 'Loading Information...',
-        queryForm: {
-          pageNo: 1,
-          pageSize: 10,
-        },
+        // queryForm: {
+        //   pageNo: 1,
+        //   pageSize: 10,
+        // },
       }
     },
     computed: {
@@ -187,27 +192,28 @@
         //   path: '/data/createDataset',
         // })
       },
-      handleQuery() {},
-      handleSizeChange(val) {
-        this.queryForm.pageSize = val
-        this.fetchData()
-      },
-      handleCurrentChange(val) {
-        this.queryForm.pageNo = val
-        this.fetchData()
-      },
+      // handleQuery() {},
+      // handleSizeChange(val) {
+      //   this.queryForm.pageSize = val
+      //   this.fetchData()
+      // },
+      // handleCurrentChange(val) {
+      //   this.queryForm.pageNo = val
+      //   this.fetchData()
+      // },
       async fetchData() {
         this.listLoading = true
-        const { datasetList, totalCount } = await getDatasetList({
-          pageNo: this.queryForm.pageNo,
-          pageSize: this.queryForm.pageSize,
-          unlocked: false,
-        })
+        let { datasetList } = await getDatasetList({ unlocked: false })
+        // const { datasetList, totalCount } = await getDatasetList({
+        //   pageNo: this.queryForm.pageNo,
+        //   pageSize: this.queryForm.pageSize,
+        //   unlocked: false,
+        // })
         this.list = datasetList
         this.list.forEach((element) => {
           element.status = element.status
         })
-        this.total = totalCount
+        // this.total = totalCount
         this.listLoading = false
       },
     },

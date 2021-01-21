@@ -10,7 +10,7 @@
               ref="trainSettings"
               :model="trainSettings"
               label-position="left"
-              label-width="130px"
+              label-width="100px"
             >
               <el-form-item label="Train Mode:" style="font-weight: bold">
                 <el-radio v-model="trainSettings.mode" label="Tune">
@@ -20,7 +20,7 @@
                   Train
                 </el-radio>
               </el-form-item>
-              <el-form-item label="Select Model:" style="font-weight: bold">
+              <el-form-item label="Model:" style="font-weight: bold">
                 <el-select
                   v-model="trainSettings.model"
                   @change="onSettingsChange"
@@ -33,7 +33,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="Select Dataset:" style="font-weight: bold">
+              <el-form-item label="Dataset:" style="font-weight: bold">
                 <el-select
                   v-model="trainSettings.dataset"
                   @change="onSettingsChange"
@@ -156,7 +156,8 @@
       },
       async onSettingsChange() {
         let model = this.trainSettings.model
-        let query = { model: model }
+        let dataset = this.trainSettings.dataset
+        let query = { model: model, dataset: dataset }
         let arg = ''
         if (this.$route.query.args) {
           arg = this.$route.query.args

@@ -1,6 +1,6 @@
 <template>
   <div class="labeling-container">
-    <h1>Dataset Labeling</h1>
+    <h1 style="margin-left: 2%">Dataset Labeling</h1>
     <p class="tips"></p>
     <el-row>
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">

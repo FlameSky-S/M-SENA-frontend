@@ -196,7 +196,6 @@
       >
         <el-table-column
           fixed
-          show-overflow-tooltip
           label="Sample ID"
           prop="sample_id"
           min-width="100"
@@ -219,7 +218,6 @@
           align="center"
         ></el-table-column>
         <el-table-column
-          show-overflow-tooltip
           label="Label"
           prop="label_value"
           width="auto"
@@ -242,7 +240,6 @@
           </template>
         </el-table-column>
         <el-table-column
-          show-overflow-tooltip
           label="Predict"
           prop="predict_value"
           width="auto"
@@ -273,8 +270,7 @@
           align="center"
         ></el-table-column>
         <el-table-column
-          show-overflow-tooltip
-          label="Data Type"
+          label="Data Split"
           prop="data_mode"
           width="auto"
           min-width="120px"
@@ -282,7 +278,6 @@
         ></el-table-column>
         <el-table-column
           fixed="right"
-          show-overflow-tooltip
           label="Operations"
           width="auto"
           min-width="160px"

@@ -32,9 +32,9 @@ export const constantRoutes = [
     },
     children: [
       {
-        path: 'datasetList',
-        name: 'Dataset List',
-        component: () => import('@/views/dataEnd/datasetList/index'),
+        path: 'datasetManagement',
+        name: 'Dataset Management',
+        component: () => import('@/views/dataEnd/datasetManagement/index'),
         meta: {
           title: 'Dataset Management',
           icon: 'el-icon-s-shop',
