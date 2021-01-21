@@ -53,6 +53,7 @@
    4. ~~ModelResult 页面批量删除，复选框~~
    5. ModelResult 页面排序功能，后端配合
    6. dataDetails 页面增加 VideoID 过滤框
+   7. Model Comparison 页面 echarts 增加最大/最小值
 
 4. 风格统一：
 
@@ -71,6 +72,8 @@
 ### 前后端
 
 1. 前后端消息推送机制（WebSocket 或 SSE）
-2. 多分辨率适配
-3. 系统测试
-4. FAQ 页面
+2. 后端日志系统
+3. 任务队列
+4. 多分辨率适配
+5. 系统测试
+6. FAQ 页面
