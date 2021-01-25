@@ -65,7 +65,13 @@
     </el-row>
     <el-row>
       <el-card class="bottom" shadow="never">
-        <el-carousel ref="carousel" :interval="0" :type="card" height="500px">
+        <el-carousel
+          ref="carousel"
+          :interval="8000"
+          :type="card"
+          :autoplay="autoplay"
+          height="500px"
+        >
           <el-carousel-item key="manage" name="manage">
             <div align="center" style="height: 100%">
               <el-row>
@@ -129,6 +135,7 @@
         offset1: 2,
         offset2: 0,
         card: 'card',
+        autoplay: true,
         // testImg: '@/assets/poster.jpg',
       }
     },
@@ -142,6 +149,11 @@
     methods: {
       setCarousel(name) {
         this.$refs.carousel.setActiveItem(name)
+        // Reset autoplay timer
+        this.autoplay = false
+        this.$nextTick(() => {
+          this.autoplay = true
+        })
       },
       openNewTab(url) {
         window.open(url)

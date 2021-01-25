@@ -103,9 +103,7 @@
                   <div
                     :id="'accChart' + props.row.result_id"
                     style="margin: 5%"
-                  >
-                    {{ accChart }}
-                  </div>
+                  ></div>
                 </el-col>
               </template>
             </el-table-column>
@@ -237,7 +235,6 @@
           pageSize: 10,
         },
         multipleSelection: [],
-        accChart: '',
       }
     },
     computed: {},
