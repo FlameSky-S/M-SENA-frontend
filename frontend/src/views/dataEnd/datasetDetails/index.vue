@@ -1,52 +1,34 @@
 <template>
   <div class="datasetDetails-container">
-    <h1>Dataset Details</h1>
+    <h1 style="margin-left: 2%">Dataset Details</h1>
     <p class="tips"></p>
-    <el-row :gutter="120">
+    <el-row :gutter="80">
       <div class="top-row">
         <el-col :xs="24" :sm="24" :md="24" :lg="10" :xl="14">
           <h2>{{ queryForm.datasetName }} Dataset</h2>
-          <el-row>
+          <el-row :gutter="20">
             <el-col :xs="24" :sm="12" :md="12" :lg="24" :xl="12">
-              <el-form
-                ref="form"
-                :model="datasetDetails.detailInfo"
-                label-width="120px"
-              >
+              <el-form label-width="120px" label-position="left">
                 <el-form-item label="Dataset:">
                   <el-input
-                    v-model="datasetDetails.detailInfo.datasetName"
-                    style="min-width: 120px"
-                    disabled
+                    v-model="datasetDetails.datasetName"
+                    readonly
                   ></el-input>
                 </el-form-item>
                 <el-form-item label="Labeled / Total:">
-                  <el-input
-                    v-model="labeledFraction"
-                    style="min-width: 120px"
-                    disabled
-                  ></el-input>
+                  <el-input v-model="labeledFraction" readonly></el-input>
                 </el-form-item>
               </el-form>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="24" :xl="12">
-              <el-form
-                ref="form"
-                :model="datasetDetails.detailInfo"
-                label-width="120px"
-              >
+              <el-form label-width="120px" label-position="left">
                 <el-form-item label="Status:">
-                  <el-input
-                    v-model="datasetDetails.detailInfo.locked"
-                    style="min-width: 120px"
-                    disabled
-                  ></el-input>
+                  <el-input v-model="datasetDetails.locked" readonly></el-input>
                 </el-form-item>
                 <el-form-item label="Language:">
                   <el-input
-                    v-model="datasetDetails.detailInfo.language"
-                    style="min-width: 120px"
-                    disabled
+                    v-model="datasetDetails.language"
+                    readonly
                   ></el-input>
                 </el-form-item>
               </el-form>
@@ -54,14 +36,14 @@
           </el-row>
           <el-row>
             <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-              <el-form label-width="120px">
+              <el-form label-width="120px" label-position="left">
                 <el-form-item label="Description:">
                   <el-input
-                    v-model="datasetDetails.detailInfo.description"
-                    style="min-width: 120px"
+                    v-model="datasetDetails.description"
                     type="textarea"
-                    :rows="3"
-                    disabled
+                    resize="none"
+                    :autosize="{ minRows: 3, maxRows: 5 }"
+                    readonly
                   ></el-input>
                 </el-form-item>
               </el-form>
@@ -71,47 +53,53 @@
         <el-col :xs="24" :sm="24" :md="24" :lg="14" :xl="10">
           <h2>Data Distribution</h2>
           <el-row>
-            <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+            <el-col :span="12">
               <div
-                id="dataDistribution"
-                ref="dataDistribution2"
-                style="width: 340px; height: 220px; margin: 0 auto"
+                id="dataDistribution1"
+                ref="dataDistribution1"
+                style="width: 100%; height: 220px; margin: 0 auto"
               ></div>
             </el-col>
-            <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+            <el-col :span="12">
               <div
-                id="dataDistribution"
-                ref="dataDistribution1"
-                style="width: 340px; height: 220px; margin: 0 auto"
+                id="dataDistribution2"
+                ref="dataDistribution2"
+                style="width: 100%; height: 220px; margin: 0 auto"
               ></div>
             </el-col>
           </el-row>
         </el-col>
       </div>
     </el-row>
-    <el-row style="margin-top: 3%">
+    <el-row style="margin-top: 2%">
       <div class="top-row">
-        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-          <el-form ref="filter" :model="filter" :inline="true">
-            <el-form-item label="Sentiment:" style="font-weight: bold">
-              <el-select v-model="filter.sentiment" style="width: 150px">
+        <el-col>
+          <el-form :model="queryForm" inline>
+            <el-form-item label="Label:">
+              <el-select v-model="queryForm.label" style="width: 150px">
                 <el-option
-                  v-for="item in filter.sentiment_list"
+                  v-for="item in labelList"
                   :key="item"
                   :label="item"
                   :value="item"
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Type of Dataset:" style="font-weight: bold">
-              <el-select v-model="filter.data_mode" style="width: 120px">
+            <el-form-item label="Data Split:">
+              <el-select v-model="queryForm.dataSplit" style="width: 120px">
                 <el-option
-                  v-for="item in filter.data_mode_list"
+                  v-for="item in dataSplitList"
                   :key="item"
                   :label="item"
                   :value="item"
                 ></el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item label="Sample ID:">
+              <el-input
+                v-model="queryForm.sampleID"
+                style="width: 150px"
+              ></el-input>
             </el-form-item>
             <el-form-item>
               <el-button
@@ -121,47 +109,64 @@
               >
                 Apply
               </el-button>
+              <el-button
+                icon="el-icon-refresh-left"
+                type="danger"
+                plain
+                @click="resetFilter"
+              >
+                Reset
+              </el-button>
             </el-form-item>
           </el-form>
           <el-table
-            ref="tableSort"
             v-loading="listLoading"
             :data="datasetDetails.instanceList"
-            :element-loading-text="elementLoadingText"
+            element-loading-text="Loading..."
             style="width: 100%"
           >
             <el-table-column
               fixed
-              show-overflow-tooltip
               label="Sample ID"
               prop="sample_id"
-              min-width="100"
+              width="120px"
               align="center"
             ></el-table-column>
             <el-table-column
-              fixed
               show-overflow-tooltip
               label="Video ID"
               prop="video_id"
-              min-width="100"
+              width="120px"
               align="center"
             ></el-table-column>
             <el-table-column
-              fixed
               show-overflow-tooltip
               label="Clip ID"
               prop="clip_id"
-              min-width="100"
+              width="120px"
               align="center"
             ></el-table-column>
             <el-table-column
-              show-overflow-tooltip
-              label="M-Label"
-              prop="label_value"
-              width="auto"
-              min-width="100px"
+              label="Label"
+              prop="annotation"
+              width="120px"
               align="center"
-            ></el-table-column>
+            >
+              <template slot-scope="scope">
+                <el-tag
+                  :type="
+                    scope.row.annotation == 'Negative'
+                      ? 'warning'
+                      : scope.row.annotation == 'Neutral'
+                      ? 'primary'
+                      : 'success'
+                  "
+                  disable-transitions
+                >
+                  {{ scope.row.annotation }}
+                </el-tag>
+              </template>
+            </el-table-column>
             <el-table-column
               show-overflow-tooltip
               label="Text"
@@ -172,31 +177,28 @@
             ></el-table-column>
             <el-table-column
               show-overflow-tooltip
-              label="Type of Dataset"
+              label="Data Split"
               prop="data_mode"
-              width="auto"
-              min-width="120px"
+              width="120px"
               align="center"
             ></el-table-column>
             <el-table-column
               fixed="right"
-              show-overflow-tooltip
               label="Operations"
-              width="auto"
-              min-width="160px"
+              width="160px"
               align="center"
             >
               <template #default="{ row }">
                 <el-button type="text" @click="showPreview(row)">
-                  Preview Instance
+                  Play Video
                 </el-button>
               </template>
             </el-table-column>
           </el-table>
           <el-pagination
-            :background="background"
+            :background="true"
             :current-page="queryForm.pageNo"
-            :layout="layout"
+            layout="total, sizes, prev, pager, next, jumper"
             :page-size="queryForm.pageSize"
             :total="total"
             @current-change="handleCurrentChange"
@@ -210,14 +212,9 @@
 </template>
 
 <script>
-  import { getDetails, getMetaData } from '@/api/datasetDetail'
-  import {
-    renameDataset,
-    unlockDataset,
-    lockDataset,
-    deleteDataset,
-  } from '@/api/datasetCurd'
+  import { getDetails, getMetaData } from '@/api/dataEnd'
   import Preview from './components/Preview'
+  import * as echarts from 'echarts'
   export default {
     name: 'DatasetDetails',
     components: {
@@ -226,55 +223,47 @@
     data() {
       return {
         listLoading: true,
-        layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
-        background: true,
-        selectRows: '',
-        elementLoadingText: 'Loading Elements...',
+        labelList: ['All', 'Positive', 'Neutral', 'Negative'],
+        dataSplitList: ['All', 'Train', 'Valid', 'Test'],
         queryForm: {
           datasetName: null,
           pageNo: 1,
           pageSize: 20,
-        },
-        filter: {
-          sentiment_list: ['All'],
-          sentiment: '',
-          data_mode_list: ['All'],
-          data_mode: '',
+          label: 'All',
+          dataSplit: 'All',
+          sampleID: '',
         },
         datasetDetails: {
-          detailInfo: {
-            datasetName: null,
-            locked: null,
-            human: 0,
-            machine: 0,
-            medium: 0,
-            hard: 0,
-            unlabeled: 0,
-            labeled: 0,
-            totalCount: null,
-            language: null,
-            unimodalLabel: null,
-            description: null,
-          },
-          modelImg: [
-            'https://i.picsum.photos/id/703/200/200.jpg?hmac=6zWxIBRmIf2e0jZTqvKBIwrc7wm-dPkvGky4go6Yyvg',
-          ],
-          instanceList: null,
+          datasetName: null,
+          locked: null,
+          labeled: 0,
+          totalCount: null,
+          language: null,
+          description: null,
+          difficultyCount: null, // a list for pie chart 2
+          classCount: null, // a list for pie chart 1
+          instanceList: null, // a copy of response data
         },
+        myChart_1: null,
+        myChart_2: null,
       }
     },
     computed: {
       labeledFraction() {
         return (
-          this.datasetDetails.detailInfo.labeled +
-          ' / ' +
-          this.datasetDetails.detailInfo.totalCount
+          this.datasetDetails.labeled + ' / ' + this.datasetDetails.totalCount
         )
       },
     },
     created() {
       this.queryForm.datasetName = this.$route.query.dataset
+    },
+    beforeMount() {
+      window.addEventListener('resize', this.handleResize)
+    },
+    beforeDestroy() {
+      window.removeEventListener('resize', this.handleResize)
     },
     mounted() {
       // Fetch Video List Info && Data Meta Data -> Excharts Dom.
@@ -282,50 +271,103 @@
         await this.fetchMetadata()
         await this.fetchDetails()
         // Construct Excharts Dom.
-        var echarts = require('echarts')
         var pie_dv_1 = this.$refs.dataDistribution1
         var pie_dv_2 = this.$refs.dataDistribution2
-        let myChart_1 = echarts.init(pie_dv_1)
-        let myChart_2 = echarts.init(pie_dv_2)
+        this.myChart_1 = echarts.init(pie_dv_1)
+        this.myChart_2 = echarts.init(pie_dv_2)
         var difficulty_data = []
-        for (var key in this.datasetDetails.detailInfo.difficultyCount) {
+        for (var key in this.datasetDetails.difficultyCount) {
           difficulty_data.push({
-            value: this.datasetDetails.detailInfo.difficultyCount[key],
+            value: this.datasetDetails.difficultyCount[key],
             name: key,
           })
         }
-        myChart_1.setOption({
+        var label_data = []
+        for (var key in this.datasetDetails.classCount) {
+          label_data.push({
+            value: this.datasetDetails.classCount[key],
+            name: key,
+          })
+        }
+
+        this.myChart_1.setOption({
+          title: {
+            text: 'Sentiment',
+            x: 'center',
+            y: 'top',
+          },
+          legend: {
+            bottom: 0,
+            left: 'center',
+          },
+          tooltip: {
+            trigger: 'item',
+            position: [0, 0],
+          },
           series: [
             {
-              name: '访问来源',
+              name: 'Sentiment',
               type: 'pie',
-              radius: '55%',
-              data: difficulty_data,
+              radius: ['40%', '75%'],
+              data: label_data,
+              label: { show: false, position: 'center' },
+              emphasis: {
+                label: {
+                  show: true,
+                  fontSize: '14',
+                  fontWeight: 'bold',
+                },
+              },
             },
           ],
         })
-        var sentiment_data = []
-        for (var key in this.datasetDetails.detailInfo.classCount) {
-          sentiment_data.push({
-            value: this.datasetDetails.detailInfo.classCount[key],
-            name: key,
-          })
-        }
-        myChart_2.setOption({
+
+        this.myChart_2.setOption({
+          title: {
+            text: 'Difficulty',
+            x: 'center',
+            y: 'top',
+          },
+          legend: {
+            bottom: 0,
+            left: 'center',
+          },
+          tooltip: {
+            trigger: 'item',
+            position: [0, 0],
+          },
           series: [
             {
-              name: '访问来源',
+              name: 'Difficulty',
               type: 'pie',
-              radius: '55%',
-              data: sentiment_data,
+              radius: ['40%', '75%'],
+              data: difficulty_data,
+              label: { show: false, position: 'center' },
+              emphasis: {
+                label: {
+                  show: true,
+                  fontSize: '14',
+                  fontWeight: 'bold',
+                },
+              },
             },
           ],
         })
       })()
     },
     methods: {
+      handleResize() {
+        this.myChart_1.resize()
+        this.myChart_2.resize()
+      },
       applyFilter() {
         this.queryForm.pageNo = 1
+        this.fetchDetails()
+      },
+      resetFilter() {
+        this.queryForm.sampleID = ''
+        this.queryForm.label = 'All'
+        this.queryForm.dataSplit = 'All'
         this.fetchDetails()
       },
       showPreview(row) {
@@ -344,8 +386,9 @@
         const { data, totalCount } = await getDetails({
           datasetName: this.queryForm.datasetName,
           difficulty_filter: 'All',
-          sentiment_filter: this.filter.sentiment,
-          data_mode_filter: this.filter.data_mode,
+          sentiment_filter: this.queryForm.label,
+          data_mode_filter: this.queryForm.dataSplit,
+          id_filter: this.queryForm.sampleID,
           pageNo: this.queryForm.pageNo,
           pageSize: this.queryForm.pageSize,
         })
@@ -357,36 +400,21 @@
         const { data } = await getMetaData({
           datasetName: this.queryForm.datasetName,
         })
-        // Table List DOM.
-        this.datasetDetails.detailInfo.datasetName = data.datasetName
-        this.datasetDetails.detailInfo.totalCount = data.totalCount
-        this.datasetDetails.detailInfo.language = data.language
-        this.datasetDetails.detailInfo.description = data.description
-
-        // Echarts DOM.
-        this.datasetDetails.detailInfo.locked = data.is_locked
-          ? 'locked'
-          : 'unlocked'
-        this.datasetDetails.detailInfo.machine = data.difficultyCount['Machine']
+        this.datasetDetails.datasetName = data.datasetName
+        this.datasetDetails.totalCount = data.totalCount
+        this.datasetDetails.language = data.language
+        this.datasetDetails.description = data.description
+        this.datasetDetails.locked = data.is_locked ? 'locked' : 'unlocked'
+        let machine = data.difficultyCount['Machine']
           ? data.difficultyCount['Machine']
           : 0
-        this.datasetDetails.detailInfo.human = data.difficultyCount['Human']
+        let human = data.difficultyCount['Human']
           ? data.difficultyCount['Human']
           : 0
-        this.datasetDetails.detailInfo.labeled =
-          this.datasetDetails.detailInfo.human +
-          this.datasetDetails.detailInfo.machine
-        // Search Bar DOM.
-        this.datasetDetails.detailInfo.classCount = data.classCount
-        this.datasetDetails.detailInfo.difficultyCount = data.difficultyCount
-        for (var key in data.classCount) {
-          this.filter.sentiment_list.push(key)
-        }
-        this.filter.sentiment = this.filter.sentiment_list[0]
-        for (var key in data.typeCount) {
-          this.filter.data_mode_list.push(key)
-        }
-        this.filter.data_mode = this.filter.data_mode_list[0]
+        this.datasetDetails.labeled = machine + human
+
+        this.datasetDetails.classCount = data.classCount
+        this.datasetDetails.difficultyCount = data.difficultyCount
       },
     },
   }
@@ -397,18 +425,6 @@
     margin: 0%;
     .top-row {
       margin: 0% 5%;
-      .detail-info-operation {
-        display: inline;
-        .detail-info-operation-header {
-          margin-left: 10%;
-        }
-        .operation-item {
-          margin: 5% 15%;
-          .operation-button {
-            width: 100%;
-          }
-        }
-      }
     }
   }
 </style>

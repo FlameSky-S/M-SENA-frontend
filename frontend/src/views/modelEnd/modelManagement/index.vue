@@ -25,13 +25,14 @@
             <el-table-column
               type="index"
               align="center"
-              min-width="50"
+              width="80"
             ></el-table-column>
             <el-table-column
               label="Model Name"
               prop="model_name"
               align="center"
-              min-width="120"
+              min-width="100"
+              show-overflow-tooltip
             ></el-table-column>
             <el-table-column
               label="Related Paper"
@@ -56,7 +57,7 @@
               min-width="200"
               show-overflow-tooltip
             ></el-table-column>
-            <el-table-column label="Operations" align="center" min-width="150">
+            <el-table-column label="Operations" align="center" width="200">
               <template slot-scope="scope">
                 <el-button type="text" @click="viewResults(scope.row)">
                   Results
@@ -64,9 +65,9 @@
                 <el-button type="text" @click="trainModel(scope.row)">
                   Train
                 </el-button>
-                <el-button type="text" @click="delModel(scope.row)">
+                <!-- <el-button type="text" @click="delModel(scope.row)">
                   Delete
-                </el-button>
+                </el-button> -->
               </template>
             </el-table-column>
           </el-table>
@@ -131,9 +132,6 @@
         this.modelLoading = false
       },
       async scanModel() {
-        // let { msg } = await scanModel()
-        // if (msg == 'success') {
-
         let { msg, modelList } = await getModelList()
         if (msg == 'success') {
           this.modelLoading = true
@@ -144,7 +142,6 @@
             type: 'success',
           })
         }
-        // }
       },
       viewResults(row) {
         this.$router.push({
@@ -159,10 +156,10 @@
         })
       },
       // editModel(row) {},
-      searchModel() {
-        this.queryForm.pageNo = 1
-        this.fetchModelList()
-      },
+      // searchModel() {
+      //   this.queryForm.pageNo = 1
+      //   this.fetchModelList()
+      // },
     },
   }
 </script>

@@ -1,18 +1,31 @@
 import request from '@/utils/request'
 
-export function createDataset(data) {
-  // data: dataset_path
+export function getDatasetList(data) {
   return request({
-    url: '/dataEnd/addDataset',
+    url: '/dataEnd/getDatasetList',
     method: 'post',
     data,
   })
 }
 
-export function deleteDataset(data) {
-  // data: datasetName (primary key)
+export function scanDatasets() {
   return request({
-    url: '/dataEnd/deleteDataset',
+    url: '/dataEnd/scanDatasets',
+    method: 'get',
+  })
+}
+
+export function getDetails(data) {
+  return request({
+    url: '/dataEnd/getDetails',
+    method: 'post',
+    data,
+  })
+}
+
+export function getMetaData(data) {
+  return request({
+    url: '/dataEnd/getMetaData',
     method: 'post',
     data,
   })

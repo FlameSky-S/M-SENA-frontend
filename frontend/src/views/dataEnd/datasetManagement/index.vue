@@ -23,24 +23,20 @@
             :element-loading-text="elementLoadingText"
             stripe
           >
-            <el-table-column label="Id" min-width="60" align="center">
+            <el-table-column label="Id" width="80" align="center" fixed>
               <template #default="scope">
                 {{ scope.$index + 1 }}
               </template>
             </el-table-column>
             <el-table-column
+              fixed
               prop="datasetName"
               label="Dataset"
               align="center"
-              width="auto"
-              min-width="80px"
+              min-width="100"
+              show-overflow-tooltip
             ></el-table-column>
-            <el-table-column
-              label="Status"
-              align="center"
-              width="auto"
-              min-width="80px"
-            >
+            <el-table-column label="Status" align="center" width="100px">
               <template #default="{ row }">
                 <el-tag :type="row.status | lockedFilter">
                   {{ row.status }}
@@ -50,39 +46,37 @@
             <el-table-column
               prop="capacity"
               label="Capacity"
-              width="auto"
-              min-width="80px"
+              width="100px"
               align="center"
             ></el-table-column>
             <el-table-column
               prop="language"
               label="Language"
-              width="auto"
-              min-width="90px"
+              width="120px"
               align="center"
             ></el-table-column>
             <el-table-column
               prop="description"
               label="Description"
               align="center"
-              :width="tableWidth()"
-              min-width="260px"
+              min-width="250px"
               show-overflow-tooltip
             ></el-table-column>
             <el-table-column
+              fixed="right"
               label="Operations"
               align="center"
-              min-width="180px"
+              width="200px"
             >
               <template #default="{ row }">
                 <el-button type="text" @click="showDetails(row)">
-                  Dataset Details
+                  Details
                 </el-button>
                 <!-- <el-button type="text" @click="handleDelete(row)">
                   Delete
                 </el-button> -->
                 <el-button type="text" @click="handleLock(row)">
-                  {{ row.status === 'locked' ? 'unlock' : 'lock' }}
+                  {{ row.status === 'locked' ? 'Unlock' : 'Lock' }}
                 </el-button>
               </template>
             </el-table-column>
@@ -99,19 +93,19 @@
         </div>
       </el-col>
     </el-row>
-    <create-page ref="createPage" @fetch-data="fetchData"></create-page>
+    <!-- <create-page ref="createPage" @fetch-data="fetchData"></create-page> -->
   </div>
 </template>
 
 <script>
-  import { getDatasetList, scanDatasets } from '@/api/datasetList'
-  import { deleteDataset, unlockDataset, lockDataset } from '@/api/datasetCurd'
-  import CreatePage from './components/CreatePage'
+  import {
+    getDatasetList,
+    scanDatasets,
+    unlockDataset,
+    lockDataset,
+  } from '@/api/dataEnd'
   export default {
     name: 'DatasetList',
-    components: {
-      CreatePage,
-    },
     filters: {
       lockedFilter(lockedstatus) {
         const statusMap = {
@@ -146,15 +140,6 @@
     },
     mounted() {},
     methods: {
-      tableWidth() {
-        if (this.fullWidth > 1500) {
-          return 580 + 'px'
-        } else if (this.fullWidth > 1200) {
-          return 350 + 'px'
-        } else {
-          return 'auto'
-        }
-      },
       showDetails(row, column) {
         this.$router.push({
           path: '/data/datasetDetail',
@@ -183,37 +168,53 @@
         }
       },
       // TODO: to change here.
-      handleRescan() {
-        scanDatasets()
-        // this.$refs['createPage'].showCreatePage()
-        // console.log(process.env.NODE_ENV)
-        // TODO: this is an optional function. Which will be used in peroid 2.
-        // this.$router.push({
-        //   path: '/data/createDataset',
-        // })
+      async handleRescan() {
+        const h = this.$createElement
+        let msg = []
+        msg.push(
+          h(
+            'p',
+            null,
+            'Detailed sample data will be lost on Result Details pages. '
+          )
+        )
+        msg.push(h('p', null, 'Are you sure?'))
+
+        this.$msgbox({
+          title: 'Warning',
+          message: h('div', null, msg),
+          confirmButtonText: 'Proceed',
+          showCancelButton: true,
+          type: 'warning',
+          center: true,
+          confirmButtonClass: 'el-button--danger',
+        })
+          .then(async () => {
+            let { msg } = await scanDatasets()
+            if (msg == 'success') {
+              this.$message({
+                message: 'Result Deleted',
+                type: 'success',
+              })
+              this.fetchResults()
+            } else {
+              this.$message({
+                message: msg,
+                type: 'error',
+              })
+            }
+          })
+          .catch(() => {
+            // cancel button action
+          })
       },
-      // handleQuery() {},
-      // handleSizeChange(val) {
-      //   this.queryForm.pageSize = val
-      //   this.fetchData()
-      // },
-      // handleCurrentChange(val) {
-      //   this.queryForm.pageNo = val
-      //   this.fetchData()
-      // },
       async fetchData() {
         this.listLoading = true
         let { datasetList } = await getDatasetList({ unlocked: false })
-        // const { datasetList, totalCount } = await getDatasetList({
-        //   pageNo: this.queryForm.pageNo,
-        //   pageSize: this.queryForm.pageSize,
-        //   unlocked: false,
-        // })
         this.list = datasetList
         this.list.forEach((element) => {
           element.status = element.status
         })
-        // this.total = totalCount
         this.listLoading = false
       },
     },

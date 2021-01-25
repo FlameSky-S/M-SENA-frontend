@@ -177,5 +177,10 @@ html {
         padding: $base-padding;
       }
     }
+    .el-form {
+      .el-form-item {
+        font-weight: bold;
+      }
+    }
   }
 }

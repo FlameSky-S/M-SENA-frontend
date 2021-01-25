@@ -1,6 +1,6 @@
 <template>
   <div class="labelingProcess-container">
-    <h1>Labeling Process</h1>
+    <h1 style="margin-left: 2%">Labeling Process</h1>
     <p class="tips"></p>
     <el-row>
       <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8">
@@ -247,7 +247,7 @@
 </template>
 
 <script>
-  import { getDetails, getMetaData } from '@/api/datasetDetail'
+  import { getDetails, getMetaData } from '@/api/dataEnd'
   import { startActiveLearning, getALModels } from '@/api/labeling'
   import ManuallyLabel from './components/manuallyLabel.vue'
   import ConfigDialog from './components/configDialog.vue'

@@ -3,7 +3,7 @@
     <h1 style="margin-left: 2%">Dataset Labeling</h1>
     <p class="tips"></p>
     <el-row>
-      <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+      <el-col>
         <div class="unlock-dataset-table">
           <el-table
             ref="datasetTable"
@@ -12,53 +12,47 @@
             :element-loading-text="elementLoadingText"
             stripe
           >
-            <el-table-column
-              label="Id"
-              width="auto"
-              align="center"
-              min-width="60px"
-            >
+            <el-table-column fixed label="Id" align="center" width="80px">
               <template #default="scope">
                 {{ scope.$index + 1 }}
               </template>
             </el-table-column>
             <el-table-column
+              fixed
               prop="datasetName"
               label="Dataset"
-              width="auto"
-              min-width="80px"
+              min-width="100px"
               align="center"
+              show-overflow-tooltip
             ></el-table-column>
             <el-table-column
               prop="capacity"
               label="Capacity"
-              width="auto"
-              min-width="80px"
+              width="100px"
               align="center"
             ></el-table-column>
             <el-table-column
               prop="language"
               label="Language"
-              width="auto"
-              min-width="90px"
+              width="120px"
               align="center"
             ></el-table-column>
             <el-table-column
               prop="description"
               label="Description"
-              :width="descriptionWidth()"
-              min-width="260px"
+              min-width="250px"
               align="center"
+              show-overflow-tooltip
             ></el-table-column>
             <el-table-column
+              fixed="right"
               label="Operations"
-              :width="operationWidth()"
               align="center"
-              min-width="140px"
+              width="200px"
             >
               <template #default="{ row }">
                 <el-button type="text" @click="startLabeling(row)">
-                  Auto Labeling
+                  Label
                 </el-button>
                 <el-button type="text" @click="exportDataset(row)">
                   Export
@@ -82,7 +76,7 @@
 </template>
 
 <script>
-  import { getDatasetList } from '@/api/datasetList'
+  import { getDatasetList } from '@/api/dataEnd'
   import { exportDataset } from '@/api/labeling'
   export default {
     name: 'Labeling',
@@ -112,24 +106,6 @@
         exportDataset({
           datasetName: row.datasetName,
         })
-      },
-      operationWidth() {
-        if (this.fullWidth > 1500) {
-          return 260 + 'px'
-        } else if (this.fullWidth > 1200) {
-          return 160 + 'px'
-        } else {
-          return 'auto'
-        }
-      },
-      descriptionWidth() {
-        if (this.fullWidth > 1500) {
-          return 700 + 'px'
-        } else if (this.fullWidth > 1200) {
-          return 400 + 'px'
-        } else {
-          return 'auto'
-        }
       },
       handleQuery() {},
       handleSizeChange(val) {

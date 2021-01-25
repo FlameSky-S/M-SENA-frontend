@@ -66,7 +66,7 @@
             </el-col>
           </el-form>
           <el-table
-            ref="table"
+            ref="resultTable"
             v-loading="resultLoading"
             :data="resultList"
             element-loading-text="Loading Results..."
@@ -76,7 +76,7 @@
             @selection-change="handleSelectionChange"
           >
             <el-table-column type="selection" width="45"></el-table-column>
-            <el-table-column type="expand" width="30">
+            <el-table-column type="expand" width="20">
               <template slot-scope="props">
                 <el-col :span="12">
                   <el-form
@@ -102,7 +102,7 @@
                 <el-col :span="12">
                   <div
                     :id="'accChart' + props.row.result_id"
-                    style="margin: 5%"
+                    style="width: 100%; height: 250px; margin: 5%"
                   ></div>
                 </el-col>
               </template>
@@ -111,19 +111,21 @@
               label="Id"
               prop="result_id"
               align="center"
-              min-width="60"
+              width="80"
             ></el-table-column>
             <el-table-column
               label="Model"
               prop="model_name"
               align="center"
               min-width="100"
+              show-overflow-tooltip
             ></el-table-column>
             <el-table-column
               label="Dataset"
               prop="dataset_name"
               align="center"
               min-width="100"
+              show-overflow-tooltip
             ></el-table-column>
             <el-table-column
               label="Train Mode"
@@ -181,7 +183,7 @@
               min-width="120"
               sortable
             ></el-table-column>
-            <el-table-column label="Operations" align="center" min-width="220">
+            <el-table-column label="Operations" align="center" width="260">
               <template slot-scope="scope">
                 <el-button type="text" @click="showDetails(scope.row)">
                   Details
@@ -217,6 +219,7 @@
 <script>
   import { getResults, setDefaultModel, delResult } from '@/api/analysisEnd'
   import { getAllSettings } from '@/api/getSettings'
+  import * as echarts from 'echarts'
   export default {
     name: 'ModelResults',
     data() {
@@ -307,7 +310,8 @@
       //   return row.is_default == value
       // },
       resetFilter() {
-        this.$refs.table.clearFilter()
+        this.$refs.resultTable.clearFilter()
+        this.$refs.resultTable.clearSort()
         this.filter.model_name = 'All'
         this.filter.dataset_name = 'All'
         this.filter.is_tuning = 'Both'
@@ -315,7 +319,7 @@
         this.fetchResults()
       },
       toggleExpand(row) {
-        this.$refs.table.toggleRowExpansion(row)
+        this.$refs.resultTable.toggleRowExpansion(row)
       },
       handleSelectionChange(val) {
         this.multipleSelection = val
@@ -323,19 +327,18 @@
       },
       lazyLoading(row, expandedRows) {
         if (expandedRows.indexOf(row) == -1) {
-          console.log("doesn't exist")
+          // folded, destroy echarts instance
+          var acc_dom = document.getElementById('accChart' + row.result_id)
+          let acc_chart = echarts.getInstanceByDom(acc_dom)
+          acc_chart.dispose()
         } else {
-          console.log('exists')
+          // expanded
           row.argDisplay = JSON.stringify(JSON.parse(row.args), null, '\t')
           row.noteDisplay = row.description
 
-          var echarts = require('echarts')
-          // let dom_id = 'accChart' + row.result_id
-          // console.log(dom_id)
           this.$nextTick(() => {
             var acc_dom = document.getElementById('accChart' + row.result_id)
-            // var acc_dom = this.$refs.dom_id
-            console.log(acc_dom)
+
             let acc_chart = echarts.init(acc_dom)
             acc_chart.setOption({
               title: {
@@ -410,7 +413,6 @@
       },
       delResult(row) {
         const h = this.$createElement
-        // console.log(row.result_id)
         let msg = []
         msg.push(
           h('p', { style: 'text-align: center' }, [
@@ -512,14 +514,10 @@
   }
   .table-expand .el-form-item {
     margin-right: 0;
-    margin-bottom: 0;
+    margin-bottom: 5px;
     font-weight: bold;
   }
   .table-expand .el-form-item span {
-    font-weight: normal;
-  }
-  .table-expand .el-form-item p {
-    margin: 0%;
     font-weight: normal;
   }
 </style>

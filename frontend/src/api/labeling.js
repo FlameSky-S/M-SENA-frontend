@@ -1,6 +1,5 @@
 import request from '@/utils/request'
 
-// Functions used in datasetDetails Page.
 export function startActiveLearning(data) {
   return request({
     url: '/dataEnd/startActiveLearning',

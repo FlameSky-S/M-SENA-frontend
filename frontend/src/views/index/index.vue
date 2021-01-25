@@ -13,14 +13,14 @@
           style="font-weight: bold"
           @click="openNewTab('https://github.com/thuiar/M-SENA')"
         >
-          <v-icon name="play"></v-icon>
+          <Vicon name="play"></Vicon>
           Get Started
         </el-button>
         <el-button
           plain
           @click="openNewTab('https://github.com/thuiar/M-SENA')"
         >
-          <v-icon name="brands/github" scale="1.1" />
+          <Vicon name="brands/github" scale="1.1" />
           Download
         </el-button>
       </p>
@@ -32,7 +32,7 @@
           shadow="never"
           @click.native="setCarousel('manage')"
         >
-          <v-icon name="manage" scale="3"></v-icon>
+          <Vicon name="manage" scale="3"></Vicon>
           <p>Easy Management</p>
         </el-card>
       </el-col>
@@ -42,7 +42,7 @@
           shadow="never"
           @click.native="setCarousel('label')"
         >
-          <v-icon name="labels" scale="3"></v-icon>
+          <Vicon name="labels" scale="3"></Vicon>
           <p>Auto Labeling</p>
         </el-card>
       </el-col>
@@ -52,13 +52,13 @@
           shadow="never"
           @click.native="setCarousel('analysis')"
         >
-          <v-icon name="analysis" scale="3"></v-icon>
+          <Vicon name="analysis" scale="3"></Vicon>
           <p>Visual Analysis</p>
         </el-card>
       </el-col>
       <el-col :xs="11" :sm="10" :md="10" :lg="5" :xl="5">
         <el-card class="mid" shadow="never" @click.native="setCarousel('doc')">
-          <v-icon name="docs" scale="3"></v-icon>
+          <Vicon name="docs" scale="3"></Vicon>
           <p>Fully Documented</p>
         </el-card>
       </el-col>
