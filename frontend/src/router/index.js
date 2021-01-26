@@ -50,9 +50,9 @@ export const constantRoutes = [
         hidden: true,
       },
       {
-        path: 'labeling',
+        path: 'datsetLabeling',
         name: 'Dataset Labeling',
-        component: () => import('@/views/dataEnd/labeling/index'),
+        component: () => import('@/views/dataEnd/datasetLabeling/index'),
         meta: {
           title: 'Dataset Labeling',
           icon: 'el-icon-s-flag',

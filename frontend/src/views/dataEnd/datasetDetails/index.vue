@@ -5,7 +5,7 @@
     <el-row :gutter="80">
       <div class="top-row">
         <el-col :xs="24" :sm="24" :md="24" :lg="10" :xl="14">
-          <h2>{{ queryForm.datasetName }} Dataset</h2>
+          <h2>Basic Info</h2>
           <el-row :gutter="20">
             <el-col :xs="24" :sm="12" :md="12" :lg="24" :xl="12">
               <el-form label-width="120px" label-position="left">
@@ -241,8 +241,8 @@
           totalCount: null,
           language: null,
           description: null,
-          difficultyCount: null, // a list for pie chart 2
-          classCount: null, // a list for pie chart 1
+          difficultyCount: null, // data list for pie chart 2
+          classCount: null, // data list for pie chart 1
           instanceList: null, // a copy of response data
         },
         myChart_1: null,
@@ -258,6 +258,7 @@
     },
     created() {
       this.queryForm.datasetName = this.$route.query.dataset
+      this.fetchDetails()
     },
     beforeMount() {
       window.addEventListener('resize', this.handleResize)
@@ -266,11 +267,8 @@
       window.removeEventListener('resize', this.handleResize)
     },
     mounted() {
-      // Fetch Video List Info && Data Meta Data -> Excharts Dom.
       ;(async () => {
         await this.fetchMetadata()
-        await this.fetchDetails()
-        // Construct Excharts Dom.
         var pie_dv_1 = this.$refs.dataDistribution1
         var pie_dv_2 = this.$refs.dataDistribution2
         this.myChart_1 = echarts.init(pie_dv_1)
@@ -297,6 +295,7 @@
             y: 'top',
           },
           legend: {
+            type: 'scroll',
             bottom: 0,
             left: 'center',
           },
@@ -329,6 +328,7 @@
             y: 'top',
           },
           legend: {
+            type: 'scroll',
             bottom: 0,
             left: 'center',
           },
@@ -404,7 +404,7 @@
         this.datasetDetails.totalCount = data.totalCount
         this.datasetDetails.language = data.language
         this.datasetDetails.description = data.description
-        this.datasetDetails.locked = data.is_locked ? 'locked' : 'unlocked'
+        this.datasetDetails.locked = data.status
         let machine = data.difficultyCount['Machine']
           ? data.difficultyCount['Machine']
           : 0

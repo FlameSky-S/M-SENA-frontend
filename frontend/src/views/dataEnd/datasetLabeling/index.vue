@@ -9,7 +9,7 @@
             ref="datasetTable"
             v-loading="listLoading"
             :data="list"
-            :element-loading-text="elementLoadingText"
+            element-loading-text="Loading..."
             stripe
           >
             <el-table-column fixed label="Id" align="center" width="80px">
@@ -60,15 +60,6 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-pagination
-            :background="background"
-            :current-page="queryForm.pageNo"
-            :layout="layout"
-            :page-size="queryForm.pageSize"
-            :total="total"
-            @current-change="handleCurrentChange"
-            @size-change="handleSizeChange"
-          ></el-pagination>
         </div>
       </el-col>
     </el-row>
@@ -83,18 +74,10 @@
     components: {},
     data() {
       return {
-        fullWidth: document.documentElement.clientWidth,
+        // fullWidth: document.documentElement.clientWidth,
         // fullHeight: document.documentElement.clientHeight,
         list: [],
         listLoading: true,
-        layout: 'total, sizes, prev, pager, next, jumper',
-        background: true,
-        total: 0,
-        elementLoadingText: 'Loading Information...',
-        queryForm: {
-          pageNo: 1,
-          pageSize: 10,
-        },
       }
     },
     computed: {},
@@ -107,15 +90,6 @@
           datasetName: row.datasetName,
         })
       },
-      handleQuery() {},
-      handleSizeChange(val) {
-        this.queryForm.pageSize = val
-        this.fetchUnlockedData()
-      },
-      handleCurrentChange(val) {
-        this.queryForm.pageNo = val
-        this.fetchUnlockedData()
-      },
       startLabeling(row) {
         this.$router.push({
           path: '/data/labelingDetail',
@@ -126,14 +100,8 @@
       },
       async fetchUnlockedData() {
         this.listLoading = true
-        const { datasetList, totalCount } = await getDatasetList({
-          pageNo: this.queryForm.pageNo,
-          pageSize: this.queryForm.pageSize,
-          unlocked: true,
-        })
-
+        const { datasetList } = await getDatasetList({ unlocked: true })
         this.list = datasetList
-        this.total = totalCount
         this.listLoading = false
       },
     },
@@ -143,7 +111,7 @@
   .labeling-container {
     margin: 0%;
     .unlock-dataset-table {
-      margin: 0% 5%;
+      margin: 20px 5%;
     }
   }
 </style>

@@ -2,10 +2,10 @@
   <el-dialog
     :title="dialogSettings.title + ' Settings'"
     :visible.sync="dialogSettings.dialogFormVisible"
-    width="600px"
+    width="550px"
     @close="close"
   >
-    <el-card shadow="hover">
+    <el-card shadow="never">
       <div slot="header">
         <h2 class="header">{{ dialogSettings.modelName }}</h2>
       </div>
@@ -15,19 +15,17 @@
             v-model="settings.argsDisplay"
             type="textarea"
             resize="none"
-            :autosize="argsAutosize"
+            :autosize="{ minRows: 12, maxRows: 24 }"
             placeholder="JSON String of Args"
           />
         </el-form-item>
       </el-form>
-      <el-button
-        icon="el-icon-check"
-        type="primary"
-        style="width: 60%; margin-left: 20%; font-size: 14px; font-weight: bold"
-        @click="saveConfig"
-      >
-        Save
-      </el-button>
+      <div align="right" style="margin-right: 40px">
+        <el-button icon="el-icon-check" type="primary" @click="saveConfig">
+          Save
+        </el-button>
+        <el-button @click="cancelAction">Cancel</el-button>
+      </div>
     </el-card>
   </el-dialog>
 </template>
@@ -43,27 +41,26 @@
     name: 'ConfigDialog',
     data() {
       return {
-        argsAutosize: { minRows: 12, maxRows: 24 },
-        descAutosize: { minRows: 3, maxRows: 5 },
         settings: {
+          args: '',
           argsDisplay: '',
         },
         dialogSettings: {
-          title: '', // dialog titile.
-          modelName: null, // selected modelName.
-          dialogFormVisible: false, // whether to show.
+          title: '',
+          modelName: null,
+          dialogFormVisible: false,
         },
       }
     },
     computed: {},
     created() {},
     methods: {
-      saveConfig() {
-        this.settings.argsDisplay = this.settings.argsDisplay.replace(
+      async saveConfig() {
+        this.settings.args = this.settings.argsDisplay.replace(
           /(\r\n|\n|\r)/gm,
           ''
         )
-        if (!this.IsJsonString(this.settings.argsDisplay)) {
+        if (!this.IsJsonString(this.settings.args)) {
           this.$message({
             message: 'Invalid Args! Please check your syntax',
             type: 'error',
@@ -71,20 +68,31 @@
           return
         } else {
           if (this.dialogSettings.title === 'Classifier') {
-            console.log('modifyClassifierConfig')
-            saveClassifierConfig({
+            let { msg } = await saveClassifierConfig({
               classifier: this.dialogSettings.modelName,
               args: this.settings.argsDisplay,
             })
+            if (msg === 'success') {
+              this.$emit('save-success')
+            } else {
+              this.$emit('save-failed')
+            }
           } else {
-            console.log('modifySelectorConfig')
-            saveSelectorConfig({
+            let { msg } = await saveSelectorConfig({
               selector: this.dialogSettings.modelName,
               args: this.settings.argsDisplay,
             })
+            if (msg === 'success') {
+              this.$emit('save-success')
+            } else {
+              this.$emit('save-failed')
+            }
           }
           this.close()
         }
+      },
+      cancelAction() {
+        this.close()
       },
       IsJsonString(str) {
         try {
@@ -97,10 +105,8 @@
       show(configTitle, modelName) {
         if (configTitle === 'Classifier') {
           ;(async () => {
-            const { args, code } = await getClassifierConfig({
-              classifier: modelName,
-            })
-            // console.log(args)
+            let { args } = await getClassifierConfig({ classifier: modelName })
+            this.settings.args = args
             if (args != '')
               this.settings.argsDisplay = JSON.stringify(
                 JSON.parse(args),
@@ -111,7 +117,8 @@
           this.dialogSettings.title = 'Classifier'
         } else {
           ;(async () => {
-            const { args } = await getSelectorConfig({ selector: modelName })
+            let { args } = await getSelectorConfig({ selector: modelName })
+            this.settings.args = args
             if (args != '')
               this.settings.argsDisplay = JSON.stringify(
                 JSON.parse(args),
@@ -121,12 +128,12 @@
           })()
           this.dialogSettings.title = 'Selector'
         }
-        this.dialogSettings.dialogFormVisible = true
         this.dialogSettings.modelName = modelName
+        this.dialogSettings.dialogFormVisible = true
       },
       close() {
-        this.settings.argsDisplay = ''
         this.dialogSettings.dialogFormVisible = false
+        this.settings.argsDisplay = ''
       },
     },
   }

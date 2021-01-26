@@ -19,6 +19,7 @@ import './utils'
 
 import 'vue-awesome/icons/play'
 import 'vue-awesome/icons/brands/github'
+import 'vue-awesome/icons/user'
 import Icon from 'vue-awesome/components/Icon'
 Icon.register({
   labels: {

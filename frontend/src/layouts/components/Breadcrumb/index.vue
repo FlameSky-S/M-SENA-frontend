@@ -17,7 +17,6 @@
     watch: {
       $route() {
         this.list = this.getBreadcrumb()
-        console.log(this.list)
       },
     },
     methods: {

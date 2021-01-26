@@ -16,7 +16,6 @@ export function exportDataset(data) {
   })
 }
 
-// get classifier & selector list together.
 export function getALModels() {
   return request({
     url: '/dataEnd/getALModels',
@@ -24,7 +23,6 @@ export function getALModels() {
   })
 }
 
-// get all Classifier Config.
 export function getClassifierConfig(data) {
   return request({
     url: '/dataEnd/getClassifierConfig',
@@ -33,7 +31,6 @@ export function getClassifierConfig(data) {
   })
 }
 
-// get all Selector Config.
 export function getSelectorConfig(data) {
   return request({
     url: '/dataEnd/getSelectorConfig',
@@ -67,7 +64,7 @@ export function getHardSamples(data) {
   })
 }
 
-// submit manually labeling results.
+// submit manual labeling results.
 export function submitLabelResult(data) {
   return request({
     url: '/dataEnd/submitLabelResult',
