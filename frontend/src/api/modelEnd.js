@@ -7,13 +7,6 @@ export function getModelList() {
   })
 }
 
-export function scanModel() {
-  return request({
-    url: '/modelEnd/scanModel',
-    method: 'get',
-  })
-}
-
 export function getArgs(data) {
   return request({
     url: '/modelEnd/getArgs',
