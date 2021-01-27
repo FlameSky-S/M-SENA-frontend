@@ -38,12 +38,26 @@
         ></el-table-column>
         <el-table-column label="Operations" align="center" width="200">
           <template slot-scope="scope">
-            <el-button type="text" @click="viewResults(scope.row)">
-              Results
-            </el-button>
-            <el-button type="text" @click="trainModel(scope.row)">
-              Train
-            </el-button>
+            <el-tooltip
+              class="item"
+              content="Go to result analysis page"
+              placement="top"
+              :enterable="false"
+            >
+              <el-button type="text" @click="viewResults(scope.row)">
+                Results
+              </el-button>
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              content="Go to model training page"
+              placement="top"
+              :enterable="false"
+            >
+              <el-button type="text" @click="trainModel(scope.row)">
+                Train
+              </el-button>
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>

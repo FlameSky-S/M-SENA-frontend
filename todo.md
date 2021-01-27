@@ -34,7 +34,7 @@
    3. 为所有异步请求添加加载动画
    4. 完善异常捕获
    5. ~~页面重命名，路径与命名统一~~
-   6. api 整理
+   6. ~~api 整理~~
 
 2. 样式修改
 
@@ -49,17 +49,18 @@
 
    1. 任务列表增加刷新按钮。时间差计算。错误 tooltip 提示。
    2. 确认所有时间的时区正确。
-   3. 表格中按钮增加 tooltip 显示说明
+   3. ~~表格中按钮增加 tooltip 显示说明~~
    4. ~~ModelResult 页面批量删除，复选框~~
    5. ModelResult 页面排序功能，后端配合
    6. dataDetails 页面增加 VideoID 过滤框
    7. Model Comparison 页面 echarts 增加最大/最小值
+   8. Model Training 若训练结果已存在，应有相应反馈，提示对应结果 ID
 
 4. 风格统一：
 
-   1. 页面第一行用一级标题 h1，尽量用各级标题
+   1. 页面第一行用一级标题 h1，margin-left: 2%
    2. 字体使用框架默认，字号默认
-   3. 使用方形 button ，尽量用 primary，字号 14px，左侧有 font-awesome/el-icon 图标
+   3. 使用方形 button ，字号 14px，左侧有 font-awesome/el-icon 图标
 
 ## 优先级：一般 （2 月 2 日前彻底完成）
 

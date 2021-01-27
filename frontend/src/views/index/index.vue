@@ -159,7 +159,7 @@
         window.open(url)
       },
       handleResize() {
-        let width = document.body.clientWidth + 13
+        let width = document.body.getBoundingClientRect().width + 13
         if (width >= 1920) {
           //xl
           this.offset1 = 2

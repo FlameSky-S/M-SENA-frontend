@@ -64,7 +64,7 @@
     },
     methods: {
       handleResize() {
-        if (document.documentElement.clientWidth >= 1200) {
+        if (document.body.getBoundingClientRect().width >= 1200) {
           this.labelPosition = 'top'
         } else this.labelPosition = 'left'
       },
@@ -78,7 +78,6 @@
       },
       close() {
         this.dialogFormVisible = false
-        // this.$emit('fetch-data')
       },
     },
   }

@@ -69,27 +69,29 @@
               width="200px"
             >
               <template #default="{ row }">
-                <el-button type="text" @click="showDetails(row)">
-                  Details
-                </el-button>
-                <!-- <el-button type="text" @click="handleDelete(row)">
-                  Delete
-                </el-button> -->
-                <el-button type="text" @click="handleLock(row)">
-                  {{ row.status === 'locked' ? 'Unlock' : 'Lock' }}
-                </el-button>
+                <el-tooltip
+                  class="item"
+                  content="Show dataset details"
+                  placement="top"
+                  :enterable="false"
+                >
+                  <el-button type="text" @click="showDetails(row)">
+                    Details
+                  </el-button>
+                </el-tooltip>
+                <el-tooltip
+                  class="item"
+                  content="Toggle lock status"
+                  placement="top"
+                  :enterable="false"
+                >
+                  <el-button type="text" @click="handleLock(row)">
+                    {{ row.status === 'locked' ? 'Unlock' : 'Lock' }}
+                  </el-button>
+                </el-tooltip>
               </template>
             </el-table-column>
           </el-table>
-          <!-- <el-pagination
-            :background="true"
-            :current-page="queryForm.pageNo"
-            layout="total, sizes, prev, pager, next, jumper"
-            :page-size="queryForm.pageSize"
-            :total="total"
-            @current-change="handleCurrentChange"
-            @size-change="handleSizeChange"
-          ></el-pagination> -->
         </div>
       </el-col>
     </el-row>
@@ -117,17 +119,10 @@
     },
     data() {
       return {
-        fullWidth: document.documentElement.clientWidth,
-        fullHeight: document.documentElement.clientHeight,
         list: [],
         listLoading: true,
-        // total: 0,
         selectRows: '',
         elementLoadingText: 'Loading Information...',
-        // queryForm: {
-        //   pageNo: 1,
-        //   pageSize: 10,
-        // },
       }
     },
     computed: {

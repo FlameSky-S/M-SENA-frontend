@@ -57,11 +57,18 @@
             </el-col>
             <el-col :span="1">
               <el-form-item>
-                <el-button
-                  icon="el-icon-delete"
-                  type="danger"
-                  @click="deleteSelection"
-                ></el-button>
+                <el-tooltip
+                  class="item"
+                  content="Delete selected results"
+                  placement="top"
+                  :enterable="false"
+                >
+                  <el-button
+                    icon="el-icon-delete"
+                    type="danger"
+                    @click="deleteSelection"
+                  ></el-button>
+                </el-tooltip>
               </el-form-item>
             </el-col>
           </el-form>
@@ -73,6 +80,7 @@
             stripe
             @row-dblclick="toggleExpand"
             @expand-change="lazyLoading"
+            @sort-change="handleSortChange"
             @selection-change="handleSelectionChange"
           >
             <el-table-column type="selection" width="45"></el-table-column>
@@ -142,61 +150,74 @@
                 </el-tag>
               </template>
             </el-table-column>
-            <!-- <el-table-column
-              label="Is Default"
-              prop="is_default"
-              align="center"
-              min-width="100"
-              :filters="[
-                { text: 'True', value: 'true' },
-                { text: 'False', value: 'false' },
-              ]"
-              :filter-method="filterDefault"
-            >
-              <template slot-scope="scope">
-                <el-tag
-                  :type="scope.row.is_default == 'true' ? 'success' : 'warning'"
-                  disable-transitions
-                >
-                  {{ scope.row.is_default }}
-                </el-tag>
-              </template>
-            </el-table-column> -->
             <el-table-column
               label="Acc"
               prop="accuracy"
               align="center"
               min-width="100"
-              sortable
+              sortable="custom"
             ></el-table-column>
             <el-table-column
               label="F1"
               prop="f1"
               align="center"
               min-width="100"
-              sortable
+              sortable="custom"
             ></el-table-column>
             <el-table-column
               label="Time"
               prop="created_at"
               align="center"
               min-width="120"
-              sortable
+              sortable="custom"
             ></el-table-column>
-            <el-table-column label="Operations" align="center" width="260">
+            <el-table-column
+              fixed="right"
+              label="Operations"
+              align="center"
+              width="260"
+            >
               <template slot-scope="scope">
-                <el-button type="text" @click="showDetails(scope.row)">
-                  Details
-                </el-button>
-                <el-button type="text" @click="setDefault(scope.row)">
-                  Default
-                </el-button>
-                <el-button type="text" @click="retrain(scope.row)">
-                  Retrain
-                </el-button>
-                <el-button type="text" @click="delResult(scope.row)">
-                  Delete
-                </el-button>
+                <el-tooltip
+                  class="item"
+                  content="Show result details"
+                  placement="top"
+                  :enterable="false"
+                >
+                  <el-button type="text" @click="showDetails(scope.row)">
+                    Details
+                  </el-button>
+                </el-tooltip>
+                <el-tooltip
+                  class="item"
+                  content="Set parameters as default"
+                  placement="top"
+                  :enterable="false"
+                >
+                  <el-button type="text" @click="setDefault(scope.row)">
+                    Default
+                  </el-button>
+                </el-tooltip>
+                <el-tooltip
+                  class="item"
+                  content="Go to training page with these parameters"
+                  placement="top"
+                  :enterable="false"
+                >
+                  <el-button type="text" @click="retrain(scope.row)">
+                    Retrain
+                  </el-button>
+                </el-tooltip>
+                <el-tooltip
+                  class="item"
+                  content="Delete this result"
+                  placement="top"
+                  :enterable="false"
+                >
+                  <el-button type="text" @click="delResult(scope.row)">
+                    Delete
+                  </el-button>
+                </el-tooltip>
               </template>
             </el-table-column>
           </el-table>
@@ -220,6 +241,7 @@
   import { getResults, setDefaultModel, delResult } from '@/api/analysisEnd'
   import { getAllSettings } from '@/api/getSettings'
   import * as echarts from 'echarts'
+  import * as dayjs from 'dayjs'
   export default {
     name: 'ModelResults',
     data() {
@@ -234,6 +256,8 @@
           model_name: 'All',
           dataset_name: 'All',
           is_tuning: 'Both',
+          sortBy: '',
+          order: '',
           pageNo: 1,
           pageSize: 10,
         },
@@ -242,6 +266,12 @@
     },
     computed: {},
     watch: {},
+    beforeMount() {
+      window.addEventListener('resize', this.handleResize)
+    },
+    beforeDestroy() {
+      window.removeEventListener('resize', this.handleResize)
+    },
     created() {
       if (this.$route.query.model) {
         this.filter.model_name = this.$route.query.model
@@ -251,12 +281,19 @@
     },
     mounted() {},
     methods: {
+      handleResize() {},
       handleSizeChange(val) {
         this.filter.pageSize = val
         this.fetchResults()
       },
       handleCurrentChange(val) {
         this.filter.pageNo = val
+        this.fetchResults()
+      },
+      handleSortChange(column) {
+        // console.log(column)
+        this.filter.sortBy = column.prop
+        this.filter.order = column.order
         this.fetchResults()
       },
       async fetchSettings() {
@@ -280,19 +317,10 @@
             this.resultList[i].accuracy
           ).toFixed(4)
           this.resultList[i].f1 = parseFloat(this.resultList[i].f1).toFixed(4)
-          let d = new Date(this.resultList[i].created_at)
-          this.resultList[i].created_at =
-            d.getFullYear() +
-            '-' +
-            ('0' + (d.getMonth() + 1)).slice(-2) +
-            '-' +
-            ('0' + d.getDate()).slice(-2) +
-            ' ' +
-            ('0' + d.getHours()).slice(-2) +
-            ':' +
-            ('0' + d.getMinutes()).slice(-2) +
-            ':' +
-            ('0' + d.getSeconds()).slice(-2)
+          let time = dayjs(this.resultList[i].created_at).format(
+            'YYYY-MM-DD HH:mm:ss'
+          )
+          this.resultList[i].created_at = time
           // this.resultList[i].argDisplay = JSON.stringify(
           //   JSON.parse(this.resultList[i].args),
           //   null,
@@ -306,9 +334,6 @@
         this.filter.pageNo = 1
         this.fetchResults()
       },
-      // filterDefault(value, row) {
-      //   return row.is_default == value
-      // },
       resetFilter() {
         this.$refs.resultTable.clearFilter()
         this.$refs.resultTable.clearSort()
@@ -316,6 +341,8 @@
         this.filter.dataset_name = 'All'
         this.filter.is_tuning = 'Both'
         this.filter.pageNo = 1
+        this.filter.sortBy = ''
+        this.filter.order = ''
         this.fetchResults()
       },
       toggleExpand(row) {
@@ -323,7 +350,6 @@
       },
       handleSelectionChange(val) {
         this.multipleSelection = val
-        // console.log(this.multipleSelection)
       },
       lazyLoading(row, expandedRows) {
         if (expandedRows.indexOf(row) == -1) {

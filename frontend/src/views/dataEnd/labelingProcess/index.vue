@@ -133,6 +133,12 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="Video ID:">
+            <el-input
+              v-model="queryForm.videoID"
+              style="width: 150px"
+            ></el-input>
+          </el-form-item>
           <el-form-item>
             <el-button
               icon="el-icon-search"
@@ -162,6 +168,14 @@
             show-overflow-tooltip
             label="SampleID"
             prop="sample_id"
+            width="120"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            fixed
+            show-overflow-tooltip
+            label="Video ID"
+            prop="video_id"
             width="120"
             align="center"
           ></el-table-column>
@@ -281,6 +295,7 @@
           selector: '',
           difficulty: 'All',
           label: 'All',
+          videoID: '',
         },
         myChart: null,
         instanceList: null,
@@ -383,6 +398,7 @@
         this.queryForm.pageNo = 1
         this.queryForm.difficulty = 'All'
         this.queryForm.label = 'All'
+        this.queryForm.videoID = ''
         this.fetchDetails()
       },
       tagMapper(text) {
@@ -470,6 +486,7 @@
           pageSize: this.queryForm.pageSize,
           data_mode_filter: 'All',
           difficulty_filter: this.queryForm.difficulty,
+          id_filter: this.queryForm.videoID,
           sentiment_filter: this.queryForm.label,
           datasetName: this.queryForm.datasetName,
         })

@@ -169,9 +169,7 @@
   export default {
     name: 'Index',
     data() {
-      return {
-        fullHeight: document.documentElement.clientHeight,
-      }
+      return {}
     },
     methods: {},
   }

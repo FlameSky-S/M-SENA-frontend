@@ -95,9 +95,9 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Sample ID:">
+            <el-form-item label="Video ID:">
               <el-input
-                v-model="queryForm.sampleID"
+                v-model="queryForm.videoID"
                 style="width: 150px"
               ></el-input>
             </el-form-item>
@@ -232,7 +232,7 @@
           pageSize: 20,
           label: 'All',
           dataSplit: 'All',
-          sampleID: '',
+          videoID: '',
         },
         datasetDetails: {
           datasetName: null,
@@ -365,7 +365,7 @@
         this.fetchDetails()
       },
       resetFilter() {
-        this.queryForm.sampleID = ''
+        this.queryForm.videoID = ''
         this.queryForm.label = 'All'
         this.queryForm.dataSplit = 'All'
         this.fetchDetails()
@@ -388,7 +388,7 @@
           difficulty_filter: 'All',
           sentiment_filter: this.queryForm.label,
           data_mode_filter: this.queryForm.dataSplit,
-          id_filter: this.queryForm.sampleID,
+          id_filter: this.queryForm.videoID,
           pageNo: this.queryForm.pageNo,
           pageSize: this.queryForm.pageSize,
         })

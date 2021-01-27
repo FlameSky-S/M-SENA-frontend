@@ -68,8 +68,6 @@
     components: {},
     data() {
       return {
-        // fullWidth: document.documentElement.clientWidth,
-        // fullHeight: document.documentElement.clientHeight,
         list: [],
         listLoading: true,
       }

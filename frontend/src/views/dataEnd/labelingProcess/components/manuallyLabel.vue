@@ -129,9 +129,6 @@
     name: 'Preview',
     data() {
       return {
-        fullWidth: document.documentElement.clientWidth,
-        fullHeight: document.documentElement.clientHeight,
-
         dialogSettings: {
           datasetName: '',
           title: '', // dialog titile.
@@ -165,7 +162,7 @@
     },
     computed: {
       labelPosition() {
-        if (this.fullWidth >= 992) {
+        if (document.body.getBoundingClientRect().width >= 992) {
           return 'top'
         } else {
           return 'right'

@@ -5,36 +5,32 @@
     width="70%"
     @close="close"
   >
-    <el-row style="margin: 0% 2%">
-      <h3 style="margin-top: 0%">SampleID : {{ form.clipInfo.sampleID }}</h3>
-    </el-row>
-    <el-row :gutter="20" style="margin: 0% 2%">
-      <el-col :xs="24" :sm="24" :md="17" :lg="17" :xl="17">
-        <video :src="form.videoconfig.url" controls width="100%"></video>
+    <el-row>
+      <el-col :xs="24" :sm="24" :md="24" :lg="17" :xl="17">
+        <video :src="info.url" controls width="100%"></video>
       </el-col>
 
-      <el-col :xs="24" :sm="24" :md="7" :lg="7" :xl="7">
+      <el-col :xs="24" :sm="24" :md="24" :lg="7" :xl="7">
         <el-form
           :label-position="labelPosition"
-          label-width="120px"
-          style="margin: 0% 2%; padding: 0"
-          :model="form.clipInfo"
+          label-width="100px"
+          style="margin-left: 5%"
         >
-          <el-form-item label="Label" style="font-weight: bold">
-            <el-input v-model="form.clipInfo.label" readonly></el-input>
+          <el-form-item label="Label">
+            <el-input v-model="info.label" readonly></el-input>
           </el-form-item>
-          <el-form-item label="Predict" style="font-weight: bold">
-            <el-input v-model="form.clipInfo.predict" readonly></el-input>
+          <el-form-item label="Predict">
+            <el-input v-model="info.predict" readonly></el-input>
           </el-form-item>
-          <el-form-item label="Data Type" style="font-weight: bold">
-            <el-input v-model="form.clipInfo.belonging" readonly></el-input>
+          <el-form-item label="Data Type">
+            <el-input v-model="info.belonging" readonly></el-input>
           </el-form-item>
-          <el-form-item label="Transcript" style="font-weight: bold">
+          <el-form-item label="Transcript">
             <el-input
-              v-model="form.clipInfo.transcript"
+              v-model="info.transcript"
               type="textarea"
               resize="none"
-              :autosize="{ minRows: 1, maxRows: 2 }"
+              :autosize="{ minRows: 3, maxRows: 5 }"
               readonly
             ></el-input>
           </el-form-item>
@@ -49,19 +45,12 @@
     name: 'Preview',
     data() {
       return {
-        fullWidth: document.documentElement.clientWidth,
-        fullHeight: document.documentElement.clientHeight,
-        form: {
-          clipInfo: {
-            clipID: null,
-            belonging: null,
-            label: null,
-            predict: null,
-          },
-          videoconfig: {
-            url:
-              'https://cdn.jsdelivr.net/gh/chuzhixin/videos@master/video.mp4',
-          },
+        info: {
+          clipID: null,
+          belonging: null,
+          label: null,
+          predict: null,
+          url: '',
           translate: 'This is the original transcipt for the video',
         },
         title: '',
@@ -70,7 +59,7 @@
     },
     computed: {
       labelPosition() {
-        if (this.fullWidth >= 992) {
+        if (document.body.getBoundingClientRect().width >= 992) {
           return 'top'
         } else {
           return 'right'
@@ -81,18 +70,17 @@
 
     methods: {
       showPreview(row) {
-        this.title = 'Preview Video Clips'
-        this.form.videoconfig.url = row.video_url
-        this.form.clipInfo.sampleID = row.sample_id
-        this.form.clipInfo.belonging = row.data_mode
-        this.form.clipInfo.transcript = row.text
-        this.form.clipInfo.label = row.label_value
-        this.form.clipInfo.predict = row.predict_value
+        this.title = 'Sample ' + row.sample_id
+        this.info.url = row.video_url
+        this.info.sampleID = row.sample_id
+        this.info.belonging = row.data_mode
+        this.info.transcript = row.text
+        this.info.label = row.label_value
+        this.info.predict = row.predict_value
         this.dialogFormVisible = true
       },
       close() {
         this.dialogFormVisible = false
-        this.$emit('fetch-data')
       },
     },
   }

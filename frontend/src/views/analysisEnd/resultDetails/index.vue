@@ -3,7 +3,7 @@
     <h1 style="margin-left: 2%">Result Details</h1>
     <p class="tips"></p>
     <el-row id="top-row" :gutter="30" style="margin: 0% 3%">
-      <el-col :xs="24" :sm="24" :md="24" :lg="10" :xl="10">
+      <el-col :xs="24" :sm="24" :md="24" :lg="18" :xl="10">
         <h2>Overall</h2>
         <el-row :gutter="30">
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -55,7 +55,7 @@
           </el-col>
         </el-row>
       </el-col>
-      <el-col :xs="24" :sm="24" :md="24" :lg="14" :xl="14">
+      <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="14">
         <h2>Line Charts</h2>
         <el-row>
           <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
@@ -181,6 +181,9 @@
               :value="item"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="Video ID:">
+          <el-input v-model="query3.video_id" style="width: 150px"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button icon="el-icon-search" type="primary" @click="applyFilter">
@@ -341,6 +344,16 @@
           pageSize: 20,
           result_mode: 'All',
           data_mode: 'All',
+          video_id: '',
+        },
+        charts: {
+          lossChart: null,
+          accChart: null,
+          f1Chart: null,
+          featureT: null,
+          featureA: null,
+          featureV: null,
+          featureM: null,
         },
         overall: {
           id: null,
@@ -380,37 +393,50 @@
           },
           argDisplay: null,
         },
-        // charts: {
-        //   loss: null,
-        //   acc: null,
-        //   f1: null,
-        //   feature_M: null,
-        //   feature_T: null,
-        //   feature_A: null,
-        //   feature_V: null,
-        // },
         sampleList: [],
       }
     },
     computed: {},
+    beforeMount() {
+      window.addEventListener('resize', this.handleResize)
+    },
+    beforeDestroy() {
+      window.removeEventListener('resize', this.handleResize)
+      for (let key in this.charts) {
+        this.charts[key].dispose()
+      }
+    },
     created() {
       this.query1.id = this.$route.query.result_id
       this.query2.id = this.$route.query.result_id
       this.query3.id = this.$route.query.result_id
       if (this.$route.query.train_mode == 'Train') {
         this.showFeatureMap = true
-        this.genFeatureMaps()
       }
-      this.fetchOverall()
-
       this.fetchSample()
     },
-    mounted() {},
+    mounted() {
+      ;(async () => {
+        for (let key in this.charts) {
+          let dom = this.$refs[key]
+          this.charts[key] = echarts.init(dom)
+        }
+        await this.fetchOverall()
+        this.genTopCharts()
+        if (this.showFeatureMap == true) {
+          this.genFeatureMaps()
+        }
+      })()
+    },
     methods: {
+      handleResize() {
+        for (let key in this.charts) {
+          this.charts[key].resize()
+        }
+      },
       applyFilter() {
         this.query3.pageNo = 1
         this.fetchSample()
-        console.log(this.query3)
       },
       showPreview(row) {
         this.$refs['preview'].showPreview(row)
@@ -455,8 +481,10 @@
           null,
           '\t'
         )
+      },
+      genTopCharts() {
         this.plotEpoch(
-          this.$refs.lossChart,
+          this.charts.lossChart,
           'Loss',
           this.overall.x,
           this.overall.train_history.loss_value,
@@ -464,7 +492,7 @@
           this.overall.test_history.loss_value
         )
         this.plotEpoch(
-          this.$refs.accChart,
+          this.charts.accChart,
           'Acc',
           this.overall.x,
           this.overall.train_history.accuracy,
@@ -472,7 +500,7 @@
           this.overall.test_history.accuracy
         )
         this.plotEpoch(
-          this.$refs.f1Chart,
+          this.charts.f1Chart,
           'F1',
           this.overall.x,
           this.overall.train_history.f1,
@@ -480,9 +508,8 @@
           this.overall.test_history.f1
         )
       },
-      plotEpoch(dom, title, x, y_train, y_valid, y_test) {
-        let loss_chart = echarts.init(dom)
-        loss_chart.setOption({
+      plotEpoch(instance, title, x, y_train, y_valid, y_test) {
+        instance.setOption({
           title: {
             text: title,
             x: 'center',
@@ -491,6 +518,7 @@
             // textVerticalAlign: 'bottom',
           },
           legend: {
+            type: 'scroll',
             x: 'center',
             y: 'top',
           },
@@ -537,60 +565,56 @@
         let { features } = await getFeatureDetails(this.query2)
         if (this.query2.feature_mode == '2D') {
           this.plotFeature2D(
-            this.$refs.featureM,
+            this.charts.featureM,
             'Feature_M',
             features.Feature_M
           )
           this.plotFeature2D(
-            this.$refs.featureT,
+            this.charts.featureT,
             'Feature_T',
             features.Feature_T
           )
           this.plotFeature2D(
-            this.$refs.featureA,
+            this.charts.featureA,
             'Feature_A',
             features.Feature_A
           )
           this.plotFeature2D(
-            this.$refs.featureV,
+            this.charts.featureV,
             'Feature_V',
             features.Feature_V
           )
         } else {
           this.plotFeature3D(
-            this.$refs.featureM,
+            this.charts.featureM,
             'Feature_M',
             features.Feature_M
           )
           this.plotFeature3D(
-            this.$refs.featureT,
+            this.charts.featureT,
             'Feature_T',
             features.Feature_T
           )
           this.plotFeature3D(
-            this.$refs.featureA,
+            this.charts.featureA,
             'Feature_A',
             features.Feature_A
           )
           this.plotFeature3D(
-            this.$refs.featureV,
+            this.charts.featureV,
             'Feature_V',
             features.Feature_V
           )
         }
         this.featureLoading = false
       },
-      plotFeature2D(dom, title, data) {
-        if (dom.hasAttribute('_echarts_instance_')) {
-          // console.log('removing old canvas')
-          dom.removeAttribute('_echarts_instance_')
-        }
-        let featureChart = echarts.init(dom)
+      plotFeature2D(instance, title, data) {
+        instance.clear()
         let new_data = []
         for (let key in data) {
           new_data.push({ name: key, type: 'scatter', data: data[key] })
         }
-        featureChart.setOption({
+        instance.setOption({
           title: {
             text: title,
           },
@@ -640,17 +664,13 @@
           series: new_data,
         })
       },
-      plotFeature3D(dom, title, data) {
-        if (dom.hasAttribute('_echarts_instance_')) {
-          console.log('removing old canvas')
-          dom.removeAttribute('_echarts_instance_')
-        }
-        let featureChart = echarts.init(dom)
+      plotFeature3D(instance, title, data) {
+        instance.clear()
         let new_data = []
         for (let key in data) {
           new_data.push({ name: key, type: 'scatter3D', data: data[key] })
         }
-        featureChart.setOption({
+        instance.setOption({
           title: {
             text: title,
           },
