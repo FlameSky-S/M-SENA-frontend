@@ -121,7 +121,7 @@
         :gutter="20"
         :element-loading-text="loadingText"
       >
-        <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="6">
+        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
           <el-card shadow="hover">
             <div
               id="featureT"
@@ -130,7 +130,7 @@
             ></div>
           </el-card>
         </el-col>
-        <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="6">
+        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
           <el-card shadow="hover">
             <div
               id="featureA"
@@ -139,7 +139,7 @@
             ></div>
           </el-card>
         </el-col>
-        <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="6">
+        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
           <el-card shadow="hover">
             <div
               id="featureV"
@@ -148,7 +148,7 @@
             ></div>
           </el-card>
         </el-col>
-        <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="6">
+        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
           <el-card shadow="hover">
             <div
               id="featureM"
@@ -188,6 +188,14 @@
         <el-form-item>
           <el-button icon="el-icon-search" type="primary" @click="applyFilter">
             Apply
+          </el-button>
+          <el-button
+            icon="el-icon-refresh-left"
+            type="danger"
+            plain
+            @click="resetFilter"
+          >
+            Reset
           </el-button>
         </el-form-item>
       </el-form>
@@ -403,7 +411,9 @@
     beforeDestroy() {
       window.removeEventListener('resize', this.handleResize)
       for (let key in this.charts) {
-        this.charts[key].dispose()
+        if (this.charts[key] != null) {
+          this.charts[key].dispose()
+        }
       }
     },
     created() {
@@ -438,6 +448,14 @@
         this.query3.pageNo = 1
         this.fetchSample()
       },
+      resetFilter() {
+        this.query3.result_mode = 'All'
+        this.query3.data_mode = 'All'
+        this.query3.video_id = ''
+        this.query3.video_id = ''
+        this.query3.pageNo = 1
+        this.fetchSample()
+      },
       showPreview(row) {
         this.$refs['preview'].showPreview(row)
       },
@@ -455,24 +473,18 @@
         this.overall.model = results.model
         this.overall.dataset = results.dataset
         this.overall.description = results.description
-        this.overall.train_final.loss_value = results.train.loss_value.shift()
-        this.overall.train_history.loss_value = results.train.loss_value
-        this.overall.valid_final.loss_value = results.valid.loss_value.shift()
-        this.overall.valid_history.loss_value = results.valid.loss_value
-        this.overall.test_final.loss_value = results.test.loss_value.shift()
-        this.overall.test_history.loss_value = results.test.loss_value
-        this.overall.train_final.accuracy = results.train.accuracy.shift()
-        this.overall.train_history.accuracy = results.train.accuracy
-        this.overall.valid_final.accuracy = results.valid.accuracy.shift()
-        this.overall.valid_history.accuracy = results.valid.accuracy
-        this.overall.test_final.accuracy = results.test.accuracy.shift()
-        this.overall.test_history.accuracy = results.test.accuracy
-        this.overall.train_final.f1 = results.train.f1.shift()
-        this.overall.train_history.f1 = results.train.f1
-        this.overall.valid_final.f1 = results.valid.f1.shift()
-        this.overall.valid_history.f1 = results.valid.f1
-        this.overall.test_final.f1 = results.test.f1.shift()
-        this.overall.test_history.f1 = results.test.f1
+        for (let key in this.overall.train_final) {
+          this.overall.train_final[key] = results.train[key].shift()
+          this.overall.train_history[key] = results.train[key]
+        }
+        for (let key in this.overall.valid_final) {
+          this.overall.valid_final[key] = results.valid[key].shift()
+          this.overall.valid_history[key] = results.valid[key]
+        }
+        for (let key in this.overall.test_final) {
+          this.overall.test_final[key] = results.test[key].shift()
+          this.overall.test_history[key] = results.test[key]
+        }
         for (let i in results.test.f1) {
           this.overall.x.push(i)
         }

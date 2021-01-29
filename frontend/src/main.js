@@ -20,6 +20,11 @@ import './utils'
 import 'vue-awesome/icons/play'
 import 'vue-awesome/icons/brands/github'
 import 'vue-awesome/icons/user'
+import 'vue-awesome/icons/dot-circle'
+import 'vue-awesome/icons/stop'
+import 'vue-awesome/icons/video'
+import 'vue-awesome/icons/video-slash'
+import 'vue-awesome/icons/child'
 import Icon from 'vue-awesome/components/Icon'
 Icon.register({
   labels: {

@@ -1,227 +1,186 @@
 <template>
   <div ref="container" class="liveTest-container">
-    <h1>Live Demo</h1>
-    <el-row v-loading="settingsLoading">
-      <el-col :offset="col1Offset" :xs="14" :sm="11" :md="9" :lg="6" :xl="6">
-        <div class="test-settings">
-          <h3>Camera Settings:</h3>
-          <el-form
-            ref="cam-settings"
-            :model="camSettings"
-            label-width="120px"
-            label-position="left"
-            style="margin: 5%"
-          >
-            <el-form-item label="Video Device:" style="font-weight: bold">
-              <el-select
-                v-model="camSettings.cam"
-                no-data-text="No device found"
-              >
-                <el-option
-                  v-for="item in camList"
-                  :key="item.deviceId"
-                  :label="item.label"
-                  :value="item.deviceId"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Audio Device:" style="font-weight: bold">
-              <el-select
-                v-model="camSettings.mic"
-                no-data-text="No device found"
-              >
-                <el-option
-                  v-for="item in micList"
-                  :key="item.deviceId"
-                  :label="item.label"
-                  :value="item.deviceId"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item>
+    <h1 style="margin-left: 2%">Live Demo</h1>
+    <div class="top-row">
+      <el-row v-loading="settingsLoading" :gutter="30">
+        <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8">
+          <div class="test-settings">
+            <h2>Camera Settings:</h2>
+            <el-form
+              :model="camSettings"
+              label-width="120px"
+              label-position="left"
+              style="margin: 5%"
+            >
+              <el-form-item label="Video Device:">
+                <el-select
+                  v-model="camSettings.cam"
+                  no-data-text="No device found"
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="item in camList"
+                    :key="item.deviceId"
+                    :label="item.label"
+                    :value="item.deviceId"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Audio Device:">
+                <el-select
+                  v-model="camSettings.mic"
+                  no-data-text="No device found"
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="item in micList"
+                    :key="item.deviceId"
+                    :label="item.label"
+                    :value="item.deviceId"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  :type="streaming ? 'danger' : 'primary'"
+                  :plain="streaming ? true : false"
+                  @click="streaming ? stopCam() : initCam()"
+                >
+                  <Vicon v-if="!streaming" name="video"></Vicon>
+                  <Vicon v-else name="video-slash"></Vicon>
+                  {{ streaming ? 'Shutdown' : 'Init Cam' }}
+                </el-button>
+                <!-- <el-button
+                  type="danger"
+                  plain
+                  style="width: 40%; padding-left: 0; padding-right: 0"
+                  :disabled="!streaming"
+                  @click="stopCam"
+                >
+                  <i class="el-icon-remove-outline"></i>
+                  Shutdown
+                </el-button> -->
+              </el-form-item>
+            </el-form>
+            <h2>Test Settings:</h2>
+            <el-form
+              :model="testSettings"
+              label-width="120px"
+              label-position="left"
+              style="margin: 5%"
+            >
+              <el-form-item label="Models:">
+                <el-select
+                  v-model="testSettings.model"
+                  multiple
+                  collapse-tags
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="item in modelList"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Language:">
+                <el-select v-model="testSettings.language" style="width: 100%">
+                  <el-option
+                    v-for="item in langList"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="Transcript:">
+                <el-input
+                  v-model="testSettings.transcript"
+                  type="textarea"
+                  :autosize="{ minRows: 5, maxRows: 5 }"
+                  resize="none"
+                ></el-input>
+              </el-form-item>
+            </el-form>
+          </div>
+        </el-col>
+        <el-col :xs="24" :sm="24" :md="24" :lg="16" :xl="16">
+          <div class="cam-view">
+            <h2>Camera View:</h2>
+            <video
+              ref="cameraView"
+              width="100%"
+              poster="@/assets/poster.jpg"
+              style="margin: 0% 2%"
+              autoplay
+              controls
+            ></video>
+            <div align="center" class="cam-buttons">
               <el-button
                 type="primary"
-                style="
-                  font-weight: 700;
-                  width: 50%;
-                  padding-left: 0;
-                  padding-right: 0;
-                "
-                :disabled="streaming"
-                @click="initCam"
+                plain
+                :disabled="!streaming"
+                @click="recording == false ? RecordBtn() : stopCam()"
               >
-                <i class="el-icon-circle-check"></i>
-                Confirm
+                <Vicon v-if="!recording" name="dot-circle"></Vicon>
+                <Vicon v-else name="stop"></Vicon>
+                {{ recording == false ? 'Record' : 'Finish' }}
               </el-button>
               <el-button
-                type="danger"
+                type="primary"
                 plain
-                style="width: 40%; padding-left: 0; padding-right: 0"
-                :disabled="!streaming"
-                @click="stopCam"
+                :disabled="streaming || recording || blob == null"
+                @click="playing == false ? startPlayback() : stopPlayback()"
               >
-                <i class="el-icon-remove-outline"></i>
-                Shutdown
+                <Vicon v-if="!playing" name="play"></Vicon>
+                <Vicon v-else name="stop"></Vicon>
+                {{ playing == false ? 'Playback' : 'Stop' }}
               </el-button>
-            </el-form-item>
-          </el-form>
-          <el-divider
-            class="hidden-md-and-down"
-            direction="horizontal"
-          ></el-divider>
-          <h3>Test Settings:</h3>
-          <el-form
-            ref="test-settings"
-            :model="testSettings"
-            label-width="120px"
-            label-position="left"
-            style="margin: 5%"
-          >
-            <el-form-item label="Models:" style="font-weight: bold">
-              <el-select v-model="testSettings.model" multiple collapse-tags>
-                <el-option
-                  v-for="item in modelList"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Language:" style="font-weight: bold">
-              <el-select v-model="testSettings.language">
-                <el-option
-                  v-for="item in langList"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Transcript:" style="font-weight: bold">
-              <el-input
-                v-model="testSettings.transcript"
-                type="textarea"
-                :autosize="{ minRows: 2, maxRows: 4 }"
-                resize="none"
-              ></el-input>
-            </el-form-item>
-          </el-form>
-        </div>
-      </el-col>
-      <el-divider
-        direction="vertical"
-        class="left-divider hidden-md-and-down"
-      ></el-divider>
-      <el-col :xs="24" :sm="24" :md="24" :lg="10" :xl="10">
-        <div class="cam-view">
-          <h3>Camera View:</h3>
-          <video
-            ref="cameraView"
-            width="100%"
-            poster="@/assets/poster.jpg"
-            autoplay
-            controls
-          ></video>
-          <p class="cam-buttons">
-            <el-button
-              ref="recordBtn"
-              type="primary"
-              style="padding-left: 0; padding-right: 0"
-              plain
-              class="cam-button"
-              :disabled="!streaming"
-              @click="recording == false ? RecordBtn() : stopCam()"
-            >
-              <i v-if="!recording" class="el-icon-video-camera"></i>
-              <i v-else class="el-icon-check"></i>
-              {{ recording == false ? 'Record' : 'Finish' }}
-            </el-button>
-            <el-button
-              ref="playbackBtn"
-              type="primary"
-              style="padding-left: 0; padding-right: 0"
-              plain
-              class="cam-button"
-              :disabled="streaming || recording || blob == null"
-              @click="playing == false ? startPlayback() : stopPlayback()"
-            >
-              <i v-if="!playing" class="el-icon-video-play"></i>
-              <i v-else class="el-icon-video-pause"></i>
-              {{ playing == false ? 'Playback' : 'Stop' }}
-            </el-button>
-            <el-button
-              type="primary"
-              class="cam-button"
-              style="padding-left: 0; padding-right: 0"
-              :disabled="streaming || recording || blob == null"
-              @click="onSubmit"
-            >
-              <i class="el-icon-data-analysis"></i>
-              Go
-            </el-button>
-          </p>
-          <!-- <a ref="downloadButton" class="button">download</a> -->
-        </div>
-      </el-col>
-      <el-divider
-        direction="vertical"
-        class="right-divider hidden-md-and-down"
-      ></el-divider>
-      <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8">
-        <div class="test-results">
-          <h3>Results:</h3>
-          <!-- <el-table
-            v-loading="resultLoading"
-            :data="testResults"
-            :cell-style="addStyle"
-            element-loading-text="Analyzing..."
-            border
-          >
-            <el-table-column
-              v-if="resultShow"
-              key="model"
-              prop="model"
-              label="Model"
-              align="center"
-            ></el-table-column>
-            <el-table-column
-              v-if="resultShow"
-              key="predict"
-              prop="predict"
-              label="Predict"
-              align="center"
-            ></el-table-column>
-            <el-table-column
-              v-if="resultShow"
-              key="positive"
-              prop="probs.Positive"
-              label="Positive"
-              align="center"
-            ></el-table-column>
-            <el-table-column
-              v-if="resultShow"
-              key="neutral"
-              prop="probs.Neutral"
-              label="neutral"
-              align="center"
-            ></el-table-column>
-            <el-table-column
-              v-if="resultShow"
-              key="negative"
-              prop="probs.Negative"
-              label="Negative"
-              align="center"
-            ></el-table-column>
-          </el-table> -->
-          <div
-            id="resultChart"
-            ref="resultChart"
-            v-loading="resultLoading"
-            style="width: 100%; height: 400px"
-            element-loading-text="Processing..."
-          ></div>
-        </div>
-      </el-col>
+              <el-button
+                type="primary"
+                style="padding: 9px 30px !important"
+                :disabled="streaming || recording || blob == null"
+                @click="onSubmit"
+              >
+                <Vicon name="child"></Vicon>
+                Go
+              </el-button>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+    <el-divider v-if="resultsShow"></el-divider>
+    <el-row v-if="resultsShow" class="bottom-row">
+      <h2>Results:</h2>
+      <el-row
+        v-loading="resultLoading"
+        element-loading-text="Processing..."
+        :gutter="20"
+        style="margin: 0% 1%"
+      >
+        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
+          <el-card shadow="hover">
+            <div ref="featureT" style="width: 100%; height: 300px"></div>
+          </el-card>
+        </el-col>
+        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
+          <el-card shadow="hover">
+            <div ref="featureA" style="width: 100%; height: 300px"></div>
+          </el-card>
+        </el-col>
+        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
+          <el-card shadow="hover">
+            <div ref="featureV" style="width: 100%; height: 300px"></div>
+          </el-card>
+        </el-col>
+        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
+          <el-card shadow="hover">
+            <div ref="featureM" style="width: 100%; height: 300px"></div>
+          </el-card>
+        </el-col>
+      </el-row>
     </el-row>
   </div>
 </template>
@@ -252,9 +211,9 @@
         testResults: [],
         settingsLoading: false,
         resultLoading: false,
-        streaming: false,
-        recording: false,
-        playing: false,
+        streaming: false, // camera & mic enabled
+        recording: false, // recording
+        playing: false, // playback ongoing
         constraints: {
           video: {
             deviceId: {
@@ -278,17 +237,20 @@
             },
           },
         },
-        stream: null,
-        transcriptDisabled: true,
-        recorder: null,
-        recData: [],
-        blob: null,
-        file: null,
-        rec_url: '',
-        resultShow: true,
-        resultChart: null,
-        screenWidth: 0,
-        col1Offset: 0,
+        stream: null, // stream object
+        // transcriptDisabled: true,
+        recorder: null, // recorder object
+        recData: [], // recorded data array
+        blob: null, // used for playback
+        file: null, // used for submission
+        rec_url: '', // url of the blob
+        resultsShow: false,
+        charts: {
+          featureM: null,
+          featureT: null,
+          featureA: null,
+          featureV: null,
+        },
       }
     },
     computed: {
@@ -316,34 +278,19 @@
           this.camSettings.mic = newValue[0].deviceId
         }
       },
-      screenWidth: function (newValue) {
-        if (newValue >= 1920) {
-          //xl
-          this.col1Offset = 0
-        } else if (newValue >= 1200) {
-          //lg
-          this.col1Offset = 0
-        } else if (newValue >= 992) {
-          //md
-          this.col1Offset = 1
-        } else if (newValue >= 768) {
-          //sm
-          this.col1Offset = 1
-        } else {
-          //xs
-          this.col1Offset = 1
-        }
-      },
     },
     created() {
       this.fetchSettings()
     },
-    mounted() {
-      this.screenWidth = document.body.clientWidth
-      window.onresize = () => {
-        let that = this
-        that.screenWidth = document.body.clientWidth
-        // console.log(that.screenWidth)
+    mounted() {},
+    beforeDestroy() {
+      if (this.streaming || this.recording) {
+        this.stopCam()
+      }
+      for (let key in this.charts) {
+        if (this.charts[key] != null) {
+          this.charts[key].dispose()
+        }
       }
     },
     methods: {
@@ -385,11 +332,9 @@
             }
           }
           this.deviceList = await navigator.mediaDevices.enumerateDevices() // check for devices again
-          // console.log(this.deviceList)
         } else {
           this.$message({
-            message:
-              'MediaDevices unavailable, make sure you have https enabled',
+            message: 'MediaDevices unavailable, make sure you have SSL enabled',
             type: 'error',
           })
         }
@@ -411,7 +356,7 @@
           } else {
             this.$message({
               message:
-                'MediaDevices unavailable, make sure you have https enabled',
+                'MediaDevices unavailable, make sure you have SSL enabled',
               type: 'error',
             })
           }
@@ -504,6 +449,7 @@
         this.playing = false
       },
       async onSubmit() {
+        this.resultsShow = true
         this.resultLoading = true
         this.query = new FormData()
         this.query.append('recorded', this.file)
@@ -512,32 +458,78 @@
         this.query.append('language', this.testSettings.language)
         let { result } = await runLive(this.query)
         this.testResults = result
-        for (let i in this.testResults) {
-          for (let key in this.testResults[i].probs) {
-            this.testResults[i].probs[key] = parseFloat(
-              this.testResults[i].probs[key]
-            ).toFixed(4)
-          }
+        for (let key in this.testResults) {
+          this.testResults[key].forEach((model) => {
+            for (let label in model.probs) {
+              model.probs[label] = parseFloat(model.probs[label]).toFixed(4)
+            }
+          })
         }
-        this.resultShow = true
+        for (let key in this.testResults) {
+          let data = [['Model']]
+          for (let key in this.testResults['M'][0].probs) {
+            data[0].push(key)
+          }
+          this.testResults[key].forEach((model) => {
+            let y = []
+            y.push(model.model)
+            for (let label in model.probs) {
+              y.push(model.probs[label])
+            }
+            data.push(y)
+          })
+          // var instance
+          // switch (key) {
+          //   case 'M':
+          //     instance = this.charts.featureM
+          //     console.log(instance)
+          //     break
+          //   case 'T':
+          //     instance = this.charts.featureT
+          //     break
+          //   case 'A':
+          //     instance = this.charts.featureA
+          //     break
+          //   case 'V':
+          //     instance = this.charts.featureV
+          //     break
+          // }
+          let name = 'feature' + key
+          // let instance = eval('this.charts.' + name)
+          if (this.$refs[name].hasAttribute('_echarts_instance_')) {
+            echarts.getInstanceByDom(this.$refs[name]).dispose()
+            // console.log(instance)
+            // instance.dispose()
+          }
+          let instance = echarts.init(this.$refs[name])
+          // console.log(instance)
+          this.plotResult(instance, data)
+        }
 
-        let data = [['Model']]
-        for (let key in this.testResults[0].probs) {
-          data[0].push(key)
-        }
-        for (let i in this.testResults) {
-          let y = []
-          y.push(this.testResults[i].model)
-          for (let key in this.testResults[i].probs) {
-            y.push(this.testResults[i].probs[key])
-          }
-          data.push(y)
-        }
-        if (this.$refs.resultChart.hasAttribute('_echarts_instance_')) {
-          this.resultChart.dispose()
-        }
-        this.resultChart = echarts.init(this.$refs.resultChart)
-        this.plotResult(this.resultChart, data)
+        // for (let i in this.testResults) {
+        //   for (let key in this.testResults[i].probs) {
+        //     this.testResults[i].probs[key] = parseFloat(
+        //       this.testResults[i].probs[key]
+        //     ).toFixed(4)
+        //   }
+        // }
+        // let data = [['Model']]
+        // for (let key in this.testResults[0].probs) {
+        //   data[0].push(key)
+        // }
+        // for (let i in this.testResults) {
+        //   let y = []
+        //   y.push(this.testResults[i].model)
+        //   for (let key in this.testResults[i].probs) {
+        //     y.push(this.testResults[i].probs[key])
+        //   }
+        //   data.push(y)
+        // }
+        // if (this.$refs.resultChart.hasAttribute('_echarts_instance_')) {
+        //   this.resultChart.dispose()
+        // }
+        // this.resultChart = echarts.init(this.$refs.resultChart)
+        // this.plotResult(this.resultChart, data)
         this.resultLoading = false
       },
       plotResult(instance, data) {
@@ -600,11 +592,6 @@
       //   this.textArea = this.testSettings.transcript
       //   this.transcriptDisabled = false
       // },
-      addStyle({ row, column, rowIndex, columnIndex }) {
-        if (columnIndex == 0) {
-          return 'background: #FAFAFA; font-weight: bold'
-        }
-      },
     },
   }
   // ref: https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_Recording_API/Recording_a_media_element
@@ -613,33 +600,20 @@
 <style lang="scss" scoped>
   .liveTest-container {
     margin: 0%;
-    .test-settings {
-      margin: 0% 3%;
-    }
-    .left-divider {
-      position: absolute;
-      left: 25%;
-      height: 100%;
-    }
-    .cam-view {
+    .top-row {
       margin: 0% 5%;
       .cam-buttons {
-        text-align: center;
-        .cam-button {
-          font-weight: 700;
-          font-size: 14px;
-          margin: 0% 5%;
-          width: 22%;
+        margin: 15px 0px;
+        .el-button + .el-button {
+          margin-left: 30px !important;
+        }
+        .el-button {
+          padding: 9px 20px !important;
         }
       }
     }
-    .right-divider {
-      position: absolute;
-      left: 66%;
-      height: 100%;
-    }
-    .test-results {
-      margin: 0% 8%;
+    .bottom-row {
+      margin: 0% 5%;
     }
   }
 </style>

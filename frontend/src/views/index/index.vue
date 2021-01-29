@@ -1,10 +1,10 @@
 <template>
   <div class="index-container">
     <el-card class="top" shadow="never">
-      <h1 class="top-header">M-SENA System</h1>
+      <h1 class="top-header">M-SENA Platform</h1>
       <p class="top-text">
-        The M-SENA System is an all-in-one platform for Multimodal Sentiment
-        Analysis tasks
+        The M-SENA is an all-in-one platform for Multimodal Sentiment Analysis
+        tasks
       </p>
       <p class="top-phrases">Open source, Easy to use, Free of charge</p>
       <p class="top-buttons">
@@ -197,7 +197,6 @@
     .top {
       background-color: $base-menu-background;
       color: $base-menu-color;
-      margin-top: 30px;
       border: none;
       padding: 80px 0px;
       .top-header {

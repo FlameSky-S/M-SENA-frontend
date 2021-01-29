@@ -34,12 +34,13 @@
             style="font-weight: 700; font-size: 14px"
             @click="onSubmit"
           >
-            Start Test
+            Compare
           </el-button>
         </el-form-item>
       </el-form>
     </el-row>
-    <el-row :gutter="30" style="margin: 0% 3%">
+    <el-divider v-if="resultShow" class="divider"></el-divider>
+    <el-row v-loading="resultLoading" :gutter="30" style="margin: 0% 3%">
       <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8">
         <div
           id="accChart"
@@ -88,6 +89,7 @@
           accChart: null,
           f1Chart: null,
         },
+        resultShow: false,
       }
     },
     computed: {},
@@ -172,6 +174,7 @@
         this.plotResult(this.f1Chart, 'F1 Score', data_f1)
 
         this.resultLoading = false
+        this.resultShow = true
       },
       plotResult(instance, title, data) {
         // transpose data
@@ -260,6 +263,9 @@
     margin: 0%;
     .test-settings {
       margin: 0% 5%;
+    }
+    .divider {
+      margin: 0 0 15px 0;
     }
   }
 </style>

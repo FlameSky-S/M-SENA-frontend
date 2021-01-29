@@ -11,205 +11,208 @@
       append-to-body
       size="550px"
     >
-      <!-- <el-scrollbar style="height: 94vh; overflow: hidden"> -->
-      <div class="el-drawer__body">
-        <p>
-          <span>Total: {{ totalNum }}</span>
-          <el-button type="text" @click="deleteAllTask">
-            <i class="el-icon-delete" style="color: red"></i>
-          </el-button>
-        </p>
-        <el-collapse v-model="activeNames" accordion>
-          <el-collapse-item
-            :title="runTitle"
-            name="run"
-            :disabled="runDisabled"
-          >
-            <div>
-              <el-table :data="runList">
-                <el-table-column
-                  prop="task_id"
-                  label="id"
-                  align="center"
-                  min-width="10"
-                ></el-table-column>
-                <el-table-column
-                  prop="task_type"
-                  label="type"
-                  align="center"
-                  min-width="25"
-                ></el-table-column>
-                <el-table-column
-                  prop="model_name"
-                  label="model"
-                  align="center"
-                  min-width="20"
-                ></el-table-column>
-                <el-table-column
-                  prop="dataset_name"
-                  label="dataset"
-                  align="center"
-                  min-width="25"
-                ></el-table-column>
-                <el-table-column
-                  prop="start_time"
-                  label="time used"
-                  align="center"
-                  min-width="20"
-                ></el-table-column>
-                <el-table-column align="center" min-width="10">
-                  <template slot-scope="scope">
-                    <el-button type="text" @click="terminateTask(scope.row)">
-                      <i class="el-icon-switch-button" style="color: red"></i>
-                    </el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </div>
-          </el-collapse-item>
-          <el-collapse-item
-            :title="errTitle"
-            name="err"
-            :disabled="errDisabled"
-          >
-            <div>
-              <el-table :data="errList">
-                <el-table-column
-                  prop="task_id"
-                  label="id"
-                  align="center"
-                  min-width="10"
-                ></el-table-column>
-                <el-table-column
-                  prop="task_type"
-                  label="type"
-                  align="center"
-                  min-width="25"
-                ></el-table-column>
-                <el-table-column
-                  prop="model_name"
-                  label="model"
-                  align="center"
-                  min-width="20"
-                ></el-table-column>
-                <el-table-column
-                  prop="dataset_name"
-                  label="dataset"
-                  align="center"
-                  min-width="25"
-                ></el-table-column>
-                <el-table-column
-                  prop="start_time"
-                  label="time used"
-                  align="center"
-                  min-width="20"
-                ></el-table-column>
-                <el-table-column align="center" min-width="10">
-                  <template slot-scope="scope">
-                    <el-button type="text" @click="deleteTask(scope.row)">
-                      <i class="el-icon-delete" style="color: red"></i>
-                    </el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </div>
-          </el-collapse-item>
-          <el-collapse-item
-            :title="termTitle"
-            name="term"
-            :disabled="termDisabled"
-          >
-            <div>
-              <el-table :data="termList">
-                <el-table-column
-                  prop="task_id"
-                  label="id"
-                  align="center"
-                  min-width="10"
-                ></el-table-column>
-                <el-table-column
-                  prop="task_type"
-                  label="type"
-                  align="center"
-                  min-width="25"
-                ></el-table-column>
-                <el-table-column
-                  prop="model_name"
-                  label="model"
-                  align="center"
-                  min-width="20"
-                ></el-table-column>
-                <el-table-column
-                  prop="dataset_name"
-                  label="dataset"
-                  align="center"
-                  min-width="25"
-                ></el-table-column>
-                <el-table-column
-                  prop="start_time"
-                  label="time used"
-                  align="center"
-                  min-width="20"
-                ></el-table-column>
-                <el-table-column align="center" min-width="10">
-                  <template slot-scope="scope">
-                    <el-button type="text" @click="deleteTask(scope.row)">
-                      <i class="el-icon-delete" style="color: red"></i>
-                    </el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </div>
-          </el-collapse-item>
-          <el-collapse-item
-            :title="finTitle"
-            name="fin"
-            :disabled="finDisabled"
-          >
-            <div>
-              <el-table :data="finList">
-                <el-table-column
-                  prop="task_id"
-                  label="id"
-                  align="center"
-                  min-width="10"
-                ></el-table-column>
-                <el-table-column
-                  prop="task_type"
-                  label="type"
-                  align="center"
-                  min-width="25"
-                ></el-table-column>
-                <el-table-column
-                  prop="model_name"
-                  label="model"
-                  align="center"
-                  min-width="20"
-                ></el-table-column>
-                <el-table-column
-                  prop="dataset_name"
-                  label="dataset"
-                  align="center"
-                  min-width="25"
-                ></el-table-column>
-                <el-table-column
-                  prop="start_time"
-                  label="time used"
-                  align="center"
-                  min-width="20"
-                ></el-table-column>
-                <el-table-column align="center" min-width="10">
-                  <template slot-scope="scope">
-                    <el-button type="text" @click="deleteTask(scope.row)">
-                      <i class="el-icon-delete" style="color: red"></i>
-                    </el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </div>
-          </el-collapse-item>
-        </el-collapse>
+      <div slot="title" class="title">
+        <i class="el-icon-s-claim" />
+        <span>Task List</span>
       </div>
+      <!-- <el-scrollbar style="height: 94vh "> -->
+      <p class="total">
+        <span>Total: {{ totalNum }}</span>
+        <el-button type="text" style="font-size: 18px" @click="deleteAllTask">
+          <i class="el-icon-delete" style="color: red"></i>
+        </el-button>
+      </p>
+      <el-collapse v-model="activeNames" accordion>
+        <el-collapse-item :title="runTitle" name="run" :disabled="runDisabled">
+          <div>
+            <el-table :data="runList">
+              <el-table-column
+                prop="task_id"
+                label="ID"
+                align="center"
+                width="45"
+                show-overflow-tooltip
+              ></el-table-column>
+              <el-table-column
+                prop="task_type"
+                label="Type"
+                align="center"
+                width="80"
+              ></el-table-column>
+              <el-table-column
+                prop="model_name"
+                label="Model"
+                align="center"
+                min-width="100"
+                show-overflow-tooltip
+              ></el-table-column>
+              <el-table-column
+                prop="dataset_name"
+                label="Dataset"
+                align="center"
+                min-width="100"
+                show-overflow-tooltip
+              ></el-table-column>
+              <el-table-column
+                prop="start_time"
+                label="Time"
+                align="center"
+                width="100"
+              ></el-table-column>
+              <el-table-column align="center" width="40">
+                <template slot-scope="scope">
+                  <el-button type="text" @click="deleteTask(scope.row)">
+                    <i class="el-icon-delete" style="color: red"></i>
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-collapse-item>
+        <el-collapse-item :title="errTitle" name="err" :disabled="errDisabled">
+          <div>
+            <el-table :data="errList">
+              <el-table-column
+                prop="task_id"
+                label="ID"
+                align="center"
+                width="45"
+                show-overflow-tooltip
+              ></el-table-column>
+              <el-table-column
+                prop="task_type"
+                label="Type"
+                align="center"
+                width="80"
+              ></el-table-column>
+              <el-table-column
+                prop="model_name"
+                label="Model"
+                align="center"
+                min-width="100"
+                show-overflow-tooltip
+              ></el-table-column>
+              <el-table-column
+                prop="dataset_name"
+                label="Dataset"
+                align="center"
+                min-width="100"
+                show-overflow-tooltip
+              ></el-table-column>
+              <el-table-column
+                prop="start_time"
+                label="Time"
+                align="center"
+                width="100"
+              ></el-table-column>
+              <el-table-column align="center" width="40">
+                <template slot-scope="scope">
+                  <el-button type="text" @click="deleteTask(scope.row)">
+                    <i class="el-icon-delete" style="color: red"></i>
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-collapse-item>
+        <el-collapse-item
+          :title="termTitle"
+          name="term"
+          :disabled="termDisabled"
+        >
+          <div>
+            <el-table :data="termList">
+              <el-table-column
+                prop="task_id"
+                label="ID"
+                align="center"
+                width="45"
+                show-overflow-tooltip
+              ></el-table-column>
+              <el-table-column
+                prop="task_type"
+                label="Type"
+                align="center"
+                width="80"
+              ></el-table-column>
+              <el-table-column
+                prop="model_name"
+                label="Model"
+                align="center"
+                min-width="100"
+                show-overflow-tooltip
+              ></el-table-column>
+              <el-table-column
+                prop="dataset_name"
+                label="Dataset"
+                align="center"
+                min-width="100"
+                show-overflow-tooltip
+              ></el-table-column>
+              <el-table-column
+                prop="start_time"
+                label="Time"
+                align="center"
+                width="100"
+              ></el-table-column>
+              <el-table-column align="center" width="40">
+                <template slot-scope="scope">
+                  <el-button type="text" @click="deleteTask(scope.row)">
+                    <i class="el-icon-delete" style="color: red"></i>
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-collapse-item>
+        <el-collapse-item :title="finTitle" name="fin" :disabled="finDisabled">
+          <div>
+            <el-table :data="finList">
+              <el-table-column
+                prop="task_id"
+                label="ID"
+                align="center"
+                width="45"
+                show-overflow-tooltip
+              ></el-table-column>
+              <el-table-column
+                prop="task_type"
+                label="Type"
+                align="center"
+                width="80"
+              ></el-table-column>
+              <el-table-column
+                prop="model_name"
+                label="Model"
+                align="center"
+                min-width="100"
+                show-overflow-tooltip
+              ></el-table-column>
+              <el-table-column
+                prop="dataset_name"
+                label="Dataset"
+                align="center"
+                min-width="100"
+                show-overflow-tooltip
+              ></el-table-column>
+              <el-table-column
+                prop="start_time"
+                label="Time"
+                align="center"
+                width="100"
+              ></el-table-column>
+              <el-table-column align="center" width="40">
+                <template slot-scope="scope">
+                  <el-button type="text" @click="deleteTask(scope.row)">
+                    <i class="el-icon-delete" style="color: red"></i>
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-collapse-item>
+      </el-collapse>
+
       <!-- </el-scrollbar> -->
     </el-drawer>
   </span>
@@ -220,6 +223,7 @@
   // import { mapActions, mapGetters } from 'vuex'
   // import { layout as defaultLayout } from '@/config/settings'
   import { getTaskList, delTask, stopTask, delAllTask } from '@/api/task'
+  import * as dayjs from 'dayjs'
   export default {
     name: 'ThemeBar',
     data() {
@@ -282,9 +286,6 @@
     },
     created() {
       this.fetchTaskList()
-      // this.$baseEventBus.$on('theme', () => {
-      //   this.handleOpenTaskBar()
-      // })
     },
     methods: {
       handleOpenTaskBar() {
@@ -301,10 +302,21 @@
         this.errorNum = data.errList.length
         this.terminatedNum = data.termList.length
         this.finishedNum = data.finList.length
+        this.runList.forEach((item) => {
+          item.start_time = dayjs(item.start_time).format('YYYY-MM-DD HH:mm:ss')
+        })
+        this.errList.forEach((item) => {
+          item.start_time = dayjs(item.start_time).format('YYYY-MM-DD HH:mm:ss')
+        })
+        this.termList.forEach((item) => {
+          item.start_time = dayjs(item.start_time).format('YYYY-MM-DD HH:mm:ss')
+        })
+        this.finList.forEach((item) => {
+          item.start_time = dayjs(item.start_time).format('YYYY-MM-DD HH:mm:ss')
+        })
       },
       async deleteTask(row) {
         let query = { task_id: row.task_id }
-        // console.log(row)
         let { msg } = await delTask(query)
         if (msg == 'success')
           this.$message({
@@ -353,6 +365,16 @@
       },
       async deleteAllTask() {
         let { msg } = await delAllTask()
+        if (msg == 'success')
+          this.$message({
+            message: 'All tasks deleted',
+            type: 'success',
+          })
+        else
+          this.$message({
+            message: 'Deletion failed',
+            type: 'error',
+          })
         this.fetchTaskList()
       },
     },
@@ -360,83 +382,26 @@
 </script>
 
 <style lang="scss" scoped>
-  @mixin right-bar {
-    position: fixed;
-    right: 0;
-    z-index: $base-z-index;
-    width: 60px;
-    min-height: 60px;
-    text-align: center;
-    cursor: pointer;
-    background: $base-color-blue;
-    border-radius: $base-border-radius;
-
-    > div {
-      padding-top: 10px;
-      border-bottom: 0 !important;
-
-      &:hover {
-        opacity: 0.9;
-      }
-
-      & + div {
-        border-top: 1px solid $base-color-white;
-      }
-
-      p {
-        padding: 0;
-        margin: 0;
-        font-size: $base-font-size-small;
-        line-height: 30px;
-        color: $base-color-white;
-      }
-    }
+  .total {
+    font-weight: bold;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
-
-  .theme-bar-setting {
-    @include right-bar;
-
-    top: calc((100vh - 110px) / 2);
-
-    ::v-deep {
-      svg:not(:root).svg-inline--fa {
-        display: block;
-        margin-right: auto;
-        margin-left: auto;
-        color: $base-color-white;
-      }
-
-      .svg-icon {
-        display: block;
-        margin-right: auto;
-        margin-left: auto;
-        font-size: 20px;
-        color: $base-color-white;
-        fill: $base-color-white;
-      }
-    }
-  }
-
-  .el-drawer__body {
-    padding: 20px;
-  }
-</style>
-<style lang="scss">
   .task-btn {
     font-size: 16px;
     margin-right: 15px;
     color: rgba(0, 0, 0, 0.65);
     cursor: pointer;
     i {
-      font-size: 20px;
+      font-size: 18px;
       margin-right: 5px;
     }
   }
-  .el-drawer__wrapper {
-    outline: none !important;
-
-    * {
-      outline: none !important;
+  .title {
+    i {
+      margin-right: 5px;
     }
   }
 </style>
