@@ -156,7 +156,7 @@
       <h2>Results:</h2>
       <el-row
         v-loading="resultLoading"
-        element-loading-text="Processing..."
+        element-loading-text="Processing, this might take a few minutes..."
         :gutter="20"
         style="margin: 0% 1%"
       >
@@ -220,12 +220,12 @@
               exact: '',
             },
             width: {
-              min: 800,
+              min: 320,
               ideal: 1280,
               max: 1920,
             },
             height: {
-              min: 600,
+              min: 240,
               ideal: 720,
               max: 1080,
             },
@@ -264,6 +264,7 @@
         let mics = this.deviceList.filter(
           (device) => device.kind === 'audioinput'
         )
+        mics.push({ label: 'Desktop Audio', deviceId: 'Desktop Audio' })
         return mics
       },
     },
@@ -344,14 +345,21 @@
         this.testSettings.model.push(this.modelList[0])
         this.settingsLoading = false
       },
-      initCam() {
+      async initCam() {
         if (this.camSettings.cam !== '' && this.camSettings.mic !== '') {
           if (
             'mediaDevices' in navigator &&
             navigator.mediaDevices.getUserMedia
           ) {
             this.constraints.video.deviceId.exact = this.camSettings.cam
-            this.constraints.audio.deviceId.exact = this.camSettings.mic
+            if (this.camSettings.mic == 'Desktop Audio') {
+              // Use desktop audio as input
+              // This is a lousy workaround since the getDisplayMedia function cannot capture audio only
+              delete this.constraints.audio
+              this.constraints['audio'] = false
+            } else {
+              this.constraints.audio.deviceId.exact = this.camSettings.mic
+            }
             this.startStream(this.constraints)
           } else {
             this.$message({
@@ -366,6 +374,18 @@
       async startStream(constraints) {
         try {
           this.stream = await navigator.mediaDevices.getUserMedia(constraints)
+          if (constraints.audio == false) {
+            // Use desktop audio as input
+            // This is a lousy workaround since the getDisplayMedia function cannot capture audio only
+            let desktop = await navigator.mediaDevices.getDisplayMedia({
+              video: true,
+              audio: true,
+            })
+            this.stream.addTrack(desktop.getAudioTracks()[0].clone())
+            // stopping and removing the video track to enhance the performance
+            desktop.getVideoTracks()[0].stop()
+            desktop.removeTrack(desktop.getVideoTracks()[0])
+          }
         } catch (err) {
           this.$message({
             message: err.message,
@@ -478,113 +498,101 @@
             }
             data.push(y)
           })
-          // var instance
-          // switch (key) {
-          //   case 'M':
-          //     instance = this.charts.featureM
-          //     console.log(instance)
-          //     break
-          //   case 'T':
-          //     instance = this.charts.featureT
-          //     break
-          //   case 'A':
-          //     instance = this.charts.featureA
-          //     break
-          //   case 'V':
-          //     instance = this.charts.featureV
-          //     break
-          // }
+
           let name = 'feature' + key
-          // let instance = eval('this.charts.' + name)
-          if (this.$refs[name].hasAttribute('_echarts_instance_')) {
-            echarts.getInstanceByDom(this.$refs[name]).dispose()
-            // console.log(instance)
-            // instance.dispose()
+          if (this.charts[name] && this.charts[name].dispose) {
+            this.charts[name].dispose()
           }
-          let instance = echarts.init(this.$refs[name])
-          // console.log(instance)
-          this.plotResult(instance, data)
+          this.charts[name] = echarts.init(this.$refs[name])
+          let title = 'Feature_' + key
+          this.plotResult(this.charts[name], title, data)
         }
 
-        // for (let i in this.testResults) {
-        //   for (let key in this.testResults[i].probs) {
-        //     this.testResults[i].probs[key] = parseFloat(
-        //       this.testResults[i].probs[key]
-        //     ).toFixed(4)
-        //   }
-        // }
-        // let data = [['Model']]
-        // for (let key in this.testResults[0].probs) {
-        //   data[0].push(key)
-        // }
-        // for (let i in this.testResults) {
-        //   let y = []
-        //   y.push(this.testResults[i].model)
-        //   for (let key in this.testResults[i].probs) {
-        //     y.push(this.testResults[i].probs[key])
-        //   }
-        //   data.push(y)
-        // }
-        // if (this.$refs.resultChart.hasAttribute('_echarts_instance_')) {
-        //   this.resultChart.dispose()
-        // }
-        // this.resultChart = echarts.init(this.$refs.resultChart)
-        // this.plotResult(this.resultChart, data)
         this.resultLoading = false
       },
-      plotResult(instance, data) {
-        let series = []
-        for (let i in data[0]) {
-          series.push({ type: 'bar' })
-        }
-        series.pop()
-        instance.setOption({
-          legend: {},
-          tooltip: {},
-          toolbox: {
-            feature: {
-              dataView: {
-                show: true,
-                title: 'Show Table',
-                readOnly: true,
-                lang: [' ', 'Close', ''],
-                optionToContent: function (opt) {
-                  var data = opt.dataset[0].source
-                  var table =
-                    '<table style="width:100%;text-align:center"><tbody>'
-                  for (let i in data) {
-                    table += '<th>'
-                    for (let j in data[i]) {
-                      if (i == 0) table += '<th>' + data[i][j] + '</th>'
-                      else table += '<td>' + data[i][j] + '</td>'
+      plotResult(instance, title, data) {
+        if (data.length == 1) {
+          // No data
+          instance.setOption({
+            title: {
+              text: title,
+              x: 'center',
+              y: 'bottom',
+            },
+            graphic: {
+              type: 'text',
+              left: 'center',
+              top: 'middle',
+              style: {
+                fill: '#606266',
+                text: 'No Data',
+                font: '16px Microsoft YaHei',
+              },
+            },
+          })
+        } else {
+          let series = []
+          for (let i in data[0]) {
+            series.push({ type: 'bar' })
+          }
+          series.pop()
+          instance.setOption({
+            title: {
+              text: title,
+              x: 'center',
+              y: 'bottom',
+            },
+            legend: {},
+            tooltip: {
+              confine: true,
+            },
+            toolbox: {
+              bottom: '1%',
+              right: '1%',
+              feature: {
+                dataView: {
+                  show: true,
+                  title: 'Table',
+                  readOnly: true,
+                  lang: [' ', 'Close', ''],
+                  optionToContent: function (opt) {
+                    var data = opt.dataset[0].source
+                    var table =
+                      '<table style="width:100%;text-align:center"><tbody>'
+                    for (let i in data) {
+                      table += '<th>'
+                      for (let j in data[i]) {
+                        if (i == 0) table += '<th>' + data[i][j] + '</th>'
+                        else table += '<td>' + data[i][j] + '</td>'
+                      }
+                      table += '</tr>'
                     }
-                    table += '</tr>'
-                  }
-                  table += '</tbody></table>'
-                  return table
+                    table += '</tbody></table>'
+                    return table
+                  },
                 },
               },
             },
-          },
-          dataset: {
-            source: data,
-          },
-          grid: {},
-          xAxis: {
-            // name: 'Model',
-            type: 'category',
-          },
-          yAxis: {
-            // name: 'Prob',
-            axisPointer: {
-              show: true,
-              type: 'line',
-              snap: true,
-              triggerTooltip: false,
+            dataset: {
+              source: data,
             },
-          },
-          series: series,
-        })
+            grid: {},
+            xAxis: {
+              // name: 'Model',
+              type: 'category',
+            },
+            yAxis: {
+              // name: 'Prob',
+              axisPointer: {
+                show: true,
+                type: 'line',
+                snap: true,
+                triggerTooltip: false,
+              },
+            },
+            series: series,
+          })
+        }
       },
       // async fetchTranscript() {
       //   let { transcript } = await getTranscript(this.rec_url)
