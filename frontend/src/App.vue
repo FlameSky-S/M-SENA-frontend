@@ -1,5 +1,5 @@
 <template>
-  <div id="vue-admin-beautiful">
+  <div id="m-sena-app">
     <router-view />
   </div>
 </template>

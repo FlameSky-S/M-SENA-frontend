@@ -1,54 +1,53 @@
 <template>
-  <section v-if="routerView" class="app-main-container">
+  <section class="app-main-container">
     <transition mode="out-in" name="fade-transform">
-      <keep-alive :include="cachedRoutes" :max="keepAliveMaxNum">
-        <router-view :key="key" class="app-main-height" />
-      </keep-alive>
+      <!-- <keep-alive :include="cachedRoutes" :max="keepAliveMaxNum"> -->
+      <router-view :key="key" class="app-main-height" />
+      <!-- </keep-alive> -->
     </transition>
-    <footer v-show="footerCopyright" class="footer-copyright">
-      Copyright
-      <vab-icon :icon="['fas', 'copyright']"></vab-icon>
-      THUIAR M-SENA Project {{ fullYear }}
+    <footer class="footer-copyright">
+      <i class="el-icon-info"></i>
+      THUIAR M-SENA Project 2021
     </footer>
   </section>
 </template>
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import {
-    copyright,
-    footerCopyright,
-    keepAliveMaxNum,
-    title,
-  } from '@/config/settings'
+  // import {
+  // copyright,
+  // footerCopyright,
+  // keepAliveMaxNum,
+  // title,
+  // } from '@/config/settings'
 
   export default {
     name: 'AppMain',
     data() {
       return {
-        show: false,
-        fullYear: new Date().getFullYear(),
-        copyright,
-        title,
-        keepAliveMaxNum,
-        routerView: true,
-        footerCopyright,
+        // show: false,
+        // fullYear: new Date().getFullYear(),
+        // copyright,
+        // title,
+        // keepAliveMaxNum,
+        // routerView: true,
+        // footerCopyright,
       }
     },
     computed: {
       ...mapGetters({
-        visitedRoutes: 'tabsBar/visitedRoutes',
+        // visitedRoutes: 'tabsBar/visitedRoutes',
         device: 'settings/device',
       }),
-      cachedRoutes() {
-        const cachedRoutesArr = []
-        this.visitedRoutes.forEach((item) => {
-          if (!item.meta.noKeepAlive) {
-            cachedRoutesArr.push(item.name)
-          }
-        })
-        return cachedRoutesArr
-      },
+      // cachedRoutes() {
+      //   const cachedRoutesArr = []
+      //   this.visitedRoutes.forEach((item) => {
+      //     if (!item.meta.noKeepAlive) {
+      //       cachedRoutesArr.push(item.name)
+      //     }
+      //   })
+      //   return cachedRoutesArr
+      // },
       key() {
         return this.$route.path
       },
@@ -63,12 +62,12 @@
     },
     created() {
       //重载所有路由
-      this.$baseEventBus.$on('reload-routerview', () => {
-        this.routerView = false
-        this.$nextTick(() => {
-          this.routerView = true
-        })
-      })
+      // this.$baseEventBus.$on('reload-routerview', () => {
+      //   this.routerView = false
+      //   this.$nextTick(() => {
+      //     this.routerView = true
+      //   })
+      // })
     },
     mounted() {},
     methods: {
@@ -84,9 +83,6 @@
     position: relative;
     width: 100%;
     overflow: hidden;
-    .vab-keel {
-      margin: $base-padding;
-    }
     .app-main-height {
       min-height: $base-app-main-height;
     }

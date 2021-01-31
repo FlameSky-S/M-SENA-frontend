@@ -1,7 +1,5 @@
 import request from '@/utils/request'
-import { method } from 'lodash'
 
-// Functions used in datasetDetails Page.
 export function startActiveLearning(data) {
   return request({
     url: '/dataEnd/startActiveLearning',
@@ -10,15 +8,14 @@ export function startActiveLearning(data) {
   })
 }
 
-export function exportDataset(data) {
+export function exportLabels(data) {
   return request({
-    url: '/dataEnd/exportDataset',
+    url: '/dataEnd/exportLabels',
     method: 'post',
     data,
   })
 }
 
-// get classifier & selector list together.
 export function getALModels() {
   return request({
     url: '/dataEnd/getALModels',
@@ -26,7 +23,6 @@ export function getALModels() {
   })
 }
 
-// get all Classifier Config.
 export function getClassifierConfig(data) {
   return request({
     url: '/dataEnd/getClassifierConfig',
@@ -35,7 +31,6 @@ export function getClassifierConfig(data) {
   })
 }
 
-// get all Selector Config.
 export function getSelectorConfig(data) {
   return request({
     url: '/dataEnd/getSelectorConfig',
@@ -69,7 +64,7 @@ export function getHardSamples(data) {
   })
 }
 
-// submit manually labeling results.
+// submit manual labeling results.
 export function submitLabelResult(data) {
   return request({
     url: '/dataEnd/submitLabelResult',

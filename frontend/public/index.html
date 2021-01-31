@@ -1,28 +1,18 @@
 <!DOCTYPE html>
-<html lang="zh-cmn-Hans">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title><%= VUE_APP_TITLE %></title>
-    <meta
-      name="keywords"
-      content="vab,vab官网,后台管理框架,vue后台管理框架,vue-admin-beautiful,vue-admin-beautiful官网,vue-admin-beautiful文档,vue-element-admin,vue-element-admin官网,vue-element-admin文档,vue-admin,vue-admin官网,vue-admin文档"
-    />
-    <meta
-      name="description"
-      content="<%= VUE_APP_TITLE %>官网与文档基于vue-admin-beautiful构建，简称vab（是一款超棒的vue+element中后台前端快速开发框架），QQ群972435319，作者：<%= VUE_APP_AUTHOR %>"
-    />
-    <meta name="author" content="<%= VUE_APP_AUTHOR %>" />
     <link rel="stylesheet" href="<%= BASE_URL %>static/css/loading.css" />
   </head>
   <body>
     <noscript>
-      非常抱歉鉴于安全考量,您无法查看<%= VUE_APP_TITLE %>
-      源代码，该系统基于vue-admin-beautiful开发
+      <strong>We're sorry but <%= VUE_APP_TITLE %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
-    <div id="vue-admin-beautiful">
+    <div id="m-sena-app">
       <div class="first-loading-wrp">
         <div class="loading-wrp">
           <span class="dot dot-spin">
@@ -35,36 +25,5 @@
         <h1><%= VUE_APP_TITLE %></h1>
       </div>
     </div>
-    <script>
-      ;/^http(s*):\/\//.test(location.href) ||
-        alert('基于vue-admin-beautiful开发的项目需要部署到服务器下访问')
-    </script>
-    <script>
-      var metas = document.getElementsByTagName('meta')
-      var i
-      if (navigator.userAgent.match(/iPhone/i)) {
-        for (i = 0; i < metas.length; i++) {
-          if (metas[i].name == 'viewport') {
-            metas[i].content =
-              'width=device-width, minimum-scale=1.0, maximum-scale=1.0'
-          }
-        }
-        document.addEventListener('gesturestart', gestureStart, false)
-      }
-      function gestureStart() {
-        for (i = 0; i < metas.length; i++) {
-          if (metas[i].name == 'viewport') {
-            metas[i].content =
-              'width=device-width, minimum-scale=0.25, maximum-scale=1.6'
-          }
-        }
-      }
-    </script>
   </body>
 </html>
-
-<style lang="scss" scoped>
-  #vue-admin-beautiful {
-    min-width: 600px;
-  }
-</style>

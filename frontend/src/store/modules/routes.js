@@ -1,6 +1,3 @@
-/**
- * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
- */
 import { constantRoutes } from '@/router'
 
 const state = { routes: [] }
@@ -9,13 +6,11 @@ const getters = {
 }
 const mutations = {
   setRoutes(state, routes) {
-    console.log('src/store/modules/routes.js/mutations/setRoutes')
     state.routes = constantRoutes.concat(routes)
   },
 }
 const actions = {
   async setRoutes({ commit }) {
-    console.log('src/store/modules/routes.js/actions/setRoutes')
     commit('setRoutes', [])
     return []
   },

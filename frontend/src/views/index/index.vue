@@ -1,160 +1,128 @@
 <template>
   <div class="index-container">
-    <center style="font-size: 38px; line-height: 60px; text-align: center">
-      M-SENA: All-in-One Platform for Multimodal Sentiment Analysis
-    </center>
-    <center style="font-size: 20px; line-height: 30px">
-      Developed by
-      <a ref="thuiar.github.io">THUIAR</a>
-      Team
-      <a ref="">@iyuge</a>
-      ,
-      <a ref="">@FlameSky-S</a>
-      ,
-      <a ref="">@Columbine21</a>
-      , Directed by
-      <a ref="">Professor Xu</a>
-    </center>
-    <el-row style="margin: 2% 2%">
-      <h2 class="header2">System Functionality</h2>
-      <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8" class="functionality">
-        <el-carousel
-          indicator-position="outside"
-          :autoplay="false"
-          height="400px"
+    <el-card class="top" shadow="never">
+      <h1 class="top-header">M-SENA Platform</h1>
+      <p class="top-text">
+        The M-SENA is an all-in-one platform for Multimodal Sentiment Analysis
+        tasks
+      </p>
+      <p class="top-phrases">Open source, Easy to use, Free of charge</p>
+      <p class="top-buttons">
+        <el-button
+          type="primary"
+          style="font-weight: bold"
+          @click="openNewTab('https://github.com/thuiar/M-SENA')"
         >
-          <el-carousel-item>
-            <h3 class="header3">
-              <em>Section one</em>
-              : Data-End
-            </h3>
-            <div>
-              <div>
-                <a class="function_link" @click="handleClick">
-                  Dataset Management
-                </a>
-              </div>
-              <p class="description">
-                This section contains
-                <b>introduction and statistics about well-known datasets</b>
-                as well as
-                <b>raw instance (video) demonstration.</b>
-              </p>
-              <div style="margin: 3% 0%">
-                <a class="function_link" @click="handleClick">
-                  Dataset Annotation
-                </a>
-              </div>
-              <p class="description">
-                This section includes
-                <b>data annotation strategy</b>
-                based on both active learning and human labeling.
-              </p>
+          <Vicon name="play"></Vicon>
+          Get Started
+        </el-button>
+        <el-button
+          plain
+          @click="openNewTab('https://github.com/thuiar/M-SENA')"
+        >
+          <Vicon name="brands/github" scale="1.1" />
+          Download
+        </el-button>
+      </p>
+    </el-card>
+    <el-row :gutter="20">
+      <el-col :xs="11" :sm="10" :md="10" :lg="5" :xl="5" :offset="offset1">
+        <el-card
+          class="mid"
+          shadow="never"
+          @click.native="setCarousel('manage')"
+        >
+          <Vicon name="manage" scale="3"></Vicon>
+          <p>Easy Management</p>
+        </el-card>
+      </el-col>
+      <el-col :xs="11" :sm="10" :md="10" :lg="5" :xl="5">
+        <el-card
+          class="mid"
+          shadow="never"
+          @click.native="setCarousel('label')"
+        >
+          <Vicon name="labels" scale="3"></Vicon>
+          <p>Auto Labeling</p>
+        </el-card>
+      </el-col>
+      <el-col :xs="11" :sm="10" :md="10" :lg="5" :xl="5" :offset="offset2">
+        <el-card
+          class="mid"
+          shadow="never"
+          @click.native="setCarousel('analysis')"
+        >
+          <Vicon name="analysis" scale="3"></Vicon>
+          <p>Visual Analysis</p>
+        </el-card>
+      </el-col>
+      <el-col :xs="11" :sm="10" :md="10" :lg="5" :xl="5">
+        <el-card class="mid" shadow="never" @click.native="setCarousel('doc')">
+          <Vicon name="docs" scale="3"></Vicon>
+          <p>Fully Documented</p>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-card class="bottom" shadow="never">
+        <el-carousel
+          ref="carousel"
+          :interval="8000"
+          :type="card"
+          :autoplay="autoplay"
+          height="500px"
+        >
+          <el-carousel-item key="manage" name="manage">
+            <div align="center" style="height: 100%">
+              <el-row>
+                <h3>Easy Management</h3>
+                <el-image :src="require('@/assets/test2.gif')"></el-image>
+                <p>Manage datasets and models with our uniquely designed UI.</p>
+                <p>Import your own data/model and start training!</p>
+              </el-row>
             </div>
           </el-carousel-item>
-          <el-carousel-item>
-            <h3 class="header3">
-              <em>Section two</em>
-              : Model-End
-            </h3>
-            <div>
-              <div>
-                <a class="function_link" @click="handleClick">
-                  Model Management & Training
-                </a>
-              </div>
-              <p class="description">
-                This section provides a rich set of tools and recipes to test
-                existing sentiment analysis frameworks of different types,
-                enabling researchers to compare widely different approaches
-                under the same condition.
-              </p>
+          <el-carousel-item key="label" name="label">
+            <div align="center" style="height: 100%">
+              <el-row>
+                <h3>Auto Labeling</h3>
+                <el-image :src="require('@/assets/test2.gif')"></el-image>
+                <p>Strugging with data-labeling?</p>
+                <p>
+                  Try out our auto labeling feature based on active learning
+                  algrithms.
+                </p>
+              </el-row>
             </div>
           </el-carousel-item>
-          <el-carousel-item>
-            <h3 class="header3">
-              <em>Section three</em>
-              : Analysis-End
-            </h3>
-            <div>
-              <div>
-                <a class="function_link" @click="handleClick">
-                  Result Analysis
-                </a>
-              </div>
-              <p class="description">
-                This section consists
-                <b>detailed model training results</b>
-              </p>
-              <div style="margin: 3% 0%">
-                <a class="function_link" @click="handleClick">Batch Test</a>
-              </div>
-              <p class="description">
-                This section provides
-                <b>
-                  fair comparison of the results of each model in the same
-                  experimental environment.
-                </b>
-              </p>
-              <div>
-                <a class="function_link" @click="handleClick">
-                  Real Time Presentation
-                </a>
-              </div>
-              <p class="description">
-                This section gives us
-                <b>an intuitive end to end evaluation means</b>
-                to assess existing model.
-              </p>
+          <el-carousel-item key="analysis" name="analysis">
+            <div align="center" style="height: 100%">
+              <el-row>
+                <h3>Visual Analysis</h3>
+                <el-image :src="require('@/assets/test2.gif')"></el-image>
+                <p>To help you better understand your model,</p>
+                <p>
+                  M-SENA provides data visualization as well as feature
+                  visualization.
+                </p>
+              </el-row>
+            </div>
+          </el-carousel-item>
+          <el-carousel-item key="doc" name="doc">
+            <div align="center" style="height: 100%">
+              <el-row>
+                <h3>Fully Documented</h3>
+                <el-image :src="require('@/assets/test2.gif')"></el-image>
+                <p>Having problems with the system?</p>
+                <p>
+                  Find solutions in our support documents. Also feel free to
+                  submit issues on Github
+                </p>
+              </el-row>
             </div>
           </el-carousel-item>
         </el-carousel>
-      </el-col>
-      <el-col :xs="24" :sm="24" :md="24" :lg="16" :xl="16">
-        <img
-          loading="lazy"
-          src="@/assets/image.png"
-          width="92%"
-          style="margin-left: 4%"
-        />
-      </el-col>
-    </el-row>
-    <el-row style="margin: 2% 2%">
-      <el-col :xs="24" :sm="24" :md="24" :lg="14" :xl="12">
-        <div class="news">
-          <h2 class="header2">News</h2>
-          <p>[mm/dd/yyyy] TEMPLATE: New Features Completed for M-SENA</p>
-          <p>
-            [12/31/2020]
-            <span style="color: #ff0000">BREAKTHROUGH</span>
-            : M-SENA SYSTEM Verison one FINISHED.
-          </p>
-          <p>
-            [01/08/2021]
-            <span style="color: #00ff00">NEW FEATURES</span>
-            : Modalities Fusion Interpretation IS FINISHED.
-          </p>
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :md="24" :lg="10" :xl="12">
-        <div class="contributor">
-          <h2 class="header2">Contributors</h2>
-          <p style="font-size: 20px; line-height: 30px">
-            Developed by
-            <a ref="thuiar.github.io">THUIAR</a>
-            Team
-            <a ref="">@iyuge</a>
-            ,
-            <a ref="">@FlameSky-S</a>
-            ,
-            <a ref="">@Columbine21</a>
-          </p>
-          <p style="font-size: 20px; line-height: 30px">
-            Directed by
-            <a ref="">Professor Xu</a>
-          </p>
-        </div>
-      </el-col>
+      </el-card>
     </el-row>
   </div>
 </template>
@@ -164,60 +132,138 @@
     name: 'Index',
     data() {
       return {
-        fullHeight: document.documentElement.clientHeight,
-        updateTime: process.env.VUE_APP_UPDATE_TIME,
-        nodeEnv: process.env.NODE_ENV,
+        offset1: 2,
+        offset2: 0,
+        card: 'card',
+        autoplay: true,
+        // testImg: '@/assets/poster.jpg',
       }
     },
-    methods: {},
+    beforeMount() {
+      window.addEventListener('resize', this.handleResize)
+    },
+    beforeDestroy() {
+      window.removeEventListener('resize', this.handleResize)
+    },
+    created() {},
+    methods: {
+      setCarousel(name) {
+        this.$refs.carousel.setActiveItem(name)
+        // Reset autoplay timer
+        this.autoplay = false
+        this.$nextTick(() => {
+          this.autoplay = true
+        })
+      },
+      openNewTab(url) {
+        window.open(url)
+      },
+      handleResize() {
+        let width = document.body.getBoundingClientRect().width + 13
+        if (width >= 1920) {
+          //xl
+          this.offset1 = 2
+          this.offset2 = 0
+          this.card = 'card'
+        } else if (width >= 1200) {
+          //lg
+          this.offset1 = 2
+          this.offset2 = 0
+          this.card = 'card'
+        } else if (width >= 992) {
+          //md
+          this.offset1 = 2
+          this.offset2 = 2
+          this.card = ''
+        } else if (width >= 768) {
+          //sm
+          this.offset1 = 2
+          this.offset2 = 2
+          this.card = ''
+        } else {
+          //xs
+          this.offset1 = 1
+          this.offset2 = 1
+          this.card = ''
+        }
+      },
+    },
   }
 </script>
 <style lang="scss" scoped>
-  .carousel-title {
-    margin-left: 5%;
-  }
-  .news p {
-    margin: 0 0 20px 0;
-    font-size: 16px;
-  }
-  .news h2 {
-    margin: 0 0 10px 0;
-    font-size: 24px;
-  }
-  .contributor h2 {
-    margin: 0 0 10px 0;
-    font-size: 24px;
-  }
-  .header2 {
-    font-size: 24px;
-    line-height: 1.5em;
-    letter-spacing: 1px;
-    background-image: url('../../assets/border_h2.gif');
-    background-repeat: no-repeat;
-    background-position: bottom left;
-    background-size: 250px;
-  }
-  .functionality {
-    .header3 {
-      font-size: 20px;
-      line-height: 1em;
-      letter-spacing: 0.5px;
+  .index-container {
+    padding: 0 !important;
+
+    .top {
+      background-color: $base-menu-background;
+      color: $base-menu-color;
+      border: none;
+      padding: 80px 0px;
+      .top-header {
+        text-align: center;
+        font-size: 35px;
+      }
+      .top-text {
+        text-align: center;
+        font-size: 20px;
+      }
+      .top-phrases {
+        text-align: center;
+        font-size: 18px;
+        color: #828386;
+      }
+      .top-buttons {
+        text-align: center;
+
+        .el-button {
+          font-size: 16px;
+          padding: 12px 16px;
+          // line-height: 22px;
+        }
+      }
     }
-    .function_link {
-      margin-left: 10%;
-      font-size: 20px;
-      line-height: 1em;
+
+    .mid {
+      border: none;
+      min-height: 120px;
+      text-align: center;
+      font-size: 18px;
+      cursor: pointer;
+      .fa-icon {
+        width: auto;
+        height: 1em;
+      }
     }
-    .description {
-      margin: 3% 15%;
-      font-size: 16px;
-      line-height: 1.6em;
+
+    .bottom {
+      border: none;
+      height: 550px;
     }
   }
 
-  .index-container {
-    padding: 0 !important;
-    margin: 0 !important;
-    background: #f5f7f8 !important;
+  .el-carousel__item {
+    .el-image {
+      margin: 0% 8%;
+      max-width: 600px;
+    }
+    h3 {
+      margin-top: 30px;
+      font-size: 20px;
+      // color: #475669;
+      color: $base-font-color;
+    }
+    p {
+      margin: 1% 8%;
+      font-size: 18px;
+      color: $base-font-color;
+    }
+  }
+
+  .el-carousel__item:nth-child(2n) {
+    background-color: #dcdfe6;
+  }
+
+  .el-carousel__item:nth-child(2n + 1) {
+    background-color: #e3e6ec;
   }
 </style>

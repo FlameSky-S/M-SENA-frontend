@@ -4,26 +4,14 @@
       <el-row :gutter="20">
         <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
           <div class="pic-error">
-            <img
-              alt="401"
-              class="pic-error-parent"
-              src="@/assets/error_images/404.png"
-            />
+            <img alt="401" class="pic-error-parent" src="@/assets/404.png" />
             <img
               alt="401"
               class="pic-error-child left"
-              src="@/assets/error_images/cloud.png"
+              src="@/assets/cloud.png"
             />
-            <img
-              alt="401"
-              class="pic-error-child"
-              src="@/assets/error_images/cloud.png"
-            />
-            <img
-              alt="401"
-              class="pic-error-child"
-              src="@/assets/error_images/cloud.png"
-            />
+            <img alt="401" class="pic-error-child" src="@/assets/cloud.png" />
+            <img alt="401" class="pic-error-child" src="@/assets/cloud.png" />
           </div>
         </el-col>
 
@@ -48,10 +36,10 @@
     data() {
       return {
         jumpTime: 5,
-        oops: '抱歉!',
-        headline: '当前页面不存在...',
-        info: '请检查您输入的网址是否正确，或点击下面的按钮返回首页。',
-        btn: '返回首页',
+        oops: 'Oops!',
+        headline: 'Page Not Found...',
+        info: 'Please verify the address or contact administrator',
+        btn: 'Home',
         timer: 0,
       }
     },

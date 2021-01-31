@@ -1,34 +1,29 @@
 <template>
-  <div :class="'logo-container-' + layout">
+  <div class="logo-container">
     <router-link to="/">
-      <!-- 这里是logo变更的位置 -->
-      <vab-remix-icon v-if="logo" class="logo" :icon-class="logo" />
-      <span
-        class="title"
-        :class="{ 'hidden-xs-only': layout === 'horizontal' }"
-        :title="title"
-      >
+      <el-image class="logo" src="./favicon.ico" />
+      <span class="title" :title="title">
         {{ title }}
       </span>
     </router-link>
   </div>
 </template>
 <script>
-  import { mapGetters } from 'vuex'
-  import { logo } from '@/config/settings'
+  // import { mapGetters } from 'vuex'
+  // import { logo } from '@/config/settings'
 
   export default {
     name: 'Logo',
     data() {
       return {
-        title: this.$baseTitle,
+        title: 'M-SENA-System',
       }
     },
     computed: {
-      ...mapGetters({
-        logo: 'settings/logo',
-        layout: 'settings/layout',
-      }),
+      // ...mapGetters({
+      // logo: 'settings/logo',
+      // layout: 'settings/layout',
+      // }),
     },
   }
 </script>
@@ -61,19 +56,7 @@
     vertical-align: middle;
   }
 
-  .logo-container-horizontal {
-    @include container;
-
-    .logo {
-      @include logo;
-    }
-
-    .title {
-      @include title;
-    }
-  }
-
-  .logo-container-vertical {
+  .logo-container {
     @include container;
 
     height: $base-logo-height;

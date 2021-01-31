@@ -1,13 +1,6 @@
-/**
- * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
- * @description router全局配置
- */
-
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Layout from '@/layouts'
-import EmptyLayout from '@/layouts/EmptyLayout'
-import { publicPath, routerMode } from '@/config/settings'
 
 Vue.use(VueRouter)
 export const constantRoutes = [
@@ -22,7 +15,7 @@ export const constantRoutes = [
         component: () => import('@/views/index/index'),
         meta: {
           title: 'Home',
-          icon: 'home',
+          icon: 'el-icon-s-home',
           affix: true,
         },
       },
@@ -35,39 +28,40 @@ export const constantRoutes = [
     name: 'Dataset',
     meta: {
       title: 'Dataset',
-      icon: 'shopping-cart',
+      icon: 'el-icon-s-data',
     },
     children: [
       {
-        path: 'datasetList',
-        name: 'Dataset List',
-        component: () => import('@/views/project/dataEnd/datasetList/index'),
+        path: 'datasetManagement',
+        name: 'Dataset Management',
+        component: () => import('@/views/dataEnd/datasetManagement/index'),
         meta: {
           title: 'Dataset Management',
+          icon: 'el-icon-s-shop',
         },
       },
       {
         path: 'datasetDetail',
         name: 'Dataset Details',
-        component: () => import('@/views/project/dataEnd/datasetDetails/index'),
+        component: () => import('@/views/dataEnd/datasetDetails/index'),
         meta: {
           title: 'Dataset Details',
         },
         hidden: true,
       },
       {
-        path: 'labeling',
+        path: 'datsetLabeling',
         name: 'Dataset Labeling',
-        component: () => import('@/views/project/dataEnd/labeling/index'),
+        component: () => import('@/views/dataEnd/datasetLabeling/index'),
         meta: {
           title: 'Dataset Labeling',
+          icon: 'el-icon-s-flag',
         },
       },
       {
         path: 'labelingDetail',
         name: 'Labeling Process',
-        component: () =>
-          import('@/views/project/dataEnd/labelingProcess/index'),
+        component: () => import('@/views/dataEnd/labelingProcess/index'),
         meta: {
           title: 'Dataset Labeling',
         },
@@ -82,24 +76,25 @@ export const constantRoutes = [
     name: 'Model',
     meta: {
       title: 'Model',
-      icon: 'users-cog',
+      icon: 'el-icon-menu',
     },
     children: [
       {
         path: 'modelList',
         name: 'Model List',
-        component: () =>
-          import('@/views/project/modelEnd/modelManagement/index'),
+        component: () => import('@/views/modelEnd/modelManagement/index'),
         meta: {
           title: 'Model Management',
+          icon: 'el-icon-s-management',
         },
       },
       {
         path: 'modelTraining',
         name: ' Model Training',
-        component: () => import('@/views/project/modelEnd/modelTraining/index'),
+        component: () => import('@/views/modelEnd/modelTraining/index'),
         meta: {
           title: 'Model Training',
+          icon: 'el-icon-s-order',
         },
       },
     ],
@@ -111,73 +106,64 @@ export const constantRoutes = [
     name: 'Analysis',
     meta: {
       title: 'Analysis',
-      icon: 'box-open',
+      icon: 'el-icon-s-marketing',
     },
     children: [
       {
-        path: 'resultAnalysis',
-        name: 'Result Analysis',
-        component: () =>
-          import('@/views/project/analysisEnd/resultAnalysis/index'),
+        path: 'results',
+        name: 'Results',
+        component: () => import('@/views/analysisEnd/results/index'),
         meta: {
-          title: 'Result Analysis',
+          title: 'Results',
+          icon: 'el-icon-s-help',
         },
       },
       {
         path: 'resultDetails',
         name: 'Result Details',
-        component: () =>
-          import('@/views/project/analysisEnd/resultDetails/index'),
+        component: () => import('@/views/analysisEnd/resultDetails/index'),
         meta: {
           title: 'Result Details',
         },
         hidden: true,
       },
       {
-        path: 'batchAnalysis',
-        name: 'Batch Analysis',
-        component: () =>
-          import('@/views/project/analysisEnd/batchAnalysis/index'),
+        path: 'modelComparison',
+        name: 'Model Comparison',
+        component: () => import('@/views/analysisEnd/modelComparison/index'),
         meta: {
-          title: 'Batch Analysis',
+          title: 'Model Comparison',
+          icon: 'el-icon-s-grid',
         },
       },
       {
-        path: 'liveTest',
-        name: ' Live Test',
-        component: () => import('@/views/project/analysisEnd/liveTest/index'),
+        path: 'liveDemo',
+        name: ' Live Demo',
+        component: () => import('@/views/analysisEnd/liveDemo/index'),
         meta: {
           title: 'Live Demo',
+          icon: 'el-icon-video-camera-solid',
+          badge: 'New',
         },
       },
     ],
   },
   {
-    path: '/wiki',
+    path: '/aboutUs',
     component: Layout,
     redirect: 'noRedirect',
     name: 'Wiki',
-    meta: {
-      title: 'System Documents',
-      icon: 'box-open',
-    },
     children: [
       {
         path: 'docs',
         name: 'System Docs',
-        component: () => import('@/views/project/Wiki/docs/index'),
+        component: () => import('@/views/Wiki/index'),
         meta: {
-          title: 'System Documents',
-          icon: 'shopping-cart',
+          title: 'About Us',
+          icon: 'el-icon-s-promotion',
         },
       },
     ],
-  },
-  {
-    path: '/401',
-    name: '401',
-    component: () => import('@/views/401'),
-    hidden: true,
   },
   {
     path: '/404',
@@ -193,8 +179,8 @@ export const constantRoutes = [
 ]
 
 const router = new VueRouter({
-  base: publicPath,
-  mode: routerMode,
+  base: '/',
+  mode: 'hash',
   scrollBehavior: () => ({
     y: 0,
   }),

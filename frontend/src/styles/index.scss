@@ -1,0 +1,215 @@
+@mixin scrollbar {
+  max-height: 88vh;
+  margin-bottom: 0.5vh;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(144, 147, 153, 0.3);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(144, 147, 153, 0.3);
+  }
+}
+
+@mixin base-scrollbar {
+  &::-webkit-scrollbar {
+    width: 13px;
+    height: 13px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.4);
+    background-clip: padding-box;
+    border: 3px solid transparent;
+    border-radius: 7px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-track:hover {
+    background-color: #f8fafc;
+  }
+}
+
+html {
+  body {
+    position: relative;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    font-size: $base-font-size-default;
+    color: #2c3e50;
+    background: #f6f8f9;
+    word-break: keep-all;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    #m-sena-app {
+      min-width: 600px;
+    }
+
+    @include base-scrollbar;
+
+    div {
+      @include base-scrollbar;
+    }
+
+    svg,
+    i {
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    .m-sena-system-wrapper {
+      .app-main-container {
+        @include base-scrollbar;
+
+        > [class*='-container'] {
+          padding: $base-padding;
+          background: $base-color-white;
+        }
+      }
+    }
+
+    .el-drawer__header {
+      // border-bottom: 1px solid #606266;
+      background-color: #2c3e50;
+      color: #f5f7fa;
+      font-size: 18px;
+      font-weight: bold;
+      margin: 0%;
+      padding: 20px;
+    }
+
+    .el-drawer__body {
+      @include scrollbar;
+      padding: 20px;
+      padding-top: 5px;
+    }
+
+    .el-collapse-item__header {
+      font-size: $base-font-size-default;
+    }
+
+    .el-button {
+      font-size: $base-font-size-default;
+    }
+
+    .el-table {
+      .el-table__body-wrapper {
+        @include base-scrollbar;
+      }
+
+      th {
+        background: #f5f7fa;
+        font-weight: bold;
+      }
+
+      td,
+      th {
+        position: relative;
+        box-sizing: border-box;
+        padding: 7.5px 0;
+
+        .cell {
+          font-size: $base-font-size-default;
+          word-break: keep-all;
+
+          .el-image {
+            width: 50px;
+            height: 50px;
+            border-radius: $base-border-radius;
+          }
+        }
+      }
+    }
+
+    .el-pagination {
+      padding: 2px 5px;
+      margin: 15px 0 0 0;
+      font-weight: normal;
+      color: $base-color-black;
+      text-align: center;
+    }
+
+    .el-menu.el-menu--popup.el-menu--popup-right-start {
+      @include scrollbar;
+    }
+
+    .el-menu.el-menu--popup.el-menu--popup-bottom-start {
+      @include scrollbar;
+    }
+
+    .el-menu-item {
+      i {
+        color: $base-color-white;
+      }
+    }
+
+    .el-submenu__title i {
+      color: $base-color-white;
+    }
+
+    // .el-dialog,
+    // .el-message-box {
+    //   &__body {
+    //     border-top: 1px solid $base-border-color;
+
+    //     .el-form {
+    //       padding-right: 30px;
+    //     }
+    //   }
+
+    //   &__footer {
+    //     padding: $base-padding;
+    //     text-align: right;
+    //     border-top: 1px solid $base-border-color;
+    //   }
+
+    //   &__content {
+    //     padding: 20px 20px 20px 20px;
+    //   }
+    // }
+
+    .el-dialog {
+      &__header {
+        border-bottom: 1px solid $base-border-color;
+      }
+      &__body {
+        padding: 20px 30px 0px 30px;
+      }
+      &__footer {
+        border-top: 1px solid $base-border-color;
+      }
+    }
+
+    .el-card {
+      margin-bottom: 15px;
+
+      &__body {
+        padding: $base-padding;
+      }
+    }
+    .el-form {
+      .el-form-item {
+        font-weight: bold;
+      }
+    }
+  }
+}
