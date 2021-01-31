@@ -15,6 +15,14 @@ export function scanDatasets() {
   })
 }
 
+export function updateDataset(data) {
+  return request({
+    url: '/dataEnd/updateDataset',
+    method: 'post',
+    data,
+  })
+}
+
 export function getDetails(data) {
   return request({
     url: '/dataEnd/getDetails',

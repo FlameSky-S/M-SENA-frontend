@@ -8,9 +8,9 @@ export function startActiveLearning(data) {
   })
 }
 
-export function exportDataset(data) {
+export function exportLabels(data) {
   return request({
-    url: '/dataEnd/exportDataset',
+    url: '/dataEnd/exportLabels',
     method: 'post',
     data,
   })

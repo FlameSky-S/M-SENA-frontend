@@ -62,7 +62,7 @@
 
 <script>
   import { getDatasetList } from '@/api/dataEnd'
-  import { exportDataset } from '@/api/labeling'
+  import { exportLabels } from '@/api/labeling'
   export default {
     name: 'Labeling',
     components: {},
@@ -77,8 +77,8 @@
       this.fetchUnlockedData()
     },
     methods: {
-      exportDataset(row) {
-        exportDataset({
+      exportLabels(row) {
+        exportLabels({
           datasetName: row.datasetName,
         })
       },

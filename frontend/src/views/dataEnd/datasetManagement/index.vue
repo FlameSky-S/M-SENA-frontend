@@ -7,9 +7,25 @@
         <div class="dataset-table">
           <el-form inline>
             <el-form-item>
+              <el-input
+                v-model="addDataset"
+                placeholder="Dataset Name"
+              ></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                :icon="updateIcon"
+                type="primary"
+                @click="handleUpdate"
+              >
+                Add/Update
+              </el-button>
+            </el-form-item>
+            <el-form-item>
               <el-button
                 icon="el-icon-refresh-left"
                 type="primary"
+                plain
                 @click="handleRescan"
               >
                 Rescan
@@ -20,7 +36,7 @@
             ref="datasetTable"
             v-loading="listLoading"
             :data="list"
-            :element-loading-text="elementLoadingText"
+            element-loading-text="Loading..."
             stripe
           >
             <el-table-column label="Id" width="80" align="center" fixed>
@@ -103,6 +119,7 @@
   import {
     getDatasetList,
     scanDatasets,
+    updateDataset,
     unlockDataset,
     lockDataset,
   } from '@/api/dataEnd'
@@ -121,8 +138,8 @@
       return {
         list: [],
         listLoading: true,
-        selectRows: '',
-        elementLoadingText: 'Loading Information...',
+        addDataset: '',
+        updateIcon: 'el-icon-plus',
       }
     },
     computed: {
@@ -135,7 +152,7 @@
     },
     mounted() {},
     methods: {
-      showDetails(row, column) {
+      showDetails(row) {
         this.$router.push({
           path: '/data/datasetDetail',
           query: {
@@ -143,12 +160,6 @@
           },
         })
       },
-      // handleDelete(row) {
-      //   ;(async () => {
-      //     await deleteDataset({ datasetName: row.dataset_name })
-      //     this.fetchData()
-      //   })()
-      // },
       handleLock(row) {
         if (row.status === 'locked') {
           ;(async () => {
@@ -162,7 +173,28 @@
           })()
         }
       },
-      // TODO: to change here.
+      async handleUpdate() {
+        if (this.addDataset === '') return
+        else {
+          this.updateIcon = 'el-icon-loading'
+          let { msg } = await updateDataset({
+            datasetName: this.addDataset,
+          })
+          if (msg == 'success') {
+            this.$message({
+              message: 'Dataset Updated',
+              type: 'success',
+            })
+            this.fetchData()
+          } else {
+            this.$message({
+              message: msg,
+              type: 'error',
+            })
+          }
+          this.updateIcon = 'el-icon-plus'
+        }
+      },
       async handleRescan() {
         const h = this.$createElement
         let msg = []
@@ -188,10 +220,10 @@
             let { msg } = await scanDatasets()
             if (msg == 'success') {
               this.$message({
-                message: 'Result Deleted',
+                message: 'Dataset Rescan Complete',
                 type: 'success',
               })
-              this.fetchResults()
+              this.fetchData()
             } else {
               this.$message({
                 message: msg,

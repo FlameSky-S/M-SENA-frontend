@@ -654,15 +654,6 @@
                 show: true,
                 title: 'zoom',
               },
-              saveAsImage: {
-                show: true,
-                title: 'save',
-              },
-
-              restore: {
-                show: true,
-                title: 'reset',
-              },
             },
           },
           grid: {

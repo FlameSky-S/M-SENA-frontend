@@ -5,17 +5,13 @@
     width="70%"
     @close="close"
   >
-    <el-row>
+    <el-row :gutter="20">
       <el-col :xs="24" :sm="24" :md="24" :lg="17" :xl="17">
-        <video :src="info.url" controls width="100%"></video>
+        <video ref="player" :src="info.url" controls width="100%"></video>
       </el-col>
 
       <el-col :xs="24" :sm="24" :md="24" :lg="7" :xl="7">
-        <el-form
-          :label-position="labelPosition"
-          label-width="100px"
-          style="margin-left: 5%"
-        >
+        <el-form :label-position="labelPosition" label-width="100px">
           <el-form-item label="Label">
             <el-input v-model="info.label" readonly></el-input>
           </el-form-item>
@@ -37,6 +33,7 @@
         </el-form>
       </el-col>
     </el-row>
+    <div slot="footer"></div>
   </el-dialog>
 </template>
 
@@ -45,30 +42,33 @@
     name: 'Preview',
     data() {
       return {
+        labelPosition: 'top',
         info: {
           clipID: null,
           belonging: null,
           label: null,
           predict: null,
           url: '',
-          translate: 'This is the original transcipt for the video',
+          transcript: '',
         },
         title: '',
         dialogFormVisible: false,
       }
     },
-    computed: {
-      labelPosition() {
-        if (document.body.getBoundingClientRect().width >= 992) {
-          return 'top'
-        } else {
-          return 'right'
-        }
-      },
+    computed: {},
+    beforeMount() {
+      window.addEventListener('resize', this.handleResize)
+    },
+    beforeDestroy() {
+      window.removeEventListener('resize', this.handleResize)
     },
     created() {},
-
     methods: {
+      handleResize() {
+        if (document.body.getBoundingClientRect().width >= 1200) {
+          this.labelPosition = 'top'
+        } else this.labelPosition = 'left'
+      },
       showPreview(row) {
         this.title = 'Sample ' + row.sample_id
         this.info.url = row.video_url
@@ -81,6 +81,8 @@
       },
       close() {
         this.dialogFormVisible = false
+        this.$refs['player'].currentTime = 0
+        this.$refs['player'].pause()
       },
     },
   }

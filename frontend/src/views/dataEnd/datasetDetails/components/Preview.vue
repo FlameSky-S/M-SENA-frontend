@@ -5,17 +5,13 @@
     width="70%"
     @close="close"
   >
-    <el-row>
+    <el-row :gutter="20">
       <el-col :xs="24" :sm="24" :md="24" :lg="17" :xl="17">
-        <video :src="info.url" controls width="100%"></video>
+        <video ref="player" :src="info.url" controls width="100%"></video>
       </el-col>
 
       <el-col :xs="24" :sm="24" :md="24" :lg="7" :xl="7">
-        <el-form
-          :label-position="labelPosition"
-          label-width="100px"
-          style="margin-left: 5%"
-        >
+        <el-form :label-position="labelPosition" label-width="100px">
           <el-form-item label="Data Split">
             <el-input v-model="info.dataSplit" readonly></el-input>
           </el-form-item>
@@ -34,6 +30,7 @@
         </el-form>
       </el-col>
     </el-row>
+    <div slot="footer"></div>
   </el-dialog>
 </template>
 
@@ -78,6 +75,8 @@
       },
       close() {
         this.dialogFormVisible = false
+        this.$refs['player'].currentTime = 0
+        this.$refs['player'].pause()
       },
     },
   }

@@ -29,11 +29,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button
-            type="primary"
-            style="font-weight: 700; font-size: 14px"
-            @click="onSubmit"
-          >
+          <el-button type="primary" @click="onSubmit">
+            <Vicon name="play" scale="0.75"></Vicon>
             Compare
           </el-button>
         </el-form-item>

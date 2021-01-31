@@ -354,49 +354,49 @@
       lazyLoading(row, expandedRows) {
         if (expandedRows.indexOf(row) == -1) {
           // folded, destroy echarts instance
-          var acc_dom = document.getElementById('accChart' + row.result_id)
-          let acc_chart = echarts.getInstanceByDom(acc_dom)
-          acc_chart.dispose()
+          // var acc_dom = document.getElementById('accChart' + row.result_id)
+          // let acc_chart = echarts.getInstanceByDom(acc_dom)
+          // acc_chart.dispose()
         } else {
           // expanded
           row.argDisplay = JSON.stringify(JSON.parse(row.args), null, '\t')
           row.noteDisplay = row.description
 
-          this.$nextTick(() => {
-            var acc_dom = document.getElementById('accChart' + row.result_id)
+          // this.$nextTick(() => {
+          //   var acc_dom = document.getElementById('accChart' + row.result_id)
 
-            let acc_chart = echarts.init(acc_dom)
-            acc_chart.setOption({
-              title: {
-                text: 'Accuracy',
-              },
-              toolbox: {
-                show: true,
-                feature: {
-                  saveAsImage: {
-                    show: true,
-                  },
-                },
-              },
-              legend: {},
-              xAxis: {
-                name: 'epoch',
-                type: 'category',
-                data: [1, 2, 3, 4, 5],
-              },
-              yAxis: {
-                name: 'Accuracy',
-                type: 'value',
-              },
-              series: [
-                {
-                  name: 'Train',
-                  type: 'line',
-                  data: [19, 32, 13, 45, 32],
-                },
-              ],
-            })
-          })
+          //   let acc_chart = echarts.init(acc_dom)
+          //   acc_chart.setOption({
+          //     title: {
+          //       text: 'Accuracy',
+          //     },
+          //     toolbox: {
+          //       show: true,
+          //       feature: {
+          //         saveAsImage: {
+          //           show: true,
+          //         },
+          //       },
+          //     },
+          //     legend: {},
+          //     xAxis: {
+          //       name: 'epoch',
+          //       type: 'category',
+          //       data: [1, 2, 3, 4, 5],
+          //     },
+          //     yAxis: {
+          //       name: 'Accuracy',
+          //       type: 'value',
+          //     },
+          //     series: [
+          //       {
+          //         name: 'Train',
+          //         type: 'line',
+          //         data: [19, 32, 13, 45, 32],
+          //       },
+          //     ],
+          //   })
+          // })
         }
       },
       showDetails(row) {

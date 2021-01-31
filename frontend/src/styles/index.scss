@@ -188,8 +188,14 @@ html {
     // }
 
     .el-dialog {
+      &__header {
+        border-bottom: 1px solid $base-border-color;
+      }
       &__body {
-        padding: 10px 30px 30px 30px;
+        padding: 20px 30px 0px 30px;
+      }
+      &__footer {
+        border-top: 1px solid $base-border-color;
       }
     }
 

@@ -44,7 +44,7 @@
                 <el-button
                   :type="streaming ? 'danger' : 'primary'"
                   :plain="streaming ? true : false"
-                  @click="streaming ? stopCam() : initCam()"
+                  @click="streaming ? stopCam((notRecorded = true)) : initCam()"
                 >
                   <Vicon v-if="!streaming" name="video"></Vicon>
                   <Vicon v-else name="video-slash"></Vicon>
@@ -123,8 +123,8 @@
                 :disabled="!streaming"
                 @click="recording == false ? RecordBtn() : stopCam()"
               >
-                <Vicon v-if="!recording" name="dot-circle"></Vicon>
-                <Vicon v-else name="stop"></Vicon>
+                <Vicon v-if="!recording" name="dot-circle" scale="0.8"></Vicon>
+                <Vicon v-else name="stop" scale="0.8"></Vicon>
                 {{ recording == false ? 'Record' : 'Finish' }}
               </el-button>
               <el-button
@@ -133,17 +133,17 @@
                 :disabled="streaming || recording || blob == null"
                 @click="playing == false ? startPlayback() : stopPlayback()"
               >
-                <Vicon v-if="!playing" name="play"></Vicon>
-                <Vicon v-else name="stop"></Vicon>
+                <Vicon v-if="!playing" name="play" scale="0.75"></Vicon>
+                <Vicon v-else name="stop" scale="0.8"></Vicon>
                 {{ playing == false ? 'Playback' : 'Stop' }}
               </el-button>
               <el-button
                 type="primary"
                 style="padding: 9px 30px !important"
+                :icon="resultLoading ? 'el-icon-loading' : 'el-icon-check'"
                 :disabled="streaming || recording || blob == null"
                 @click="onSubmit"
               >
-                <Vicon name="child"></Vicon>
                 Go
               </el-button>
             </div>
@@ -398,16 +398,18 @@
         this.$refs['cameraView'].volume = 0
         this.streaming = true
       },
-      stopCam() {
+      stopCam(notRecorded = false) {
         this.stream.getTracks().forEach((track) => track.stop())
-        this.$refs['cameraView'].srcObject = null
-        this.$refs['cameraView'].src = this.rec_url
-        this.$refs['cameraView'].onended = () => (this.playing = false)
-        this.playing = true
-        this.$refs['cameraView'].controls = true
-        this.$refs['cameraView'].volume = 1
+        if (notRecorded == false) {
+          this.$refs['cameraView'].srcObject = null
+          this.$refs['cameraView'].src = this.rec_url
+          this.playing = true
+          this.$refs['cameraView'].onended = () => (this.playing = false)
+          this.$refs['cameraView'].controls = true
+          this.$refs['cameraView'].volume = 1
+          this.recording = false
+        }
         this.streaming = false
-        this.recording = false
       },
       // wait(delayInMS) {
       //   return new Promise((resolve) => setTimeout(resolve, delayInMS))

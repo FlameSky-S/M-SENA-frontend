@@ -96,8 +96,7 @@
               </el-tooltip>
             </el-form-item>
             <div align="center">
-              <el-button type="primary" @click="autoLabel">
-                <Vicon name="play" scale="0.75"></Vicon>
+              <el-button :icon="autoIcon" type="primary" @click="autoLabel">
                 Auto Label
               </el-button>
               <el-button type="primary" plain @click="manualLabel">
@@ -244,10 +243,10 @@
         ></el-pagination>
       </el-row>
     </div>
-    <manually-label
-      ref="manuallyLabel"
+    <manual-dialog
+      ref="ManualDialog"
       @refresh-video-list="refresh"
-    ></manually-label>
+    ></manual-dialog>
     <config-dialog
       ref="configSettings"
       @save-success="saveSuccess"
@@ -259,22 +258,23 @@
 <script>
   import { getDetails, getMetaData } from '@/api/dataEnd'
   import { startActiveLearning, getALModels } from '@/api/labeling'
-  import ManuallyLabel from './components/manuallyLabel.vue'
+  import ManualDialog from './components/manualDialog.vue'
   import ConfigDialog from './components/configDialog.vue'
   import * as echarts from 'echarts'
   export default {
     name: 'LabelingProcess',
-    components: { ManuallyLabel, ConfigDialog },
+    components: { ManualDialog, ConfigDialog },
     data() {
       return {
         listLoading: true,
+        autoIcon: 'el-icon-check',
         total: 0,
         difficultyList: [
           'All',
           'Unlabeled',
           'Human',
           'Machine',
-          'Middle',
+          'Medium',
           'Hard',
         ],
         labelList: ['All', 'Positive', 'Neutral', 'Negative'],
@@ -426,16 +426,16 @@
         }
       },
       edit(row) {
-        this.$refs['manuallyLabel'].show(row, this.queryForm.datasetName)
+        this.$refs['ManualDialog'].show(row, this.queryForm.datasetName)
       },
-      manualLabel(row) {
+      manualLabel() {
         if (this.datasetDetails.labeled === this.datasetDetails.totalCount) {
           this.$message({
             message: 'The dataset needs no further labeling',
             type: 'warning',
           })
         } else {
-          this.edit(row)
+          this.$refs['ManualDialog'].show(null, this.queryForm.datasetName)
         }
       },
       async autoLabel() {
@@ -445,12 +445,13 @@
             type: 'warning',
           })
         } else {
-          let { code, msg } = await startActiveLearning({
+          this.autoIcon = 'el-icon-loading'
+          let { msg } = await startActiveLearning({
             datasetName: this.queryForm.datasetName,
             selector: this.queryForm.selector,
             classifier: this.queryForm.classifier,
           })
-          if (code === 200 && msg == 'success') {
+          if (msg == 'success') {
             this.$message({
               message: 'Auto Labeling Started',
               type: 'success',
@@ -461,6 +462,7 @@
               type: 'error',
             })
           }
+          this.autoIcon = 'el-icon-check'
         }
       },
       handleSizeChange(val) {
