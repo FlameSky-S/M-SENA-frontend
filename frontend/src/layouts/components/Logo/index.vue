@@ -16,7 +16,7 @@
     name: 'Logo',
     data() {
       return {
-        title: 'M-SENA-System',
+        title: 'M-SENA Platform',
       }
     },
     computed: {
