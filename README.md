@@ -1,3 +1,18 @@
+M-SENA Platform Frontend
+
+- [Installation](#Installation)
+- [Usage](#Usage)
+  - [Dataset](#Dataset)
+    - [Dataset Management](#Dataset-Management)
+    - [Dataset Details](#Dataset-Details)
+    - [Dataset Labeling](#Dataset-Labeling)
+  - [Model](#Model)
+    - [Model Management](#Model-Management)
+    - [Model Training](#Model-Training)
+  - [Analysis](#Installation)
+    - [Results](#Results)
+  - [Task List](#Task-List)
+
 # Installation
 
 # Usage
@@ -60,7 +75,7 @@ This page lists all the models available in the system. Feel free to add new mod
 
 ![](./img/Model-Management.png)
 
-The "Results" button leads to ["Model Results"]() page where trained results of the model is ilsted. The "Train" button leads to ["Model Training"]() page where you can train the model with specific parameters.
+The "Results" button leads to ["Results"]() page where trained results of the model is ilsted. The "Train" button leads to ["Model Training"]() page where you can train the model with specific parameters.
 
 ### Model Training
 
@@ -70,11 +85,10 @@ You can modify model parameters and start training tasks on this page.
 
 The "Train Mode" has two options, "Tune" and "Train". The "Tune Mode" allows you to try different sets of parameter combinations. To do this, simply quote the parameters with square brackets. Here's an example:
 
-```json
+```text
 {
    ...
 	"early_stop": [12,13,14,15,16],
-   ...
 	"batch_size": [32,64,128],
    ...
 }
@@ -84,11 +98,11 @@ In this example, the system will search through 15 different sets of parameters,
 
 The "Train Mode" works similar with "Tune Mode", but accepts just one set of parameter. However, the trained models will be saved for further analysis in ["Analysis"]() section.
 
-After clicking the "Start" button, the training task will be listed in the ["Task List"]() to the right. Training results will be listed on ["Model Results"]() page.
+After clicking the "Start" button, the training task will be listed in the ["Task List"]() to the right. Training results will be listed on ["Results"]() page.
 
 ## Analysis
 
-### Model Results
+### Results
 
 ### Model Comparison
 
