@@ -11,9 +11,47 @@ This project is the frontend of the [M-SENA Platform](https://github.com/thuiar/
     - [Model Training](#Model-Training)
   - [Analysis](#Installation)
     - [Results](#Results)
+    - [Result Details](#Result-Details)
+    - [Model Comparison](#Model-Comparison)
+    - [Live Demo](#Live-Demo)
   - [Task List](#Task-List)
 
 # Installation
+
+## Docker
+
+We provide a Docker image which have both frontend and backend installed and configured. Click [Here]() to download the image.
+
+## Use Release Packages
+
+Go to the [release page]() and download the latest package. Unzip the files and put them under the directory of your web server. Here's an example config file with nginx:
+
+```text
+/etc/nginx/sites-available
+
+   ... default configuration ...
+   server {
+      listen 80 default_server;
+      root /home/thuiar/dist;    # directory of web files
+      index.html;
+      ... default configuration ...
+   }
+
+```
+
+## Compile from source code
+
+### Dependencies
+
+1. nodejs
+
+```bash
+apt install npm
+```
+
+### Build
+
+Clone this repo and cd into the frontend directory. Run `npm run build` to compile. The output files should be under `dist` folder.
 
 # Usage
 
@@ -27,7 +65,7 @@ This page lists all the datasets available in the database along with some brief
 
 1. Add/Rescan Dataset
 
-The "Add/Update" button adds/updates a single dataset according to the given dataset name to the left. The "Rescan" button delete all existing datasets and re-add them along with new datasets. For detailed instructions on formatting and placing datasets, please refer to the [backend readme]()
+The "Add/Update" button adds/updates a single dataset according to the given dataset name to the left. The "Rescan" button delete all existing datasets and re-add them along with new datasets. For detailed instructions on formatting and placing datasets, please refer to the [backend readme](https://github.com/iyuge2/M-SENA-Backend#datasets)
 
 > Note: After updating one or more datasets, detailed sample data of previously trained results will be lost.
 
@@ -142,7 +180,7 @@ On this page, a live demo is presented to you with love from our team. You can r
 
 2. Select one or more models, the language you will speak in the video, and type in the sentences.
 
-3. Click "Record" button and read your lines. ~~Don't forget to look at the camera and smile~~. Click "Go" to start analyzing. The results will be ready momentarily.
+3. Click "Record" button and read your lines. After finishing recording, you can playback your video clip and re-record if not satisfied. Click "Go" to start analyzing. The results will be ready momentarily.
 
 ## Task List
 
