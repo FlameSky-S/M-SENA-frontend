@@ -1,3 +1,5 @@
+![](https://badgen.net/badge/license/GPLv3/blue)![](https://badgen.net/github/release/FlameSky-S/M-SENA-frontend)
+
 This project is the frontend of the [M-SENA Platform](https://github.com/thuiar/M-SENA/). It is developed base on [Vue.js](https://vuejs.org/) and [Element-ui](https://element.eleme.io/#/en-US).
 
 - [Installation](#Installation)
@@ -24,7 +26,7 @@ We provide a Docker image which have both frontend and backend installed and con
 
 ## Use Release Packages
 
-Go to the [release page]() and download the latest package. Unzip the files and put them under the directory of your web server. Here's an example config file with nginx:
+1. Go to the [release page]() and download the latest package. Unzip the files and put them under the directory of your web server. Here's an example config file with nginx:
 
 ```text
 /etc/nginx/sites-available
@@ -37,6 +39,14 @@ Go to the [release page]() and download the latest package. Unzip the files and 
       ... default configuration ...
    }
 
+```
+
+2. Open baseURL.js located under `static` folder and change the IP address to your backend server's IP.
+
+```text
+./static/baseURL.js
+
+  window.baseURL = 'http://xx.xxx.xxx.xx:5000'
 ```
 
 ## Compile from source code
