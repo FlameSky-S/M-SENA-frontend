@@ -1,7 +1,7 @@
 <template>
   <div class="logo-container">
     <router-link to="/">
-      <el-image class="logo" src="./favicon.ico" />
+      <el-image class="logo" src="./logo.png" />
       <span class="title" :title="title">
         {{ title }}
       </span>
