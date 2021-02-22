@@ -1,12 +1,10 @@
-# M-SENA-frontend
+# Installation
 
-## Installation
+# Usage
 
-## Usage
+## Dataset
 
-### Dataset
-
-#### Dataset Management
+### Dataset Management
 
 This page lists all the datasets available in the database along with some brief introduction.
 
@@ -24,13 +22,13 @@ The "Details" button leads to a ["Dataset Details"]() page where more detailed i
 
 The "Lock/Unlock" button locks/unlocks the dataset. Locked datasets will not show up in the ["Dataset Labeing"]() page.
 
-#### Dataset Details
+### Dataset Details
 
 More information is given in this page, including data distribution charts, sample lists with filters and video players for each sample.
 
 ![](./img/Dataset-Details.png)
 
-#### Dataset Labeling
+### Dataset Labeling
 
 All the unlocked datsets are listed here. The "Label" button leads to a new page where all the labeling configurations and operations are given. The "Export" button exports all samples with their labels in the format of csv files.
 
@@ -54,9 +52,9 @@ After clicking the "Manual" button, the page will look like this:
 
 2. Use these buttons to navigate through the given sample list. Clikc "Submit" button to save all labels. You don't have to label all the samples in the list. However, the more samples you label, the higher the accuracy will be for the next round of auto labeling.
 
-### Model
+## Model
 
-#### Model Management
+### Model Management
 
 This page lists all the models available in the system. Feel free to add new models.
 
@@ -64,7 +62,7 @@ This page lists all the models available in the system. Feel free to add new mod
 
 The "Results" button leads to ["Model Results"]() page where trained results of the model is ilsted. The "Train" button leads to ["Model Training"]() page where you can train the model with specific parameters.
 
-#### Model Training
+### Model Training
 
 You can modify model parameters and start training tasks on this page.
 
@@ -88,12 +86,12 @@ The "Train Mode" works similar with "Tune Mode", but accepts just one set of par
 
 After clicking the "Start" button, the training task will be listed in the ["Task List"]() to the right. Training results will be listed on ["Model Results"]() page.
 
-### Analysis
+## Analysis
 
-#### Model Results
+### Model Results
 
-#### Model Comparison
+### Model Comparison
 
-#### Live Demo
+### Live Demo
 
-### Task List
+## Task List
