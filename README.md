@@ -1,8 +1,12 @@
-![](https://badgen.net/badge/license/GPLv3/blue)![](https://badgen.net/github/release/FlameSky-S/M-SENA-frontend)
+[![](https://badgen.net/badge/license/GPL-3.0/blue)](#License)[![](https://badgen.net/github/release/FlameSky-S/M-SENA-frontend)](https://github.com/FlameSky-S/M-SENA-frontend/releases)[![](https://badgen.net/github/issues/FlameSky-S/M-SENA-frontend)](https://github.com/FlameSky-S/M-SENA-frontend/issues)[![](https://badgen.net/badge/contact/THUIAR/green)](https://thuiar.github.io/)
 
 This project is the frontend of the [M-SENA Platform](https://github.com/thuiar/M-SENA/). It is developed base on [Vue.js](https://vuejs.org/) and [Element-ui](https://element.eleme.io/#/en-US).
 
 - [Installation](#Installation)
+  - [Docker](#Docker)
+  - [Release Packages](#Release-Packages)
+  - [Compile From Source](#Compile-From-Source)
+  - [About Https](#About-HTTPS)
 - [Usage](#Usage)
   - [Dataset](#Dataset)
     - [Dataset Management](#Dataset-Management)
@@ -17,6 +21,7 @@ This project is the frontend of the [M-SENA Platform](https://github.com/thuiar/
     - [Model Comparison](#Model-Comparison)
     - [Live Demo](#Live-Demo)
   - [Task List](#Task-List)
+- [License](#License)
 
 # Installation
 
@@ -24,7 +29,7 @@ This project is the frontend of the [M-SENA Platform](https://github.com/thuiar/
 
 We provide a Docker image which have both frontend and backend installed and configured. Click [Here]() to download the image.
 
-## Use Release Packages
+## Release Packages
 
 1. Go to the [release page]() and download the latest package. Unzip the files and put them under the directory of your web server. Here's an example config file with nginx:
 
@@ -49,19 +54,36 @@ We provide a Docker image which have both frontend and backend installed and con
   window.baseURL = 'http://xx.xxx.xxx.xx:5000'
 ```
 
-## Compile from source code
+## Compile From Source
 
 ### Dependencies
 
-1. nodejs
+1. node.js
 
 ```bash
-apt install npm
+apt install nodejs npm
 ```
 
 ### Build
 
-Clone this repo and cd into the frontend directory. Run `npm run build` to compile. The output files should be under `dist` folder.
+Run the following commands to compile. The output files should be under `dist` folder. Just copy them to your web root directory and set it up like in [this section](#Use-Release-Packages).
+
+```shell
+git clone https://github.com/FlameSky-S/M-SENA-frontend.git
+cd M-SENA-frontend/frontend
+npm i
+npm run build
+```
+
+## About HTTPS
+
+Some features (the [Live Demo](#Live-Demo) page) of the M-SENA Platform requires the page to be loaded in a secure context. A secure context is, in short, a page loaded using HTTPS or the `file:///` URL scheme, or a page loaded from localhost. If you find configuring HTTPS inconvenient, there are 3 possible workarounds for you:
+
+1. Load the website from localhost. That means you have to deploy M-SENA-frontend and visit the website from the same machine.
+
+2. Use port fowarding. Just foward the port of the web server (default 80, may differ when specified in config file) to your PC. For example: `yourPC:8080 -> serverIP:80`. Then you can visit `localhost:8080` on your PC.
+
+3. Set Chrome flags. For those who use Chrome, visit `chrome://flags` and search for `Insecure origins treated as secure` option. Add your web server's IP, select "Enabled" on the right, and relaunch Chrome. Then you can visit M-SENA as if you have enabled HTTPS on it.
 
 # Usage
 
@@ -186,7 +208,7 @@ On this page, a live demo is presented to you with love from our team. You can r
 
 1. Select video and audio device. Click "Init Cam" button to turn on the selected devices.
 
-> Note: If you deploy your server on an insecure environment (http) rather than a secure one (https), you will get a blank device list. See [Installation]() for a possible solution.
+> Note: You will get a blank device list if the browsing context is insecure (that is, the page is loaded using HTTP rather than HTTPS). See [About HTTPS](#About-Https) for possible solutions.
 
 2. Select one or more models, the language you will speak in the video, and type in the sentences.
 
@@ -197,3 +219,7 @@ On this page, a live demo is presented to you with love from our team. You can r
 The "Task List" button is on the top right corner. You can monitor task status here. Deleting tasks won't effect the results.
 
 ![](./img/Task-List.png)
+
+# License
+
+M-SENA-frontend is published under the GNU GPL 3 license.
