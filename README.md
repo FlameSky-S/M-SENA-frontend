@@ -1,4 +1,4 @@
-[![](https://badgen.net/badge/license/GPL-3.0/blue)](#License)[![](https://badgen.net/github/release/FlameSky-S/M-SENA-frontend)](https://github.com/FlameSky-S/M-SENA-frontend/releases)[![](https://badgen.net/github/issues/FlameSky-S/M-SENA-frontend)](https://github.com/FlameSky-S/M-SENA-frontend/issues)[![](https://badgen.net/badge/contact/THUIAR/green)](https://thuiar.github.io/)
+[![](https://badgen.net/badge/license/GPL-3.0/green)](#License) [![](https://badgen.net/github/release/FlameSky-S/M-SENA-frontend)](https://github.com/FlameSky-S/M-SENA-frontend/releases) [![](https://badgen.net/github/issues/FlameSky-S/M-SENA-frontend)](https://github.com/FlameSky-S/M-SENA-frontend/issues) [![](https://badgen.net/badge/contact/THUIAR/purple)](https://thuiar.github.io/)
 
 This project is the frontend of the [M-SENA Platform](https://github.com/thuiar/M-SENA/). It is developed base on [Vue.js](https://vuejs.org/) and [Element-ui](https://element.eleme.io/#/en-US).
 
@@ -81,7 +81,7 @@ Some features (the [Live Demo](#Live-Demo) page) of the M-SENA Platform requires
 
 1. Load the website from localhost. That means you have to deploy M-SENA-frontend and visit the website from the same machine.
 
-2. Use port fowarding. Just foward the port of the web server (default 80, may differ when specified in config file) to your PC. For example: `yourPC:8080 -> serverIP:80`. Then you can visit `localhost:8080` on your PC.
+2. Use port fowarding. Just foward the port of the web server (default 80, may differ when specified in config file) to your PC. For example: `serverIP:80 -> yourPC:8080`. Then you can visit `localhost:8080` on your PC.
 
 3. Set Chrome flags. For those who use Chrome, visit `chrome://flags` and search for `Insecure origins treated as secure` option. Add your web server's IP, select "Enabled" on the right, and relaunch Chrome. Then you can visit M-SENA as if you have enabled HTTPS on it.
 
