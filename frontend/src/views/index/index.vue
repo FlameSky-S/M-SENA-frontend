@@ -76,7 +76,9 @@
             <div align="center" style="height: 100%">
               <el-row>
                 <h3>Easy Management</h3>
-                <el-image :src="require('@/assets/test2.gif')"></el-image>
+                <el-image
+                  :src="require('@/assets/EasyManagement.png')"
+                ></el-image>
                 <p>Manage datasets and models with our uniquely designed UI.</p>
                 <p>Import your own data/model and start training!</p>
               </el-row>
@@ -86,7 +88,9 @@
             <div align="center" style="height: 100%">
               <el-row>
                 <h3>Auto Labeling</h3>
-                <el-image :src="require('@/assets/test2.gif')"></el-image>
+                <el-image
+                  :src="require('@/assets/AutoLabeling.png')"
+                ></el-image>
                 <p>Strugging with data-labeling?</p>
                 <p>
                   Try out our auto labeling feature based on active learning
@@ -99,7 +103,9 @@
             <div align="center" style="height: 100%">
               <el-row>
                 <h3>Visual Analysis</h3>
-                <el-image :src="require('@/assets/test2.gif')"></el-image>
+                <el-image
+                  :src="require('@/assets/VisualAnalysis.png')"
+                ></el-image>
                 <p>To help you better understand your model,</p>
                 <p>
                   M-SENA provides data visualization as well as feature
@@ -112,7 +118,9 @@
             <div align="center" style="height: 100%">
               <el-row>
                 <h3>Fully Documented</h3>
-                <el-image :src="require('@/assets/test2.gif')"></el-image>
+                <el-image
+                  :src="require('@/assets/FullyDocumented.png')"
+                ></el-image>
                 <p>Having problems with the system?</p>
                 <p>
                   Find solutions in our support documents. Also feel free to
