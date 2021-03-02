@@ -125,7 +125,7 @@ After clicking the "Label" button, the new page looks like this:
 
 The operation panel is on top right of the page. The classifier and selector used in auto labeling is selected and configured here. For more details about the auto labeling algorithm, please read [our paper]().
 
-The labeling process should be a loop like this: "Manual --> Auto --> Manual", till all samples are labeled. When labeling a new dataset, a few labels should be manually given first. After each round of auto labeling, a few samples requiring manual correction will be sorted out by the algorithm.
+The labeling process should be a loop like this: "Auto --> Manual --> Auto", till all samples are labeled. After each round of auto labeling, a few samples requiring manual labeling will be sorted out by the algorithm and presented to the user.
 
 After clicking the "Auto Label" button, the labeling task will start in background. The task is listed in the ["Task List"](#Task-List).
 

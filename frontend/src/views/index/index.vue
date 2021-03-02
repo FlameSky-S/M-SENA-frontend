@@ -121,7 +121,7 @@
                 <el-image
                   :src="require('@/assets/FullyDocumented.png')"
                 ></el-image>
-                <p>Having problems with the system?</p>
+                <p>Having problems using the system?</p>
                 <p>
                   Find solutions in our support documents. Also feel free to
                   submit issues on Github
