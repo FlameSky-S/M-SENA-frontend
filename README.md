@@ -7,7 +7,7 @@ This project is the frontend of the [M-SENA Platform](https://github.com/thuiar/
   - [Release Packages](#Release-Packages)
   - [Compile From Source](#Compile-From-Source)
   - [About Https](#About-HTTPS)
-- [Usage](#Usage)
+- [How to Use](#How-to-Use)
   - [Dataset](#Dataset)
     - [Dataset Management](#Dataset-Management)
     - [Dataset Details](#Dataset-Details)
@@ -85,7 +85,7 @@ Some features (the [Live Demo](#Live-Demo) page) of the M-SENA Platform requires
 
 3. Set Chrome flags. For those who use Chrome, visit `chrome://flags` and search for `Insecure origins treated as secure` option. Add your web server's IP, select "Enabled" on the right, and relaunch Chrome. Then you can visit M-SENA as if you have enabled HTTPS on it.
 
-# Usage
+# How to Use
 
 ## Dataset
 
