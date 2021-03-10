@@ -27,11 +27,11 @@ This project is the frontend of the [M-SENA Platform](https://github.com/thuiar/
 
 ## Docker
 
-We provide a Docker image which have both frontend and backend installed and configured. Click [Here]() to download the image.
+We provide a [docker image](https://hub.docker.com/repository/docker/flamesky/m-sena-platform/general) in which both frontend and backend are installed and configured. See the [main repo](https://github.com/thuiar/M-SENA) for details.
 
 ## Release Packages
 
-1. Go to the [release page]() and download the latest package. Unzip the files and put them under the directory of your web server. Here's an example config file with nginx:
+1. Go to the [release page](https://github.com/FlameSky-S/M-SENA-frontend/releases) and download the latest package. Unzip the files and put them under the directory of your web server. Here's an example config file with nginx:
 
 ```text
 /etc/nginx/sites-available
