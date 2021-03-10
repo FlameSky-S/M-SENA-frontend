@@ -61,18 +61,18 @@ We provide a [docker image](https://hub.docker.com/repository/docker/flamesky/m-
 1. node.js
 
 ```bash
-apt install nodejs npm
+$ apt install nodejs npm
 ```
 
 ### Build
 
-Run the following commands to compile. The output files should be under `dist` folder. Just copy them to your web root directory and set it up like in [this section](#Use-Release-Packages).
+Run the following commands to compile. The output files should be under `dist` folder. Just copy them to your web root directory and set it up like in [this section](#Release-Packages).
 
 ```shell
-git clone https://github.com/FlameSky-S/M-SENA-frontend.git
-cd M-SENA-frontend/frontend
-npm i
-npm run build
+$ git clone https://github.com/FlameSky-S/M-SENA-frontend.git
+$ cd M-SENA-frontend/frontend
+$ npm i
+$ npm run build
 ```
 
 ## About HTTPS
