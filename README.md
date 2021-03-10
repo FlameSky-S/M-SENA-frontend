@@ -27,7 +27,7 @@ This project is the frontend of the [M-SENA Platform](https://github.com/thuiar/
 
 ## Docker
 
-We provide a [docker image](https://hub.docker.com/repository/docker/flamesky/m-sena-platform/general) in which both frontend and backend services are installed and configured. See the [main repo](https://github.com/thuiar/M-SENA#docker) for details.
+We provide a [docker image](https://hub.docker.com/repository/docker/flamesky/m-sena-platform) in which both frontend and backend services are installed and configured. See the [main repo](https://github.com/thuiar/M-SENA#docker) for details.
 
 ## Release Packages
 
