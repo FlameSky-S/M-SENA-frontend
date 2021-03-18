@@ -7,7 +7,7 @@ This project is the frontend of the [M-SENA Platform](https://github.com/thuiar/
   - [Release Packages](#Release-Packages)
   - [Compile From Source](#Compile-From-Source)
   - [About Https](#About-HTTPS)
-- [Usage](#Usage)
+- [How to Use](#How-to-Use)
   - [Dataset](#Dataset)
     - [Dataset Management](#Dataset-Management)
     - [Dataset Details](#Dataset-Details)
@@ -27,11 +27,11 @@ This project is the frontend of the [M-SENA Platform](https://github.com/thuiar/
 
 ## Docker
 
-We provide a Docker image which have both frontend and backend installed and configured. Click [Here]() to download the image.
+We provide a [docker image](https://hub.docker.com/repository/docker/flamesky/m-sena-platform) in which both frontend and backend services are installed and configured. See the [main repo](https://github.com/thuiar/M-SENA#docker) for details.
 
 ## Release Packages
 
-1. Go to the [release page]() and download the latest package. Unzip the files and put them under the directory of your web server. Here's an example config file with nginx:
+1. Go to the [release page](https://github.com/FlameSky-S/M-SENA-frontend/releases) and download the latest package. Unzip the files and put them under the directory of your web server. Here's an example config file with nginx:
 
 ```text
 /etc/nginx/sites-available
@@ -61,18 +61,18 @@ We provide a Docker image which have both frontend and backend installed and con
 1. node.js
 
 ```bash
-apt install nodejs npm
+$ apt install nodejs npm
 ```
 
 ### Build
 
-Run the following commands to compile. The output files should be under `dist` folder. Just copy them to your web root directory and set it up like in [this section](#Use-Release-Packages).
+Run the following commands to compile. The output files should be under `dist` folder. Just copy them to your web root directory and set it up like in [this section](#Release-Packages).
 
 ```shell
-git clone https://github.com/FlameSky-S/M-SENA-frontend.git
-cd M-SENA-frontend/frontend
-npm i
-npm run build
+$ git clone https://github.com/FlameSky-S/M-SENA-frontend.git
+$ cd M-SENA-frontend/frontend
+$ npm i
+$ npm run build
 ```
 
 ## About HTTPS
@@ -85,7 +85,7 @@ Some features (the [Live Demo](#Live-Demo) page) of the M-SENA Platform requires
 
 3. Set Chrome flags. For those who use Chrome, visit `chrome://flags` and search for `Insecure origins treated as secure` option. Add your web server's IP, select "Enabled" on the right, and relaunch Chrome. Then you can visit M-SENA as if you have enabled HTTPS on it.
 
-# Usage
+# How to Use
 
 ## Dataset
 
