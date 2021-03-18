@@ -144,20 +144,12 @@
       </el-col>
       <el-col :xs="24" :sm="24" :md="24" :lg="10" :xl="12">
         <div class="contributor">
-          <h2 class="header2">Special Thanks</h2>
+          <h2 class="header2">Collaboration</h2>
           <p style="font-size: 16px; line-height: 30px">
-            <a href="https://github.com/ElemeFE/element" target="_blank">
-              Element UI
-            </a>
-            ,
-            <a
-              href="https://github.com/chuzhixin/vue-admin-beautiful"
-              target="_blank"
-            >
-              Vue-Admin-Beautiful
-            </a>
-            ,
-            <a href="https://github.com/pallets/flask" target="_blank">Flask</a>
+            For commercial collaborations (model customization, data
+            customization, end-to-end function development, etc.), please
+            contact THUIAR Team at
+            <a href="mailto://xuhua@tsinghua.edu.cn">xuhua@tsinghua.edu.cn</a>
           </p>
         </div>
       </el-col>
