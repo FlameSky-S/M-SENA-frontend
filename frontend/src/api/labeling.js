@@ -1,12 +1,6 @@
 import request from '@/utils/request'
 
-export function startActiveLearning(data) {
-  return request({
-    url: '/dataEnd/startActiveLearning',
-    method: 'post',
-    data,
-  })
-}
+// utils
 
 export function exportLabels(data) {
   return request({
@@ -16,58 +10,155 @@ export function exportLabels(data) {
   })
 }
 
-export function getALModels() {
+export function getMyProgress(data) {
   return request({
-    url: '/dataEnd/getALModels',
-    method: 'get',
-  })
-}
-
-export function getClassifierConfig(data) {
-  return request({
-    url: '/dataEnd/getClassifierConfig',
+    url: 'dataEnd/getMyProgress',
     method: 'post',
     data,
   })
 }
 
-export function getSelectorConfig(data) {
+// Admin Functions
+
+export function getUsersForAssignment(data) {
   return request({
-    url: '/dataEnd/getSelectorConfig',
+    url: '/dataEnd/getUsersForAssignment',
     method: 'post',
     data,
   })
 }
 
-export function saveClassifierConfig(data) {
+export function assignTasks(data) {
   return request({
-    url: '/dataEnd/saveClassifierConfig',
+    url: '/dataEnd/assignTasks',
     method: 'post',
     data,
   })
 }
 
-export function saveSelectorConfig(data) {
+export function getAllProgress(data) {
   return request({
-    url: '/dataEnd/saveSelectorConfig',
+    url: '/dataEnd/getAllProgress',
     method: 'post',
     data,
   })
 }
 
-// get next sampleId to label.
-export function getHardSamples(data) {
+export function calculateLables(data) {
   return request({
-    url: '/dataEnd/getHardSamples',
+    url: '/dataEnd/calculateLables',
     method: 'post',
     data,
   })
 }
 
-// submit manual labeling results.
-export function submitLabelResult(data) {
+export function getLabelingDetails(data) {
   return request({
-    url: '/dataEnd/submitLabelResult',
+    url: '/dataEnd/getLabelingDetails',
+    method: 'post',
+    data,
+  })
+}
+
+// Text Label
+
+export function getTextSample(data) {
+  return request({
+    url: 'dataEnd/getTextSample',
+    method: 'post',
+    data,
+  })
+}
+
+export function getTextSampleNext(data) {
+  return request({
+    url: 'dataEnd/getTextSampleNext',
+    method: 'post',
+    data,
+  })
+}
+
+export function submitTextLabel(data) {
+  return request({
+    url: '/dataEnd/submitTextLabel',
+    method: 'post',
+    data,
+  })
+}
+
+// Audio Label
+
+export function getAudioSample(data) {
+  return request({
+    url: 'dataEnd/getAudioSample',
+    method: 'post',
+    data,
+  })
+}
+
+export function getAudioSampleNext(data) {
+  return request({
+    url: 'dataEnd/getAudioSampleNext',
+    method: 'post',
+    data,
+  })
+}
+
+export function submitAudioLabel(data) {
+  return request({
+    url: '/dataEnd/submitAudioLabel',
+    method: 'post',
+    data,
+  })
+}
+
+// Video Label
+
+export function getVideoSample(data) {
+  return request({
+    url: '/dataEnd/getVideoSample',
+    method: 'post',
+    data,
+  })
+}
+
+export function getVideoSampleNext(data) {
+  return request({
+    url: '/dataEnd/getVideoSampleNext',
+    method: 'post',
+    data,
+  })
+}
+
+export function submitVideoLabel(data) {
+  return request({
+    url: '/dataEnd/submitVideoLabel',
+    method: 'post',
+    data,
+  })
+}
+
+// Multimodal Label
+
+export function getMultiSample(data) {
+  return request({
+    url: '/dataEnd/getMultiSample',
+    method: 'post',
+    data,
+  })
+}
+
+export function getMultiSampleNext(data) {
+  return request({
+    url: '/dataEnd/getMultiSampleNext',
+    method: 'post',
+    data,
+  })
+}
+
+export function submitMultiLabel(data) {
+  return request({
+    url: '/dataEnd/submitMultiLabel',
     method: 'post',
     data,
   })

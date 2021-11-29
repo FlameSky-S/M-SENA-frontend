@@ -14,7 +14,8 @@
       </el-col>
       <el-col :xs="20" :sm="12" :md="12" :lg="12" :xl="12">
         <div class="right-panel">
-          <task-bar class="hidden-xs-only"></task-bar>
+          <user-bar />
+          <task-bar />
         </div>
       </el-col>
     </el-row>
@@ -23,11 +24,13 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import { Breadcrumb, TaskBar } from '@/layouts/components'
+  import { Breadcrumb, UserBar, TaskBar } from '@/layouts/components'
+  // import UserBar from '@/layouts
   export default {
     name: 'NavBar',
     components: {
       Breadcrumb,
+      UserBar,
       TaskBar,
     },
     data() {
@@ -42,6 +45,10 @@
         // device: 'settings/device',
         // routes: 'routes/routes',
       }),
+    },
+    created() {
+      // console.log(UserBar)
+      // console.log(TaskBar)
     },
     methods: {
       ...mapActions({

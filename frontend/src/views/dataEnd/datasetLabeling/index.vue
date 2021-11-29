@@ -49,9 +49,11 @@
           width="200px"
         >
           <template #default="{ row }">
-            <el-button type="text" @click="startLabeling(row)">Label</el-button>
+            <el-button type="text" @click="startLabeling(row)">
+              Details
+            </el-button>
             <el-button type="text" @click="exportDataset(row)">
-              Export
+              Export CSV
             </el-button>
           </template>
         </el-table-column>

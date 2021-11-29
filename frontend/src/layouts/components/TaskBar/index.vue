@@ -2,7 +2,7 @@
   <span>
     <div class="task-btn" @click="handleOpenTaskBar">
       <i class="el-icon-s-claim" />
-      <span>Task List</span>
+      <span class="hidden-xs-only">Task List</span>
     </div>
     <el-drawer
       title="Task List"
@@ -225,7 +225,7 @@
   import { getTaskList, delTask, stopTask, delAllTask } from '@/api/task'
   import * as dayjs from 'dayjs'
   export default {
-    name: 'ThemeBar',
+    name: 'TaskBar',
     data() {
       return {
         drawerVisible: false,
