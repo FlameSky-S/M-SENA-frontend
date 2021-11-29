@@ -8,10 +8,11 @@ export function getDatasetList(data) {
   })
 }
 
-export function scanDatasets() {
+export function scanDatasets(data) {
   return request({
     url: '/dataEnd/scanDatasets',
-    method: 'get',
+    method: 'post',
+    data,
   })
 }
 

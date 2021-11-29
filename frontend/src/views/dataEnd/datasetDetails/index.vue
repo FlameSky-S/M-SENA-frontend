@@ -4,10 +4,10 @@
     <p class="tips"></p>
     <el-row :gutter="80">
       <div class="top-row">
-        <el-col :xs="24" :sm="24" :md="24" :lg="10" :xl="14">
+        <el-col :xs="24" :sm="24" :md="24" :lg="14" :xl="14">
           <h2>Basic Info</h2>
           <el-row :gutter="20">
-            <el-col :xs="24" :sm="12" :md="12" :lg="24" :xl="12">
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form label-width="120px" label-position="left">
                 <el-form-item label="Dataset:">
                   <el-input
@@ -20,7 +20,7 @@
                 </el-form-item>
               </el-form>
             </el-col>
-            <el-col :xs="24" :sm="12" :md="12" :lg="24" :xl="12">
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form label-width="120px" label-position="left">
                 <el-form-item label="Status:">
                   <el-input v-model="datasetDetails.locked" readonly></el-input>
@@ -50,17 +50,17 @@
             </el-col>
           </el-row>
         </el-col>
-        <el-col :xs="24" :sm="24" :md="24" :lg="14" :xl="10">
+        <el-col :xs="24" :sm="24" :md="24" :lg="10" :xl="10">
           <h2>Data Distribution</h2>
           <el-row>
-            <el-col :span="12">
+            <el-col :xs="12" :sm="12" :md="12" :lg="24" :xl="12">
               <div
                 id="dataDistribution1"
                 ref="dataDistribution1"
                 style="width: 100%; height: 220px; margin: 0 auto"
               ></div>
             </el-col>
-            <el-col :span="12">
+            <el-col :xs="12" :sm="12" :md="12" :xl="12" class="hidden-lg-only">
               <div
                 id="dataDistribution2"
                 ref="dataDistribution2"
@@ -126,13 +126,6 @@
             style="width: 100%"
           >
             <el-table-column
-              fixed
-              label="Sample ID"
-              prop="sample_id"
-              width="120px"
-              align="center"
-            ></el-table-column>
-            <el-table-column
               show-overflow-tooltip
               label="Video ID"
               prop="video_id"
@@ -147,26 +140,27 @@
               align="center"
             ></el-table-column>
             <el-table-column
-              label="Label"
+              label="C_Label"
               prop="annotation"
               width="120px"
               align="center"
             >
               <template slot-scope="scope">
                 <el-tag
-                  :type="
-                    scope.row.annotation == 'Negative'
-                      ? 'warning'
-                      : scope.row.annotation == 'Neutral'
-                      ? 'primary'
-                      : 'success'
-                  "
+                  :type="tagMapper(scope.row.annotation)"
                   disable-transitions
                 >
                   {{ scope.row.annotation }}
                 </el-tag>
               </template>
             </el-table-column>
+            <el-table-column
+              show-overflow-tooltip
+              label="R_Label"
+              prop="label_value"
+              width="120px"
+              align="center"
+            ></el-table-column>
             <el-table-column
               show-overflow-tooltip
               label="Text"
@@ -241,8 +235,8 @@
           totalCount: null,
           language: null,
           description: null,
-          difficultyCount: null, // data list for pie chart 2
           classCount: null, // data list for pie chart 1
+          typeCount: null, // data list for pie chart 2
           instanceList: null, // a copy of response data
         },
         myChart_1: null,
@@ -273,17 +267,17 @@
         var pie_dv_2 = this.$refs.dataDistribution2
         this.myChart_1 = echarts.init(pie_dv_1)
         this.myChart_2 = echarts.init(pie_dv_2)
-        var difficulty_data = []
-        for (var key in this.datasetDetails.difficultyCount) {
-          difficulty_data.push({
-            value: this.datasetDetails.difficultyCount[key],
-            name: key,
-          })
-        }
         var label_data = []
         for (var key in this.datasetDetails.classCount) {
           label_data.push({
             value: this.datasetDetails.classCount[key],
+            name: key,
+          })
+        }
+        var split_data = []
+        for (var key in this.datasetDetails.typeCount) {
+          split_data.push({
+            value: this.datasetDetails.typeCount[key],
             name: key,
           })
         }
@@ -302,6 +296,10 @@
           tooltip: {
             trigger: 'item',
             position: [0, 0],
+            formatter: function (params) {
+              var res = `${params.marker} ${params.data.name}: <b>${params.percent}%</b>`
+              return res
+            },
           },
           series: [
             {
@@ -315,15 +313,15 @@
                   show: true,
                   fontSize: '14',
                   fontWeight: 'bold',
+                  formatter: '{b}\n\n{c}',
                 },
               },
             },
           ],
         })
-
         this.myChart_2.setOption({
           title: {
-            text: 'Difficulty',
+            text: 'Split',
             x: 'center',
             y: 'top',
           },
@@ -335,19 +333,24 @@
           tooltip: {
             trigger: 'item',
             position: [0, 0],
+            formatter: function (params) {
+              var res = `${params.marker} ${params.data.name}: <b>${params.percent}%</b>`
+              return res
+            },
           },
           series: [
             {
-              name: 'Difficulty',
+              name: 'Split',
               type: 'pie',
               radius: ['40%', '75%'],
-              data: difficulty_data,
+              data: split_data,
               label: { show: false, position: 'center' },
               emphasis: {
                 label: {
                   show: true,
                   fontSize: '14',
                   fontWeight: 'bold',
+                  formatter: '{b}\n\n{c}',
                 },
               },
             },
@@ -356,6 +359,20 @@
       })()
     },
     methods: {
+      tagMapper(text) {
+        switch (text) {
+          case 'Positive':
+            return 'success'
+          case 'Neutral':
+            return ''
+          case 'Negative':
+            return 'warning'
+          case '-':
+            return 'info'
+          default:
+            return ''
+        }
+      },
       handleResize() {
         this.myChart_1.resize()
         this.myChart_2.resize()
@@ -371,6 +388,7 @@
         this.fetchDetails()
       },
       showPreview(row) {
+        console.log(row)
         this.$refs['preview'].showPreview(row)
       },
       handleSizeChange(val) {
@@ -385,7 +403,6 @@
         this.listLoading = true
         const { data, totalCount } = await getDetails({
           datasetName: this.queryForm.datasetName,
-          difficulty_filter: 'All',
           sentiment_filter: this.queryForm.label,
           data_mode_filter: this.queryForm.dataSplit,
           id_filter: this.queryForm.videoID,
@@ -405,16 +422,11 @@
         this.datasetDetails.language = data.language
         this.datasetDetails.description = data.description
         this.datasetDetails.locked = data.status
-        let machine = data.difficultyCount['Machine']
-          ? data.difficultyCount['Machine']
-          : 0
-        let human = data.difficultyCount['Human']
-          ? data.difficultyCount['Human']
-          : 0
-        this.datasetDetails.labeled = machine + human
+
+        this.datasetDetails.labeled = data.labeled
 
         this.datasetDetails.classCount = data.classCount
-        this.datasetDetails.difficultyCount = data.difficultyCount
+        this.datasetDetails.typeCount = data.typeCount
       },
     },
   }
