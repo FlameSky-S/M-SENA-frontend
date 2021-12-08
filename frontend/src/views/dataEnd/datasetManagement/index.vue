@@ -5,7 +5,7 @@
     <el-row>
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <div class="dataset-table">
-          <el-form inline>
+          <el-form v-if="isAdmin" inline>
             <el-form-item>
               <el-input
                 v-model="addDataset"
@@ -14,18 +14,8 @@
             </el-form-item>
             <el-form-item>
               <el-button
-                :icon="updateIcon"
+                :icon="rescanIcon"
                 type="primary"
-                @click="handleUpdate"
-              >
-                Add/Update
-              </el-button>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                icon="el-icon-refresh-left"
-                type="primary"
-                plain
                 @click="handleRescan"
               >
                 Rescan
@@ -101,7 +91,11 @@
                   placement="top"
                   :enterable="false"
                 >
-                  <el-button type="text" @click="handleLock(row)">
+                  <el-button
+                    v-if="isAdmin"
+                    type="text"
+                    @click="handleLock(row)"
+                  >
                     {{ row.status === 'locked' ? 'Unlock' : 'Lock' }}
                   </el-button>
                 </el-tooltip>
@@ -139,12 +133,15 @@
         list: [],
         listLoading: true,
         addDataset: '',
-        updateIcon: 'el-icon-plus',
+        rescanIcon: 'el-icon-refresh-left',
       }
     },
     computed: {
       height() {
         return this.$baseTableHeight()
+      },
+      isAdmin() {
+        return this.$store.state.auth.isAdmin
       },
     },
     created() {
@@ -163,22 +160,46 @@
       handleLock(row) {
         if (row.status === 'locked') {
           ;(async () => {
-            await unlockDataset({ datasetName: row.datasetName })
+            await unlockDataset({
+              datasetName: row.datasetName,
+              token: window.sessionStorage.getItem('token'),
+            })
             this.fetchData()
           })()
         } else {
           ;(async () => {
-            await lockDataset({ datasetName: row.datasetName })
+            await lockDataset({
+              datasetName: row.datasetName,
+              token: window.sessionStorage.getItem('token'),
+            })
             this.fetchData()
           })()
         }
       },
-      async handleUpdate() {
-        if (this.addDataset === '') return
-        else {
-          this.updateIcon = 'el-icon-loading'
+      async handleRescan() {
+        if (this.addDataset === '') {
+          this.rescanIcon = 'el-icon-loading'
+          let { msg } = await scanDatasets({
+            token: window.sessionStorage.getItem('token'),
+          })
+          if (msg == 'success') {
+            this.$message({
+              message: 'Dataset Scan Complete',
+              type: 'success',
+            })
+            this.fetchData()
+          } else {
+            this.$message({
+              message: msg,
+              type: 'error',
+            })
+          }
+          this.rescanIcon = 'el-icon-refresh-left'
+        } else {
+          this.rescanIcon = 'el-icon-loading'
           let { msg } = await updateDataset({
             datasetName: this.addDataset,
+            token: window.sessionStorage.getItem('token'),
           })
           if (msg == 'success') {
             this.$message({
@@ -192,48 +213,8 @@
               type: 'error',
             })
           }
-          this.updateIcon = 'el-icon-plus'
+          this.rescanIcon = 'el-icon-refresh-left'
         }
-      },
-      async handleRescan() {
-        const h = this.$createElement
-        let msg = []
-        msg.push(
-          h(
-            'p',
-            null,
-            'Detailed sample data will be lost on Result Details pages. '
-          )
-        )
-        msg.push(h('p', null, 'Are you sure?'))
-
-        this.$msgbox({
-          title: 'Warning',
-          message: h('div', null, msg),
-          confirmButtonText: 'Proceed',
-          showCancelButton: true,
-          type: 'warning',
-          center: true,
-          confirmButtonClass: 'el-button--danger',
-        })
-          .then(async () => {
-            let { msg } = await scanDatasets()
-            if (msg == 'success') {
-              this.$message({
-                message: 'Dataset Rescan Complete',
-                type: 'success',
-              })
-              this.fetchData()
-            } else {
-              this.$message({
-                message: msg,
-                type: 'error',
-              })
-            }
-          })
-          .catch(() => {
-            // cancel button action
-          })
       },
       async fetchData() {
         this.listLoading = true

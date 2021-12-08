@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Layout from '@/layouts'
+import store from '@/store'
+import { verifyToken } from '@/api/user'
 
 Vue.use(VueRouter)
 export const constantRoutes = [
@@ -50,7 +52,7 @@ export const constantRoutes = [
         hidden: true,
       },
       {
-        path: 'datsetLabeling',
+        path: 'datasetLabeling',
         name: 'Dataset Labeling',
         component: () => import('@/views/dataEnd/datasetLabeling/index'),
         meta: {
@@ -166,6 +168,25 @@ export const constantRoutes = [
     ],
   },
   {
+    path: '/user',
+    component: Layout,
+    hidden: true,
+    redirect: 'noRedirect',
+    name: 'User',
+    children: [
+      {
+        path: 'login',
+        name: 'User Login',
+        component: () => import('@/views/user/login'),
+      },
+      {
+        path: 'userManagement',
+        name: 'User Management',
+        component: () => import('@/views/user/userManagement'),
+      },
+    ],
+  },
+  {
     path: '/404',
     name: '404',
     component: () => import('@/views/404'),
@@ -186,6 +207,42 @@ const router = new VueRouter({
   }),
   routes: constantRoutes,
 })
+
+router.beforeEach(async (to, from, next) => {
+  // verify user login status
+  let token = window.sessionStorage.getItem('token')
+  if (token) {
+    var { msg, user_name, is_admin } = await verifyToken({ token: token })
+    store.dispatch('auth/setUser', user_name)
+    store.dispatch('auth/setAdmin', is_admin)
+    if (msg != 'success') {
+      window.sessionStorage.removeItem('token')
+    }
+  } else {
+    var msg = 'fail'
+    store.dispatch('auth/setUser', null)
+    store.dispatch('auth/setAdmin', false)
+  }
+  // console.log(store.state.auth.user)
+  // redirect
+  if (
+    to.path === '/data/datasetLabeling' ||
+    to.path === '/data/labelingDetail'
+  ) {
+    if (msg == 'success') {
+      next()
+    } else {
+      next({
+        path: '/user/login',
+        query: { redirect: '/data/datasetLabeling' },
+      })
+    }
+  } else {
+    // 正常跳转
+    next()
+  }
+})
+
 //注释的地方是允许路由重复点击，如果你觉得框架路由跳转规范太过严格可选择放开
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location, onResolve, onReject) {
