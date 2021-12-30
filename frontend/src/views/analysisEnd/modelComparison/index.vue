@@ -2,7 +2,7 @@
   <div class="batchTest-container">
     <h1 style="margin-left: 2%">Model Comparison</h1>
     <el-row style="margin: 0% 5%">
-      <el-form ref="testSettings" :model="testSettings" inline>
+      <el-form ref="testSettings" :model="testSettings" inline size="mini">
         <el-form-item label="Models:" style="font-weight: bold">
           <el-select
             v-model="testSettings.model"
@@ -259,7 +259,7 @@
   .batchTest-container {
     margin: 0%;
     .test-settings {
-      margin: 0% 5%;
+      margin: 0% 3%;
     }
     .divider {
       margin: 0 0 15px 0;

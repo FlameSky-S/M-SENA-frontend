@@ -5,6 +5,6 @@ const config = {
       : window.baseURL,
   contentType: 'application/json;charset=UTF-8',
   successCode: [200, 0],
-  requestTimeout: 100000,
+  requestTimeout: 300000,
 }
 module.exports = config

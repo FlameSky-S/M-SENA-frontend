@@ -75,13 +75,13 @@
       // },
       handleSelectionChange(value) {
         this.checkedUsers = value
-        console.log(this.checkedUsers)
+        // console.log(this.checkedUsers)
       },
       async handleAssign() {
         this.queryUsers = this.checkedUsers.map(function (item, index) {
           return item.username
         })
-        console.log(this.queryUsers)
+        // console.log(this.queryUsers)
         let { msg } = await assignTasks({
           users: this.queryUsers,
           dataset_name: this.dialogSettings.datasetName,

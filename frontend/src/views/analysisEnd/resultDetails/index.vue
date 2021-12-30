@@ -429,7 +429,9 @@
       ;(async () => {
         for (let key in this.charts) {
           let dom = this.$refs[key]
-          this.charts[key] = echarts.init(dom)
+          if (dom != null) {
+            this.charts[key] = echarts.init(dom)
+          }
         }
         await this.fetchOverall()
         this.genTopCharts()
@@ -441,7 +443,9 @@
     methods: {
       handleResize() {
         for (let key in this.charts) {
-          this.charts[key].resize()
+          if (this.charts[key] != null) {
+            this.charts[key].resize()
+          }
         }
       },
       applyFilter() {
@@ -451,7 +455,6 @@
       resetFilter() {
         this.query3.result_mode = 'All'
         this.query3.data_mode = 'All'
-        this.query3.video_id = ''
         this.query3.video_id = ''
         this.query3.pageNo = 1
         this.fetchSample()
@@ -493,6 +496,7 @@
           null,
           '\t'
         )
+        console.log(this.overall)
       },
       genTopCharts() {
         this.plotEpoch(

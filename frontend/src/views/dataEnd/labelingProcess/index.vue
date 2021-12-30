@@ -127,14 +127,16 @@
         >
           Calculate Labels
         </el-button>
-        <el-button type="primary" plain>Export User Label Data</el-button>
+        <el-button type="primary" plain @click="handleExport">
+          Export User Label Data
+        </el-button>
         <!-- <el-button type="danger" plain>Close Labeling Task</el-button> -->
       </div>
     </div>
     <div v-if="isAdmin" class="bottom-row">
       <el-row style="margin-top: 2%">
         <h2>Sample Status</h2>
-        <el-form :model="queryForm" :inline="true">
+        <el-form :model="queryForm" inline size="mini">
           <el-form-item label="Video ID:">
             <el-input
               v-model="queryForm.videoID"
@@ -287,6 +289,7 @@
     getMyProgress,
     getAllProgress,
     calculateLables,
+    exportUserLabels,
   } from '@/api/labeling'
   import TaskAssignment from './components/taskAssignment.vue'
   import TextLabel from './components/textDialog.vue'
@@ -571,6 +574,31 @@
         } else {
           this.$message({
             message: 'Label Calculation Failed',
+            type: 'error',
+          })
+        }
+        this.dialogVisible = false
+        this.loading = false
+      },
+      async handleExport() {
+        const { msg, url } = await exportUserLabels({
+          token: window.sessionStorage.getItem('token'),
+          datasetName: this.queryForm.datasetName,
+        })
+        if (msg == 'success') {
+          var link = document.createElement('a')
+          link.href = url
+          link.setAttribute('download', '')
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+          this.$message({
+            message: 'Download started',
+            type: 'success',
+          })
+        } else {
+          this.$message({
+            message: 'Export Failed',
             type: 'error',
           })
         }

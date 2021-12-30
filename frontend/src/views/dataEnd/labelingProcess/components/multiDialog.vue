@@ -60,6 +60,9 @@
       </el-form>
     </el-row>
     <div slot="footer">
+      <el-button type="danger" plain @click="handleSubmitQuestionale">
+        Submit Questionale Sample
+      </el-button>
       <el-button plain icon="el-icon-arrow-left" @click="getPrevNext('prev')">
         Prev
       </el-button>
@@ -80,6 +83,7 @@
     getMultiSample,
     getMultiSampleNext,
     submitMultiLabel,
+    submitQuestionableSample,
   } from '@/api/labeling'
   export default {
     name: 'MultiLabel',
@@ -190,6 +194,23 @@
           this.$message({
             message: 'No more unlabeled data',
             type: 'info',
+          })
+        }
+      },
+      async handleSubmitQuestionale() {
+        let { msg } = await submitQuestionableSample({
+          datasetName: this.dialogSettings.datasetName,
+          sample: this.title,
+        })
+        if (msg == 'success') {
+          this.$message({
+            message: 'Submission Success',
+            type: 'success',
+          })
+        } else {
+          this.$message({
+            message: 'Submission Failed',
+            type: 'error',
           })
         }
       },

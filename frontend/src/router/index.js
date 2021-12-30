@@ -24,6 +24,24 @@ export const constantRoutes = [
     ],
   },
   {
+    path: '/liveDemo',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: ' Live Demo',
+    children: [
+      {
+        path: 'liveDemo',
+        name: 'Live Demo',
+        component: () => import('@/views/analysisEnd/liveDemo/index'),
+        meta: {
+          title: 'Live Demo',
+          icon: 'el-icon-video-camera-solid',
+          badge: 'New',
+        },
+      },
+    ],
+  },
+  {
     path: '/data',
     component: Layout,
     redirect: 'noRedirect',
@@ -68,6 +86,45 @@ export const constantRoutes = [
           title: 'Dataset Labeling',
         },
         hidden: true,
+      },
+    ],
+  },
+  {
+    path: '/feature',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'Feature',
+    meta: {
+      title: 'Feature',
+      icon: 'el-icon-s-check',
+    },
+    children: [
+      {
+        path: 'featureManagement',
+        name: 'Feature Management',
+        component: () => import('@/views/featureEnd/featureManagement/index'),
+        meta: {
+          title: 'Feature Management',
+          icon: 'el-icon-s-finance',
+        },
+      },
+      {
+        path: 'featureDetails',
+        name: 'Feature Details',
+        component: () => import('@/views/featureEnd/featureDetails/index'),
+        meta: {
+          title: 'Feature Details',
+        },
+        hidden: true,
+      },
+      {
+        path: 'featureExtraction',
+        name: 'Feature Extraction',
+        component: () => import('@/views/featureEnd/featureExtraction/index'),
+        meta: {
+          title: 'Feature Extraction',
+          icon: 'el-icon-s-open',
+        },
       },
     ],
   },
@@ -136,16 +193,6 @@ export const constantRoutes = [
         meta: {
           title: 'Model Comparison',
           icon: 'el-icon-s-grid',
-        },
-      },
-      {
-        path: 'liveDemo',
-        name: ' Live Demo',
-        component: () => import('@/views/analysisEnd/liveDemo/index'),
-        meta: {
-          title: 'Live Demo',
-          icon: 'el-icon-video-camera-solid',
-          badge: 'New',
         },
       },
     ],

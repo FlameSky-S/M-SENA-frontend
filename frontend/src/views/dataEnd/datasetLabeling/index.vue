@@ -1,14 +1,20 @@
 <template>
   <div class="labeling-container">
     <h1 style="margin-left: 2%">Dataset Labeling</h1>
-    <p class="tips"></p>
-    <div class="unlock-dataset-table">
+    <p class="tips">
+      Annotate datasets that are unlocked on the 'Dataset Management' page.
+    </p>
+    <p class="tips">
+      Double click on a row or click 'Details' to start labeling.
+    </p>
+    <div class="labeling-content">
       <el-table
         ref="datasetTable"
         v-loading="listLoading"
         :data="list"
         element-loading-text="Loading..."
         stripe
+        @row-dblclick="handleRowDblclick"
       >
         <el-table-column fixed label="Id" align="center" width="80px">
           <template #default="scope">
@@ -52,8 +58,8 @@
             <el-button type="text" @click="startLabeling(row)">
               Details
             </el-button>
-            <el-button type="text" @click="exportDataset(row)">
-              Export CSV
+            <el-button v-if="isAdmin" type="text" @click="handleExport(row)">
+              Write-to-CSV
             </el-button>
           </template>
         </el-table-column>
@@ -74,15 +80,30 @@
         listLoading: true,
       }
     },
-    computed: {},
+    computed: {
+      isAdmin() {
+        return this.$store.state.auth.isAdmin
+      },
+    },
     created() {
       this.fetchUnlockedData()
     },
     methods: {
-      exportLabels(row) {
-        exportLabels({
+      async handleExport(row) {
+        const { msg } = await exportLabels({
           datasetName: row.datasetName,
         })
+        if (msg == 'success') {
+          this.$message({
+            type: 'success',
+            message: '"label.csv" written!',
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: 'Export Failed!',
+          })
+        }
       },
       startLabeling(row) {
         this.$router.push({
@@ -98,14 +119,21 @@
         this.list = datasetList
         this.listLoading = false
       },
+      handleRowDblclick(row) {
+        this.startLabeling(row)
+      },
     },
   }
 </script>
 <style lang="scss" scoped>
   .labeling-container {
     margin: 0%;
-    .unlock-dataset-table {
-      margin: 40px 5%;
+    .labeling-content {
+      margin: 30px 3%;
+    }
+    .tips {
+      margin: 15px 3%;
+      font-size: 14px;
     }
   }
 </style>

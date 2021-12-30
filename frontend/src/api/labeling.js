@@ -163,3 +163,19 @@ export function submitMultiLabel(data) {
     data,
   })
 }
+
+export function submitQuestionableSample(data) {
+  return request({
+    url: '/dataEnd/submitQuestionableSample',
+    method: 'post',
+    data,
+  })
+}
+
+export function exportUserLabels(data) {
+  return request({
+    url: '/dataEnd/exportUserLabels',
+    method: 'post',
+    data,
+  })
+}

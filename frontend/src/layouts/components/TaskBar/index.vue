@@ -18,9 +18,36 @@
       <!-- <el-scrollbar style="height: 94vh "> -->
       <p class="total">
         <span>Total: {{ totalNum }}</span>
-        <el-button type="text" style="font-size: 18px" @click="deleteAllTask">
-          <i class="el-icon-delete" style="color: red"></i>
-        </el-button>
+        <span>
+          <el-tooltip
+            effect="dark"
+            content="Refresh"
+            placement="top"
+            :enterable="false"
+          >
+            <el-button
+              type="text"
+              style="font-size: 18px"
+              @click="fetchTaskList"
+            >
+              <i class="el-icon-refresh-left" style="color: #1890ff"></i>
+            </el-button>
+          </el-tooltip>
+          <el-tooltip
+            effect="dark"
+            content="Delete inactive tasks"
+            placement="top"
+            :enterable="false"
+          >
+            <el-button
+              type="text"
+              style="font-size: 18px"
+              @click="deleteAllTask"
+            >
+              <i class="el-icon-delete" style="color: red"></i>
+            </el-button>
+          </el-tooltip>
+        </span>
       </p>
       <el-collapse v-model="activeNames" accordion>
         <el-collapse-item :title="runTitle" name="run" :disabled="runDisabled">
@@ -37,7 +64,7 @@
                 prop="task_type"
                 label="Type"
                 align="center"
-                width="80"
+                width="90"
               ></el-table-column>
               <el-table-column
                 prop="model_name"
@@ -53,12 +80,9 @@
                 min-width="100"
                 show-overflow-tooltip
               ></el-table-column>
-              <el-table-column
-                prop="start_time"
-                label="Time"
-                align="center"
-                width="100"
-              ></el-table-column>
+              <el-table-column label="Status" align="center" width="100">
+                <template slot-scope="scope">{{ scope.row.status }}</template>
+              </el-table-column>
               <el-table-column align="center" width="40">
                 <template slot-scope="scope">
                   <el-button type="text" @click="deleteTask(scope.row)">
@@ -83,7 +107,7 @@
                 prop="task_type"
                 label="Type"
                 align="center"
-                width="80"
+                width="90"
               ></el-table-column>
               <el-table-column
                 prop="model_name"
@@ -133,7 +157,7 @@
                 prop="task_type"
                 label="Type"
                 align="center"
-                width="80"
+                width="90"
               ></el-table-column>
               <el-table-column
                 prop="model_name"
@@ -179,7 +203,7 @@
                 prop="task_type"
                 label="Type"
                 align="center"
-                width="80"
+                width="90"
               ></el-table-column>
               <el-table-column
                 prop="model_name"
@@ -196,7 +220,7 @@
                 show-overflow-tooltip
               ></el-table-column>
               <el-table-column
-                prop="start_time"
+                prop="end_time"
                 label="Time"
                 align="center"
                 width="100"
@@ -219,17 +243,22 @@
 </template>
 
 <script>
-  // import variables from '@/styles/variables.scss'
-  // import { mapActions, mapGetters } from 'vuex'
-  // import { layout as defaultLayout } from '@/config/settings'
-  import { getTaskList, delTask, stopTask, delAllTask } from '@/api/task'
+  import { baseURL } from '@/config'
+  import {
+    getTaskList,
+    delTask,
+    stopTask,
+    delAllTask,
+    updateTask,
+  } from '@/api/task'
   import * as dayjs from 'dayjs'
   export default {
     name: 'TaskBar',
     data() {
       return {
+        ws: null,
         drawerVisible: false,
-        activeNames: [],
+        activeNames: ['run'],
         runList: [],
         errList: [],
         termList: [],
@@ -260,7 +289,7 @@
       },
       runDisabled: function () {
         let disabled = false
-        if (this.runningNum == 0) disabled = true
+        // if (this.runningNum == 0) disabled = true
         return disabled
       },
       errDisabled: function () {
@@ -280,16 +309,99 @@
       },
     },
     watch: {
-      drawerVisible: function (newValue) {
-        if (newValue == true) this.fetchTaskList()
-      },
+      // drawerVisible: function (newValue) {
+      //   if (newValue == true) this.fetchTaskList()
+      // },
     },
     created() {
       this.fetchTaskList()
     },
+    mounted() {
+      this.initWebSocket()
+    },
     methods: {
       handleOpenTaskBar() {
         this.drawerVisible = true
+        this.ws.send('drawer opened')
+      },
+      initWebSocket() {
+        let url = baseURL.replace('http', 'ws') + '/task/progress'
+        this.ws = new WebSocket(url)
+        this.ws.onopen = this.websocketOpen
+        this.ws.onmessage = this.websocketMessage
+        this.ws.onerror = this.websocketError
+        this.ws.onclose = this.websocketClose
+      },
+      websocketOpen() {
+        console.log('WebSocket for task progress opened.')
+        this.ws.send('opened')
+      },
+      async websocketMessage(e) {
+        let msg = JSON.parse(e.data)
+        console.log(msg)
+        switch (msg['msg']) {
+          case 'Finished':
+            var m1 = await updateTask({
+              id: msg['task_id'],
+              state: 1,
+              endTime: dayjs().format(),
+            })
+            if (m1.msg == 'success') {
+              this.finishedNum += 1
+              this.fetchTaskList()
+            }
+            break
+          case 'Error':
+            var m2 = await updateTask({
+              id: msg['task_id'],
+              state: 2,
+              endTime: dayjs().format(),
+            })
+            if (m2.msg == 'success') {
+              this.errorNum += 1
+              this.fetchTaskList()
+            }
+            break
+          case 'Terminated':
+            var m3 = await updateTask({
+              id: msg['task_id'],
+              state: 3,
+              endTime: dayjs().format(),
+            })
+            if (m3.msg == 'success') {
+              this.terminatedNum += 1
+              this.fetchTaskList()
+            }
+            break
+          case 'Extracting':
+            this.runList.forEach((item, index) => {
+              if (item.task_id == msg['task_id']) {
+                if (item.task_type == 'Feature Extraction') {
+                  let progress = (msg['processed'] / msg['total']) * 100
+                  this.$set(this.runList, index, {
+                    ...item,
+                    status: progress.toFixed(2) + '%',
+                  })
+                } else {
+                  item.status = msg['msg']
+                }
+              }
+            })
+            break
+          default:
+            this.runList.forEach((item) => {
+              if (item.task_id == msg['task_id']) {
+                item.status = msg['msg']
+              }
+            })
+        }
+      },
+      websocketError() {
+        console.log('WebSocket Error')
+        // this.initWebSocket()
+      },
+      websocketClose() {
+        console.log('WebSocket for task progress closed.')
       },
       async fetchTaskList() {
         let { data } = await getTaskList()
@@ -304,6 +416,7 @@
         this.finishedNum = data.finList.length
         this.runList.forEach((item) => {
           item.start_time = dayjs(item.start_time).format('YYYY-MM-DD HH:mm:ss')
+          item.status = 'Pending'
         })
         this.errList.forEach((item) => {
           item.start_time = dayjs(item.start_time).format('YYYY-MM-DD HH:mm:ss')
@@ -312,7 +425,7 @@
           item.start_time = dayjs(item.start_time).format('YYYY-MM-DD HH:mm:ss')
         })
         this.finList.forEach((item) => {
-          item.start_time = dayjs(item.start_time).format('YYYY-MM-DD HH:mm:ss')
+          item.end_time = dayjs(item.end_time).format('YYYY-MM-DD HH:mm:ss')
         })
       },
       async deleteTask(row) {

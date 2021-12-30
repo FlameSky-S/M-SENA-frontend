@@ -29,3 +29,11 @@ export function delAllTask() {
     method: 'get',
   })
 }
+
+export function updateTask(data) {
+  return request({
+    url: '/task/updateTask',
+    method: 'post',
+    data,
+  })
+}

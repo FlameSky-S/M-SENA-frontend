@@ -1,7 +1,9 @@
 <template>
   <div class="training-container">
     <h1 style="margin-left: 2%">Train Model</h1>
-    <p class="tips"></p>
+    <p class="tips">
+      Train models using pre-defined features or learnable features.
+    </p>
     <el-row>
       <el-col :xs="24" :sm="20" :md="18" :lg="12" :xl="10">
         <div v-loading="settingsLoading" class="train-settings">
@@ -13,6 +15,24 @@
               label-width="100px"
             >
               <el-form-item label="Train Mode:" style="font-weight: bold">
+                <el-radio
+                  v-model="trainSettings.featureMode"
+                  label="Pre-Defined"
+                >
+                  Pre-Defined
+                </el-radio>
+                <el-radio
+                  v-model="trainSettings.featureMode"
+                  label="End-to-End"
+                >
+                  End-to-End
+                </el-radio>
+              </el-form-item>
+              <el-form-item
+                v-if="false"
+                label="Train Mode:"
+                style="font-weight: bold"
+              >
                 <el-radio v-model="trainSettings.mode" label="Tune">
                   Tune
                 </el-radio>
@@ -46,7 +66,53 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
+              <el-form-item label="Features:" style="font-weight: bold">
+                <el-switch v-model="trainSettings.featureSelection"></el-switch>
+              </el-form-item>
               <el-form-item
+                v-show="trainSettings.featureSelection"
+                label="Feature A"
+                style="font-weight: bold"
+              >
+                <el-select v-model="trainSettings.featureA">
+                  <el-option
+                    v-for="item in featureLists.A"
+                    :key="item.name"
+                    :label="item.name"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item
+                v-show="trainSettings.featureSelection"
+                label="Feature V"
+                style="font-weight: bold"
+              >
+                <el-select v-model="trainSettings.featureV">
+                  <el-option
+                    v-for="item in featureLists.V"
+                    :key="item.name"
+                    :label="item.name"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item
+                v-show="trainSettings.featureSelection"
+                label="Feature T"
+                style="font-weight: bold"
+              >
+                <el-select v-model="trainSettings.featureT">
+                  <el-option
+                    v-for="item in featureLists.T"
+                    :key="item.name"
+                    :label="item.name"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item
+                v-if="false"
                 v-show="trainSettings.mode == 'Tune'"
                 label="Tune Times:"
                 style="font-weight: bold"
@@ -57,15 +123,7 @@
                   style="width: 80px"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="Args:" style="font-weight: bold">
-                <el-input
-                  v-model="argsDisplay"
-                  type="textarea"
-                  resize="none"
-                  :autosize="argsAutosize"
-                  placeholder="JSON String of Args"
-                />
-              </el-form-item>
+
               <el-form-item label="Notes:" style="font-weight: bold">
                 <el-input
                   v-model="trainSettings.description"
@@ -73,6 +131,22 @@
                   resize="none"
                   :autosize="descAutosize"
                   placeholder="Add Notes Here"
+                />
+              </el-form-item>
+              <el-form-item label="Advanced:">
+                <el-switch v-model="trainSettings.advanced"></el-switch>
+              </el-form-item>
+              <el-form-item
+                v-show="trainSettings.advanced"
+                label="Args:"
+                style="font-weight: bold"
+              >
+                <el-input
+                  v-model="argsDisplay"
+                  type="textarea"
+                  resize="none"
+                  :autosize="argsAutosize"
+                  placeholder="JSON String of Args"
                 />
               </el-form-item>
               <el-form-item>
@@ -96,6 +170,7 @@
 <script>
   import { startTraining, getArgs } from '@/api/modelEnd'
   import { getAllSettings } from '@/api/getSettings'
+  import { getFeatureListforTraining } from '@/api/featureEnd'
   export default {
     name: 'Training',
     components: {},
@@ -103,13 +178,24 @@
       return {
         datasetList: [],
         modelList: [],
+        featureLists: {
+          A: [],
+          V: [],
+          T: [],
+        },
         trainSettings: {
-          mode: 'Tune',
+          mode: 'Train',
+          featureMode: 'Pre-Defined',
           model: '',
           dataset: '',
           args: '',
+          featureT: '',
+          featureA: '',
+          featureV: '',
           description: '',
           tuneTimes: '10',
+          advanced: false,
+          featureSelection: false,
         },
         argsDisplay: '',
         argsAutosize: { minRows: 10, maxRows: 20 },
@@ -118,12 +204,7 @@
         icon: 'el-icon-check',
       }
     },
-    computed: {
-      tuneTimesEnabled: function () {
-        console.log('test')
-        return this.trainSettings.mode == 'Tune' ? true : false
-      },
-    },
+    computed: {},
     watch: {},
     created() {
       this.fetchSettings()
@@ -152,7 +233,16 @@
           this.trainSettings.dataset = this.datasetList[0].name
         }
         this.onSettingsChange()
+
         this.settingsLoading = false
+      },
+      async fetchFeatures(modality) {
+        let { data } = await getFeatureListforTraining({
+          dataset: this.trainSettings.dataset,
+          model: this.trainSettings.model,
+          modality: modality,
+        })
+        this.featureLists[modality] = data
       },
       async onSettingsChange() {
         let model = this.trainSettings.model
@@ -168,11 +258,16 @@
         // this.trainSettings.args = args
         if (arg != '')
           this.argsDisplay = JSON.stringify(JSON.parse(arg), null, '\t')
+        let list = ['A', 'V', 'T']
+        for (let i in list) {
+          this.fetchFeatures(list[i])
+          this.trainSettings['feature' + list[i]] = ''
+        }
       },
       async startTrain() {
         this.icon = 'el-icon-loading'
         this.trainSettings.args = this.argsDisplay.replace(/(\r\n|\n|\r)/gm, '')
-        if (!this.IsJsonString(this.trainSettings.args)) {
+        if (!this.IsJsonString(this.trainSettings.dargs)) {
           this.icon = 'el-icon-check'
           this.$message({
             message: 'Invalid Args! Please check your syntax',
@@ -212,7 +307,11 @@
     margin: 0%;
     .train-settings {
       width: 600px;
-      margin: 0% 10%;
+      margin: 0% 3%;
+    }
+    .tips {
+      margin: 15px 3%;
+      font-size: 14px;
     }
   }
 </style>

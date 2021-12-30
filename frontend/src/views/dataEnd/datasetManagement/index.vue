@@ -5,7 +5,7 @@
     <el-row>
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <div class="dataset-table">
-          <el-form v-if="isAdmin" inline>
+          <el-form v-if="isAdmin" inline size="mini">
             <el-form-item>
               <el-input
                 v-model="addDataset"
@@ -233,7 +233,7 @@
   .datasetList-container {
     margin: 0%;
     .dataset-table {
-      margin: 0% 5%;
+      margin: 0% 3%;
     }
   }
 </style>

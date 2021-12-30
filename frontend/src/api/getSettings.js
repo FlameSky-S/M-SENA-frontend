@@ -6,3 +6,10 @@ export function getAllSettings() {
     method: 'get',
   })
 }
+
+export function getFeatureExtractionTools() {
+  return request({
+    url: '/settings/getFeatureExtractionTools',
+    method: 'get',
+  })
+}

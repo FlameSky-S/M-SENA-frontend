@@ -109,7 +109,7 @@
   .modelManagement-container {
     margin: 0%;
     .model-table {
-      margin: 40px 5%;
+      margin: 30px 3%;
     }
   }
   .paper-title {

@@ -5,7 +5,7 @@
     <el-row>
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <div class="results-table">
-          <el-form ref="filter" :model="filter" :inline="true">
+          <el-form ref="filter" :model="filter" inline size="mini">
             <el-col :span="23">
               <el-form-item label="Model:" style="font-weight: bold">
                 <el-select v-model="filter.model_name" style="width: 150px">
@@ -488,13 +488,13 @@
         for (let i in this.multipleSelection) {
           postData.push(this.multipleSelection[i].result_id)
         }
-        console.log(postData)
+        // console.log(postData)
         const h = this.$createElement
         // console.log(row.result_id)
         let msg = []
         msg.push(
           h('p', { style: 'text-align: center' }, [
-            h('span', null, 'Deleting multiple results'),
+            h('span', null, 'Deleting ' + postData.length + ' results'),
           ])
         )
         msg.push(h('p', null, 'Are you sure?'))
@@ -535,7 +535,7 @@
   .results-container {
     margin: 0%;
     .results-table {
-      margin: 0% 5%;
+      margin: 0% 3%;
     }
   }
   .table-expand .el-form-item {

@@ -74,7 +74,7 @@
     <el-row style="margin-top: 2%">
       <div class="top-row">
         <el-col>
-          <el-form :model="queryForm" inline>
+          <el-form :model="queryForm" inline size="mini">
             <el-form-item label="Label:">
               <el-select v-model="queryForm.label" style="width: 150px">
                 <el-option
@@ -184,7 +184,7 @@
             >
               <template #default="{ row }">
                 <el-button type="text" @click="showPreview(row)">
-                  Play Video
+                  Play-Video
                 </el-button>
               </template>
             </el-table-column>
@@ -388,7 +388,7 @@
         this.fetchDetails()
       },
       showPreview(row) {
-        console.log(row)
+        // console.log(row)
         this.$refs['preview'].showPreview(row)
       },
       handleSizeChange(val) {
