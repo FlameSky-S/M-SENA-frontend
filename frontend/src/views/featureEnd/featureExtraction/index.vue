@@ -2,10 +2,10 @@
   <div class="featureExtraction-container">
     <h1 style="margin-left: 2%">Feature Extraction</h1>
     <p class="tips">Extract pre-defined features for datasets.</p>
-    <p class="tips">
+    <!-- <p class="tips">
       For end-to-end features obtained by fine-tuning pre-trained models, please
       refer to "Model Training" page.
-    </p>
+    </p> -->
     <el-row v-loading="settingsLoading" class="settings">
       <el-card shadow="hover" style="padding: 20px">
         <el-form
@@ -13,7 +13,7 @@
           :model="trainSettings"
           :rules="rules"
           label-position="left"
-          label-width="100px"
+          label-width="120px"
         >
           <el-form-item label="Dataset:">
             <el-select
@@ -22,9 +22,9 @@
             >
               <el-option
                 v-for="item in datasetList"
-                :key="item.name"
-                :label="item.name"
-                :value="item.name"
+                :key="item"
+                :label="item"
+                :value="item"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -69,25 +69,45 @@
                 </el-select>
               </el-form-item>
               <LibrosaSettings
-                v-show="trainSettings.audioTool == 'librosa'"
+                v-show="
+                  trainSettings.audioTool == 'librosa' && trainSettings.audio
+                "
+                ref="librosa"
                 @change="librosaChange"
               ></LibrosaSettings>
               <OpenSmileSettings
-                v-show="trainSettings.audioTool == 'opensmile'"
+                v-show="
+                  trainSettings.audioTool == 'opensmile' && trainSettings.audio
+                "
+                ref="opensmile"
                 @change="opensmileChange"
               ></OpenSmileSettings>
               <Wav2vec2Settings
-                v-show="trainSettings.audioTool == 'wav2vec'"
+                v-show="
+                  trainSettings.audioTool == 'wav2vec' && trainSettings.audio
+                "
+                ref="wav2vec"
                 @change="wav2vec2Change"
               ></Wav2vec2Settings>
               <el-form-item label="Advanced:">
-                <el-switch
-                  v-model="audioAdvanced"
-                  @change="onAdvancedChange"
-                ></el-switch>
+                <el-tooltip
+                  effect="dark"
+                  content="Turning on advanced mode will require a name for the feature file."
+                  placement="right"
+                >
+                  <el-switch
+                    v-model="audioAdvanced"
+                    @change="onAdvancedChange"
+                  ></el-switch>
+                </el-tooltip>
               </el-form-item>
-              <el-form-item v-show="audioAdvanced" label="Audio Args:">
+              <el-form-item
+                v-show="audioAdvanced"
+                label="Audio Args:"
+                prop="audioArgs"
+              >
                 <el-input
+                  ref="audioArgs"
                   v-model="audioArgsDisplay"
                   type="textarea"
                   resize="none"
@@ -116,14 +136,39 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
+              <OpenFaceSettings
+                v-show="
+                  trainSettings.videoTool == 'openface' && trainSettings.video
+                "
+                ref="openface"
+                @change="openfaceChange"
+              ></OpenFaceSettings>
+              <MediaPipeSettings
+                v-show="
+                  trainSettings.videoTool == 'mediapipe' && trainSettings.video
+                "
+                ref="mediapipe"
+                @change="mediapipeChange"
+              ></MediaPipeSettings>
               <el-form-item label="Advanced:">
-                <el-switch
-                  v-model="videoAdvanced"
-                  @change="onAdvancedChange"
-                ></el-switch>
+                <el-tooltip
+                  effect="dark"
+                  content="Turning on advanced mode will require a name for the feature file."
+                  placement="right"
+                >
+                  <el-switch
+                    v-model="videoAdvanced"
+                    @change="onAdvancedChange"
+                  ></el-switch>
+                </el-tooltip>
               </el-form-item>
-              <el-form-item v-show="videoAdvanced" label="Visual Args:">
+              <el-form-item
+                v-show="videoAdvanced"
+                label="Visual Args:"
+                prop="videoArgs"
+              >
                 <el-input
+                  ref="videoArgs"
                   v-model="videoArgsDisplay"
                   type="textarea"
                   resize="none"
@@ -152,11 +197,43 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
+              <BERTSettings
+                v-show="trainSettings.textTool == 'bert' && trainSettings.text"
+                ref="bert"
+                @change="bertChange"
+              ></BERTSettings>
+              <RoBERTaSettings
+                v-show="
+                  trainSettings.textTool == 'roberta' && trainSettings.text
+                "
+                ref="roberta"
+                @change="robertaChange"
+              ></RoBERTaSettings>
               <el-form-item label="Advanced:">
-                <el-switch
-                  v-model="textAdvanced"
-                  @change="onAdvancedChange"
-                ></el-switch>
+                <el-tooltip
+                  effect="dark"
+                  content="Turning on advanced mode will require a name for the feature file."
+                  placement="right"
+                >
+                  <el-switch
+                    v-model="textAdvanced"
+                    @change="onAdvancedChange"
+                  ></el-switch>
+                </el-tooltip>
+              </el-form-item>
+              <el-form-item
+                v-show="textAdvanced"
+                label="Text Args:"
+                prop="textArgs"
+              >
+                <el-input
+                  ref="textArgs"
+                  v-model="textArgsDisplay"
+                  type="textarea"
+                  resize="none"
+                  :autosize="argsAutosize"
+                  placeholder="JSON String of Args"
+                />
               </el-form-item>
             </el-tab-pane>
           </el-tabs>
@@ -180,15 +257,24 @@
 <script>
   import { getFeatureArgs, startExtracting } from '@/api/featureEnd'
   import { getAllSettings, getFeatureExtractionTools } from '@/api/getSettings'
+  import { IsJsonString } from '@/utils/validate'
   import LibrosaSettings from './components/librosa'
   import OpenSmileSettings from './components/opensmile'
   import Wav2vec2Settings from './components/wav2vec2'
+  import OpenFaceSettings from './components/openface'
+  import MediaPipeSettings from './components/mediapipe'
+  import BERTSettings from './components/bert'
+  import RoBERTaSettings from './components/roberta'
   export default {
     name: 'FeatureExtraction',
     components: {
       LibrosaSettings,
       OpenSmileSettings,
       Wav2vec2Settings,
+      OpenFaceSettings,
+      MediaPipeSettings,
+      BERTSettings,
+      RoBERTaSettings,
     },
     data() {
       var validateName = (rule, value, callback) => {
@@ -254,11 +340,71 @@
           callback()
         }
       }
+      var validateAudioArgs = (rule, value, callback) => {
+        if (
+          value != '' &&
+          this.audioAdvanced &&
+          !IsJsonString(this.audioArgsDisplay)
+        ) {
+          this.formValid = false
+          this.$refs.audioArgs.focus()
+          this.activeTab = 'audio'
+          this.$refs.audioArgs.$el.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+            inline: 'nearest',
+          })
+          callback(new Error('AudioArgs is not a valid JSON string'))
+        } else {
+          this.formValid = this.formValid && true
+          callback()
+        }
+      }
+      var validateVideoArgs = (rule, value, callback) => {
+        if (
+          value != '' &&
+          this.videoAdvanced &&
+          !IsJsonString(this.videoArgsDisplay)
+        ) {
+          this.formValid = false
+          this.$refs.videoArgs.focus()
+          this.activeTab = 'visual'
+          this.$refs.videoArgs.$el.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+            inline: 'nearest',
+          })
+          callback(new Error('VideoArgs is not a valid JSON string'))
+        } else {
+          this.formValid = this.formValid && true
+          callback()
+        }
+      }
+      var validateTextArgs = (rule, value, callback) => {
+        if (
+          value != '' &&
+          this.textAdvanced &&
+          !IsJsonString(this.textArgsDisplay)
+        ) {
+          this.formValid = false
+          this.$refs.textArgs.focus()
+          this.activeTab = 'visual'
+          this.$refs.textArgs.$el.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+            inline: 'nearest',
+          })
+          callback(new Error('TextArgs is not a valid JSON string'))
+        } else {
+          this.formValid = this.formValid && true
+          callback()
+        }
+      }
       return {
         datasetList: [],
         audioToolList: ['librosa', 'opensmile', 'wav2vec'],
-        videoToolList: ['mediapipe', 'openface2', 'vggface'],
-        textToolList: ['bert', 'xlnet'],
+        videoToolList: ['openface', 'mediapipe'],
+        textToolList: ['bert', 'roberta'],
         activeTab: 'audio',
         trainSettings: {
           // modality: 'audio',
@@ -312,6 +458,24 @@
               trigger: 'blur',
             },
           ],
+          audioArgs: [
+            {
+              validator: validateAudioArgs,
+              trigger: 'blur',
+            },
+          ],
+          videoArgs: [
+            {
+              validator: validateVideoArgs,
+              trigger: 'blur',
+            },
+          ],
+          textArgs: [
+            {
+              validator: validateTextArgs,
+              trigger: 'blur',
+            },
+          ],
         },
       }
     },
@@ -357,6 +521,8 @@
       },
       opensmileChange(data) {
         this.trainSettings.audioArgs.audio.args.feature_set = data.feature_set
+        this.trainSettings.audioArgs.audio.args.feature_level =
+          data.feature_level
         this.audioArgsDisplay = JSON.stringify(
           this.trainSettings.audioArgs,
           null,
@@ -371,6 +537,44 @@
           4
         )
       },
+      openfaceChange(data) {
+        this.trainSettings.videoArgs.video.args.landmark_2D = data.landmark2D
+        this.trainSettings.videoArgs.video.args.landmark_3D = data.landmark3D
+        this.trainSettings.videoArgs.video.args.head_pose = data.pose
+        this.trainSettings.videoArgs.video.args.action_units = data.AUs
+        this.trainSettings.videoArgs.video.args.gaze = data.gaze
+        this.trainSettings.videoArgs.video.fps = data.fps
+        this.videoArgsDisplay = JSON.stringify(
+          this.trainSettings.videoArgs,
+          null,
+          4
+        )
+      },
+      mediapipeChange(data) {
+        this.trainSettings.videoArgs.video.fps = data.fps
+        this.videoArgsDisplay = JSON.stringify(
+          this.trainSettings.videoArgs,
+          null,
+          4
+        )
+      },
+      bertChange(data) {
+        console.log(this.trainSettings.textArgs)
+        this.trainSettings.textArgs.text.pretrained = data.pretrained
+        this.textArgsDisplay = JSON.stringify(
+          this.trainSettings.textArgs,
+          null,
+          4
+        )
+      },
+      robertaChange(data) {
+        this.trainSettings.textArgs.text.pretrained = data.pretrained
+        this.textArgsDisplay = JSON.stringify(
+          this.trainSettings.textArgs,
+          null,
+          4
+        )
+      },
       async onToolChange() {
         if (this.activeTab == 'audio') {
           var query = {
@@ -380,6 +584,7 @@
           const { data } = await getFeatureArgs(query)
           this.trainSettings.audioArgs = data
           this.audioArgsDisplay = JSON.stringify(data, null, 4)
+          this.$refs[this.trainSettings.audioTool].init(data)
         } else if (this.activeTab == 'visual') {
           var query = {
             modality: 'visual',
@@ -388,6 +593,7 @@
           const { data } = await getFeatureArgs(query)
           this.trainSettings.videoArgs = data
           this.videoArgsDisplay = JSON.stringify(data, null, 4)
+          this.$refs[this.trainSettings.videoTool].init(data)
         } else if (this.activeTab == 'text') {
           var query = {
             modality: 'text',
@@ -396,6 +602,7 @@
           const { data } = await getFeatureArgs(query)
           this.trainSettings.textArgs = data
           this.textArgsDisplay = JSON.stringify(data, null, 4)
+          this.$refs[this.trainSettings.textTool].init(data)
         }
       },
       onAdvancedChange(val) {
@@ -432,9 +639,21 @@
         this.$refs['trainSettings'].validateField('audioTool')
         this.$refs['trainSettings'].validateField('videoTool')
         this.$refs['trainSettings'].validateField('textTool')
+        this.$refs['trainSettings'].validateField('audioArgs')
+        this.$refs['trainSettings'].validateField('videoArgs')
+        this.$refs['trainSettings'].validateField('textArgs')
 
         if (this.formValid) {
           this.icon = 'el-icon-loading'
+          if (this.audioAdvanced) {
+            this.trainSettings.audioArgs = JSON.parse(this.audioArgsDisplay)
+          }
+          if (this.videoAdvanced) {
+            this.trainSettings.videoArgs = JSON.parse(this.videoArgsDisplay)
+          }
+          if (this.textAdvanced) {
+            this.trainSettings.textArgs = JSON.parse(this.textArgsDisplay)
+          }
           var isExist = false
           var Id = 0
           try {

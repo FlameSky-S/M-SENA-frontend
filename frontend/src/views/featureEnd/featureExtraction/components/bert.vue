@@ -2,7 +2,7 @@
   <div>
     <el-form-item label="Model:" style="font-weight: bold">
       <el-select
-        v-model="wav2vec2Settings.pretrained"
+        v-model="bertSettings.pretrained"
         placeholder="Please Select"
         filterable
         allow-create
@@ -24,7 +24,7 @@
         placement="right"
       >
         <el-switch
-          v-model="wav2vec2Settings.fineTune"
+          v-model="bertSettings.fineTune"
           active-color="#13ce66"
           disabled
           @change="handleChange"
@@ -36,15 +36,12 @@
 
 <script>
   export default {
-    name: 'Wav2vec2Settings',
+    name: 'BERTSettings',
     data() {
       return {
-        pretrained: [
-          'facebook/wav2vec2-base-960h',
-          'facebook/wav2vec2-base-10k-voxpopuli-ft-en',
-        ],
-        wav2vec2Settings: {
-          pretrained: 'facebook/wav2vec2-base-960h',
+        pretrained: ['bert-base-uncased', 'bert-base-chinese'],
+        bertSettings: {
+          pretrained: 'bert-base-uncased',
           fineTune: false,
         },
       }
@@ -54,10 +51,10 @@
     mounted() {},
     methods: {
       init(data) {
-        this.wav2vec2Settings.pretrained = data.audio.pretrained
+        this.bertSettings.pretrained = data.text.pretrained
       },
       handleChange() {
-        this.$emit('change', this.wav2vec2Settings)
+        this.$emit('change', this.bertSettings)
       },
     },
   }

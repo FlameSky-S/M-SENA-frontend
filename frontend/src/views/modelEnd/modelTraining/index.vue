@@ -1,9 +1,9 @@
 <template>
   <div class="training-container">
     <h1 style="margin-left: 2%">Train Model</h1>
-    <p class="tips">
+    <!-- <p class="tips">
       Train models using pre-defined features or learnable features.
-    </p>
+    </p> -->
     <el-row>
       <el-col :xs="24" :sm="20" :md="18" :lg="12" :xl="10">
         <div v-loading="settingsLoading" class="train-settings">
@@ -14,7 +14,7 @@
               label-position="left"
               label-width="100px"
             >
-              <el-form-item label="Train Mode:" style="font-weight: bold">
+              <!-- <el-form-item label="Train Mode:" style="font-weight: bold">
                 <el-radio
                   v-model="trainSettings.featureMode"
                   label="Pre-Defined"
@@ -27,19 +27,8 @@
                 >
                   End-to-End
                 </el-radio>
-              </el-form-item>
-              <el-form-item
-                v-if="false"
-                label="Train Mode:"
-                style="font-weight: bold"
-              >
-                <el-radio v-model="trainSettings.mode" label="Tune">
-                  Tune
-                </el-radio>
-                <el-radio v-model="trainSettings.mode" label="Train">
-                  Train
-                </el-radio>
-              </el-form-item>
+              </el-form-item> -->
+
               <el-form-item label="Model:" style="font-weight: bold">
                 <el-select
                   v-model="trainSettings.model"
@@ -60,14 +49,49 @@
                 >
                   <el-option
                     v-for="item in datasetList"
-                    :key="item.name"
-                    :label="item.name"
-                    :value="item.name"
+                    :key="item"
+                    :label="item"
+                    :value="item"
                   ></el-option>
                 </el-select>
               </el-form-item>
+              <el-form-item label="Is Tune:" style="font-weight: bold">
+                <el-radio-group
+                  v-model="trainSettings.isTune"
+                  @change="onSettingsChange"
+                >
+                  <el-radio-button :label="true">True</el-radio-button>
+                  <el-radio-button :label="false">False</el-radio-button>
+                </el-radio-group>
+              </el-form-item>
+              <el-form-item
+                v-show="trainSettings.isTune"
+                label="Tune Times:"
+                style="font-weight: bold"
+              >
+                <el-input-number
+                  v-model="trainSettings.tuneTimes"
+                  :min="1"
+                  :max="1000"
+                ></el-input-number>
+              </el-form-item>
+              <el-form-item label="Seed:" style="font-weight: bold">
+                <el-input-number
+                  v-model="trainSettings.seed"
+                  :min="0"
+                  :max="65536"
+                ></el-input-number>
+              </el-form-item>
               <el-form-item label="Features:" style="font-weight: bold">
-                <el-switch v-model="trainSettings.featureSelection"></el-switch>
+                <el-tooltip
+                  effect="dark"
+                  content="Use custom features"
+                  placement="right"
+                >
+                  <el-switch
+                    v-model="trainSettings.featureSelection"
+                  ></el-switch>
+                </el-tooltip>
               </el-form-item>
               <el-form-item
                 v-show="trainSettings.featureSelection"
@@ -110,18 +134,6 @@
                     :value="item.value"
                   ></el-option>
                 </el-select>
-              </el-form-item>
-              <el-form-item
-                v-if="false"
-                v-show="trainSettings.mode == 'Tune'"
-                label="Tune Times:"
-                style="font-weight: bold"
-              >
-                <el-input
-                  v-model="trainSettings.tuneTimes"
-                  onkeyup="value=value.replace(/[^\d]/g,'')"
-                  style="width: 80px"
-                ></el-input>
               </el-form-item>
 
               <el-form-item label="Notes:" style="font-weight: bold">
@@ -171,6 +183,7 @@
   import { startTraining, getArgs } from '@/api/modelEnd'
   import { getAllSettings } from '@/api/getSettings'
   import { getFeatureListforTraining } from '@/api/featureEnd'
+  import { IsJsonString } from '@/utils/validate'
   export default {
     name: 'Training',
     components: {},
@@ -184,8 +197,10 @@
           T: [],
         },
         trainSettings: {
-          mode: 'Train',
-          featureMode: 'Pre-Defined',
+          isTune: false,
+          tuneTimes: 50,
+          seed: 1111,
+          // featureMode: 'Pre-Defined',
           model: '',
           dataset: '',
           args: '',
@@ -193,7 +208,6 @@
           featureA: '',
           featureV: '',
           description: '',
-          tuneTimes: '10',
           advanced: false,
           featureSelection: false,
         },
@@ -217,7 +231,7 @@
         this.datasetList = datasets
         this.modelList = models
         if (this.datasetList == '') {
-          this.datasetList = [{ name: 'None', sentiment: 'N/A' }]
+          this.datasetList = ['None']
         }
         if (this.modelList == '') {
           this.modelList = ['None']
@@ -230,7 +244,7 @@
         if (this.$route.query.dataset) {
           this.trainSettings.dataset = this.$route.query.dataset
         } else {
-          this.trainSettings.dataset = this.datasetList[0].name
+          this.trainSettings.dataset = this.datasetList[0]
         }
         this.onSettingsChange()
 
@@ -247,7 +261,8 @@
       async onSettingsChange() {
         let model = this.trainSettings.model
         let dataset = this.trainSettings.dataset
-        let query = { model: model, dataset: dataset }
+        let isTune = this.trainSettings.isTune
+        let query = { model: model, dataset: dataset, isTune: isTune }
         let arg = ''
         if (this.$route.query.args) {
           arg = this.$route.query.args
@@ -267,7 +282,7 @@
       async startTrain() {
         this.icon = 'el-icon-loading'
         this.trainSettings.args = this.argsDisplay.replace(/(\r\n|\n|\r)/gm, '')
-        if (!this.IsJsonString(this.trainSettings.dargs)) {
+        if (!IsJsonString(this.trainSettings.args)) {
           this.icon = 'el-icon-check'
           this.$message({
             message: 'Invalid Args! Please check your syntax',
@@ -289,14 +304,6 @@
             type: 'error',
           })
         }
-      },
-      IsJsonString(str) {
-        try {
-          JSON.parse(str)
-        } catch (e) {
-          return false
-        }
-        return true
       },
     },
   }

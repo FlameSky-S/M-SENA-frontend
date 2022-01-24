@@ -319,6 +319,9 @@
     mounted() {
       this.initWebSocket()
     },
+    beforeDestroy() {
+      this.ws.close()
+    },
     methods: {
       handleOpenTaskBar() {
         this.drawerVisible = true
@@ -373,7 +376,7 @@
               this.fetchTaskList()
             }
             break
-          case 'Extracting':
+          case 'Processing':
             this.runList.forEach((item, index) => {
               if (item.task_id == msg['task_id']) {
                 if (item.task_type == 'Feature Extraction') {
@@ -444,6 +447,7 @@
         this.fetchTaskList()
       },
       async terminateTask(row) {
+        // TODO
         let query = { task_id: row.task_id }
         let { msg } = await stopTask(query)
         if (msg == 'success')

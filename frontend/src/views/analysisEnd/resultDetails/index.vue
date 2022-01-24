@@ -420,7 +420,7 @@
       this.query1.id = this.$route.query.result_id
       this.query2.id = this.$route.query.result_id
       this.query3.id = this.$route.query.result_id
-      if (this.$route.query.train_mode == 'Train') {
+      if (this.$route.query.is_tune == 'false') {
         this.showFeatureMap = true
       }
       this.fetchSample()
@@ -583,43 +583,43 @@
           this.plotFeature2D(
             this.charts.featureM,
             'Feature_M',
-            features.Feature_M
+            features.Feature_f
           )
           this.plotFeature2D(
             this.charts.featureT,
             'Feature_T',
-            features.Feature_T
+            features.Feature_t
           )
           this.plotFeature2D(
             this.charts.featureA,
             'Feature_A',
-            features.Feature_A
+            features.Feature_a
           )
           this.plotFeature2D(
             this.charts.featureV,
             'Feature_V',
-            features.Feature_V
+            features.Feature_v
           )
         } else {
           this.plotFeature3D(
             this.charts.featureM,
             'Feature_M',
-            features.Feature_M
+            features.Feature_f
           )
           this.plotFeature3D(
             this.charts.featureT,
             'Feature_T',
-            features.Feature_T
+            features.Feature_t
           )
           this.plotFeature3D(
             this.charts.featureA,
             'Feature_A',
-            features.Feature_A
+            features.Feature_a
           )
           this.plotFeature3D(
             this.charts.featureV,
             'Feature_V',
-            features.Feature_V
+            features.Feature_v
           )
         }
         this.featureLoading = false

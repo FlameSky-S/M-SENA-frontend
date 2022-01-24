@@ -74,6 +74,18 @@
     created() {},
     mounted() {},
     methods: {
+      init(data) {
+        this.librosaSettings.n_mfcc = data.audio.args.mfcc.n_mfcc
+        for (let key in data.audio.args) {
+          if (key == 'rms') this.librosaSettings.rms = true
+          else if (key == 'zero_crossing_rate')
+            this.librosaSettings.zero_crossing_rate = true
+          else if (key == 'spectral_centroid')
+            this.librosaSettings.spectral_centroid = true
+          else if (key == 'spectral_rolloff')
+            this.librosaSettings.spectral_rolloff = true
+        }
+      },
       handleChange() {
         this.$emit('change', this.librosaSettings)
       },

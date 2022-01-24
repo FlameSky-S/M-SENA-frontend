@@ -16,15 +16,15 @@
         ></el-table-column>
         <el-table-column
           label="Model Name"
-          prop="model_name"
+          prop="modelName"
           align="center"
           min-width="100"
           show-overflow-tooltip
         ></el-table-column>
-        <el-table-column label="Related Paper" align="center" min-width="250">
+        <el-table-column label="Paper" align="center" min-width="250">
           <template slot-scope="scope">
             <a :href="scope.row.paper_url" class="paper-title" target="_blank">
-              {{ scope.row.paper_name }}
+              {{ scope.row.title }}
               <i class="el-icon-document"></i>
             </a>
           </template>
@@ -38,6 +38,16 @@
         ></el-table-column>
         <el-table-column label="Operations" align="center" width="200">
           <template slot-scope="scope">
+            <el-tooltip
+              class="item"
+              content="Get bibtex citation"
+              placement="top"
+              :enterable="false"
+            >
+              <el-button type="text" @click="viewCitation(scope.row)">
+                Cite
+              </el-button>
+            </el-tooltip>
             <el-tooltip
               class="item"
               content="Go to result analysis page"
@@ -66,7 +76,7 @@
 </template>
 
 <script>
-  import { getModelList } from '@/api/modelEnd'
+  import { getCitations } from '@/api/modelEnd'
   export default {
     name: 'ModelManagement',
     components: {},
@@ -85,10 +95,11 @@
     methods: {
       async fetchModelList() {
         this.modelLoading = true
-        let { modelList } = await getModelList()
+        let { modelList } = await getCitations()
         this.modelList = modelList
         this.modelLoading = false
       },
+      viewCitation(row) {},
       viewResults(row) {
         this.$router.push({
           path: '/analysis/results',

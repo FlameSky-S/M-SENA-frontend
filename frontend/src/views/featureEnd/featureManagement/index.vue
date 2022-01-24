@@ -264,6 +264,8 @@
         this.filter.featureA = ''
         this.filter.featureV = ''
         this.filter.datasetName = ''
+        this.filter.pageNo = 1
+        this.fetchFeatureList()
       },
       handleRowClick(row) {
         this.$refs.featureTable.toggleRowSelection(row)
@@ -275,8 +277,8 @@
         const { datasets } = await getAllSettings()
         this.datasetList = datasets.map((item) => {
           return {
-            label: item.name,
-            value: item.name,
+            label: item,
+            value: item,
           }
         })
       },

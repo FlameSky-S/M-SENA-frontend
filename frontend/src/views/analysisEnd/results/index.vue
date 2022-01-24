@@ -21,14 +21,14 @@
                 <el-select v-model="filter.dataset_name" style="width: 150px">
                   <el-option
                     v-for="item in datasetList"
-                    :key="item.name"
-                    :label="item.name"
-                    :value="item.name"
+                    :key="item"
+                    :label="item"
+                    :value="item"
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="Train Mode:" style="font-weight: bold">
-                <el-select v-model="filter.is_tuning" style="width: 120px">
+              <el-form-item label="Is Tune:" style="font-weight: bold">
+                <el-select v-model="filter.is_tune" style="width: 120px">
                   <el-option
                     v-for="item in modeList"
                     :key="item"
@@ -86,7 +86,28 @@
             <el-table-column type="selection" width="45"></el-table-column>
             <el-table-column type="expand" width="20">
               <template slot-scope="props">
-                <el-col :span="12">
+                <el-col :span="6" :offset="2">
+                  <el-form
+                    label-position="left"
+                    label-width="80px"
+                    class="table-expand"
+                    style="margin-left: 50px"
+                  >
+                    <el-form-item label="Acc-2:">
+                      <span>{{ props.row.accuracy }}</span>
+                    </el-form-item>
+                    <el-form-item label="F1-score:">
+                      <span>{{ props.row.f1 }}</span>
+                    </el-form-item>
+                    <el-form-item label="MAE:">
+                      <span>{{ props.row.mae }}</span>
+                    </el-form-item>
+                    <el-form-item label="Corr:">
+                      <span>{{ props.row.corr }}</span>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+                <el-col :span="10" :offset="1">
                   <el-form
                     label-position="left"
                     label-width="80px"
@@ -98,7 +119,7 @@
                         v-model="props.row.argDisplay"
                         type="textarea"
                         resize="none"
-                        :autosize="{ minRows: 5, maxRows: 10 }"
+                        :autosize="{ minRows: 5, maxRows: 5 }"
                         readonly
                       ></el-input>
                     </el-form-item>
@@ -106,12 +127,6 @@
                       <span>{{ props.row.description }}</span>
                     </el-form-item>
                   </el-form>
-                </el-col>
-                <el-col :span="12">
-                  <div
-                    :id="'accChart' + props.row.result_id"
-                    style="width: 100%; height: 250px; margin: 5%"
-                  ></div>
                 </el-col>
               </template>
             </el-table-column>
@@ -136,17 +151,17 @@
               show-overflow-tooltip
             ></el-table-column>
             <el-table-column
-              label="Train Mode"
-              prop="is_tuning"
+              label="Is Tune"
+              prop="is_tune"
               align="center"
               min-width="100"
             >
               <template slot-scope="scope">
                 <el-tag
-                  :type="scope.row.is_tuning == 'Tune' ? 'primary' : 'success'"
+                  :type="scope.row.is_tune == 'True' ? 'primary' : 'success'"
                   disable-transitions
                 >
-                  {{ scope.row.is_tuning }}
+                  {{ scope.row.is_tune }}
                 </el-tag>
               </template>
             </el-table-column>
@@ -158,7 +173,7 @@
               sortable="custom"
             ></el-table-column>
             <el-table-column
-              label="F1"
+              label="GAT"
               prop="f1"
               align="center"
               min-width="100"
@@ -188,7 +203,7 @@
                     Details
                   </el-button>
                 </el-tooltip>
-                <el-tooltip
+                <!-- <el-tooltip
                   class="item"
                   content="Set parameters as default"
                   placement="top"
@@ -197,7 +212,7 @@
                   <el-button type="text" @click="setDefault(scope.row)">
                     Default
                   </el-button>
-                </el-tooltip>
+                </el-tooltip> -->
                 <el-tooltip
                   class="item"
                   content="Go to training page with these parameters"
@@ -249,13 +264,13 @@
         resultList: [],
         datasetList: [],
         modelList: [],
-        modeList: ['Both', 'Train', 'Tune'],
+        modeList: ['Both', 'True', 'False'],
         resultLoading: true,
         total: 0,
         filter: {
           model_name: 'All',
           dataset_name: 'All',
-          is_tuning: 'Both',
+          is_tune: 'Both',
           sortBy: '',
           order: '',
           pageNo: 1,
@@ -266,12 +281,8 @@
     },
     computed: {},
     watch: {},
-    beforeMount() {
-      window.addEventListener('resize', this.handleResize)
-    },
-    beforeDestroy() {
-      window.removeEventListener('resize', this.handleResize)
-    },
+    beforeMount() {},
+    beforeDestroy() {},
     created() {
       if (this.$route.query.model) {
         this.filter.model_name = this.$route.query.model
@@ -281,7 +292,6 @@
     },
     mounted() {},
     methods: {
-      handleResize() {},
       handleSizeChange(val) {
         this.filter.pageSize = val
         this.fetchResults()
@@ -302,10 +312,7 @@
         this.modelList = models
         this.modelList.unshift('All')
         this.datasetList = datasets
-        this.datasetList.unshift({
-          name: 'All',
-          sentiment: '',
-        })
+        this.datasetList.unshift('All')
         this.resultLoading = false
       },
       async fetchResults() {
@@ -339,7 +346,7 @@
         this.$refs.resultTable.clearSort()
         this.filter.model_name = 'All'
         this.filter.dataset_name = 'All'
-        this.filter.is_tuning = 'Both'
+        this.filter.is_tune = 'Both'
         this.filter.pageNo = 1
         this.filter.sortBy = ''
         this.filter.order = ''
@@ -352,59 +359,15 @@
         this.multipleSelection = val
       },
       lazyLoading(row, expandedRows) {
-        if (expandedRows.indexOf(row) == -1) {
-          // folded, destroy echarts instance
-          // var acc_dom = document.getElementById('accChart' + row.result_id)
-          // let acc_chart = echarts.getInstanceByDom(acc_dom)
-          // acc_chart.dispose()
-        } else {
-          // expanded
-          row.argDisplay = JSON.stringify(JSON.parse(row.args), null, '\t')
-          row.noteDisplay = row.description
-
-          // this.$nextTick(() => {
-          //   var acc_dom = document.getElementById('accChart' + row.result_id)
-
-          //   let acc_chart = echarts.init(acc_dom)
-          //   acc_chart.setOption({
-          //     title: {
-          //       text: 'Accuracy',
-          //     },
-          //     toolbox: {
-          //       show: true,
-          //       feature: {
-          //         saveAsImage: {
-          //           show: true,
-          //         },
-          //       },
-          //     },
-          //     legend: {},
-          //     xAxis: {
-          //       name: 'epoch',
-          //       type: 'category',
-          //       data: [1, 2, 3, 4, 5],
-          //     },
-          //     yAxis: {
-          //       name: 'Accuracy',
-          //       type: 'value',
-          //     },
-          //     series: [
-          //       {
-          //         name: 'Train',
-          //         type: 'line',
-          //         data: [19, 32, 13, 45, 32],
-          //       },
-          //     ],
-          //   })
-          // })
-        }
+        row.argDisplay = JSON.stringify(JSON.parse(row.args), null, '\t')
+        row.noteDisplay = row.description
       },
       showDetails(row) {
         this.$router.push({
           path: '/analysis/resultDetails',
           query: {
             result_id: row.result_id,
-            train_mode: row.is_tuning,
+            is_tune: row.is_tune,
           },
         })
       },

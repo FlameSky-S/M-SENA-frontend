@@ -53,14 +53,14 @@
         <el-col :xs="24" :sm="24" :md="24" :lg="10" :xl="10">
           <h2>Data Distribution</h2>
           <el-row>
-            <el-col :xs="12" :sm="12" :md="12" :lg="24" :xl="12">
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
               <div
                 id="dataDistribution1"
                 ref="dataDistribution1"
                 style="width: 100%; height: 220px; margin: 0 auto"
               ></div>
             </el-col>
-            <el-col :xs="12" :sm="12" :md="12" :xl="12" class="hidden-lg-only">
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
               <div
                 id="dataDistribution2"
                 ref="dataDistribution2"
@@ -99,6 +99,7 @@
               <el-input
                 v-model="queryForm.videoID"
                 style="width: 150px"
+                @keyup.enter.native="applyFilter"
               ></el-input>
             </el-form-item>
             <el-form-item>

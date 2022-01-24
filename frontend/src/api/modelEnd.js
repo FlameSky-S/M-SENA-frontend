@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function getModelList() {
+export function getCitations() {
   return request({
-    url: '/modelEnd/modelList',
+    url: '/modelEnd/getCitations',
     method: 'get',
   })
 }

@@ -34,13 +34,13 @@
         <el-col :xs="24" :sm="16" :md="16" :lg="10" :xl="10">
           <h2>My Progress</h2>
           <el-form label-width="100px" label-position="left">
-            <el-form-item label="Audio:">
+            <el-form-item label="Video:">
               <el-progress
                 :text-inside="true"
                 :stroke-width="20"
-                :percentage="myProgress.audioP"
-                :format="formatPercentage(myProgress, 'audio')"
-                color="#91cc75"
+                :percentage="myProgress.videoP"
+                :format="formatPercentage(myProgress, 'video')"
+                color="#fac858"
                 style="display: contents"
               ></el-progress>
             </el-form-item>
@@ -50,17 +50,17 @@
                 :stroke-width="20"
                 :percentage="myProgress.textP"
                 :format="formatPercentage(myProgress, 'text')"
-                color="#5470c6"
+                color="#91cc75"
                 style="display: contents"
               ></el-progress>
             </el-form-item>
-            <el-form-item label="Video:">
+            <el-form-item label="Audio:">
               <el-progress
                 :text-inside="true"
                 :stroke-width="20"
-                :percentage="myProgress.videoP"
-                :format="formatPercentage(myProgress, 'video')"
-                color="#fac858"
+                :percentage="myProgress.audioP"
+                :format="formatPercentage(myProgress, 'audio')"
+                color="#5470c6"
                 style="display: contents"
               ></el-progress>
             </el-form-item>
@@ -80,8 +80,8 @@
           <h2>Operations</h2>
           <el-form>
             <el-form-item>
-              <el-button style="width: 150px" type="blue" @click="labelAudio">
-                Audio Label
+              <el-button style="width: 150px" type="yellow" @click="labelVideo">
+                Video Label
               </el-button>
             </el-form-item>
             <el-form-item>
@@ -90,8 +90,8 @@
               </el-button>
             </el-form-item>
             <el-form-item>
-              <el-button style="width: 150px" type="yellow" @click="labelVideo">
-                Video Label
+              <el-button style="width: 150px" type="blue" @click="labelAudio">
+                Audio Label
               </el-button>
             </el-form-item>
             <el-form-item>
