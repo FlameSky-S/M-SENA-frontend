@@ -5,52 +5,57 @@
       <el-row v-loading="settingsLoading" :gutter="30">
         <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8">
           <div class="test-settings">
-            <h2>Camera Settings:</h2>
-            <el-form
-              :model="camSettings"
-              label-width="120px"
-              label-position="left"
-              style="margin: 5%"
-            >
-              <el-form-item label="Video Device:">
-                <el-select
-                  v-model="camSettings.cam"
-                  no-data-text="No device found"
-                  style="width: 100%"
+            <h3>Input Selection:</h3>
+            <el-tabs type="border-card">
+              <el-tab-pane label="Camera">
+                <el-form
+                  :model="camSettings"
+                  label-width="110px"
+                  label-position="left"
+                  style="margin: 3%"
+                  size="mini"
                 >
-                  <el-option
-                    v-for="item in camList"
-                    :key="item.deviceId"
-                    :label="item.label"
-                    :value="item.deviceId"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="Audio Device:">
-                <el-select
-                  v-model="camSettings.mic"
-                  no-data-text="No device found"
-                  style="width: 100%"
-                >
-                  <el-option
-                    v-for="item in micList"
-                    :key="item.deviceId"
-                    :label="item.label"
-                    :value="item.deviceId"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  :type="streaming ? 'danger' : 'primary'"
-                  :plain="streaming ? true : false"
-                  @click="streaming ? stopCam((notRecorded = true)) : initCam()"
-                >
-                  <Vicon v-if="!streaming" name="video"></Vicon>
-                  <Vicon v-else name="video-slash"></Vicon>
-                  {{ streaming ? 'Shutdown' : 'Init Cam' }}
-                </el-button>
-                <!-- <el-button
+                  <el-form-item label="Video Device:">
+                    <el-select
+                      v-model="camSettings.cam"
+                      no-data-text="No device found"
+                      style="width: 100%"
+                    >
+                      <el-option
+                        v-for="item in camList"
+                        :key="item.deviceId"
+                        :label="item.label"
+                        :value="item.deviceId"
+                      ></el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="Audio Device:">
+                    <el-select
+                      v-model="camSettings.mic"
+                      no-data-text="No device found"
+                      style="width: 100%"
+                    >
+                      <el-option
+                        v-for="item in micList"
+                        :key="item.deviceId"
+                        :label="item.label"
+                        :value="item.deviceId"
+                      ></el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button
+                      :type="streaming ? 'danger' : 'primary'"
+                      :plain="streaming ? true : false"
+                      @click="
+                        streaming ? stopCam((notRecorded = true)) : initCam()
+                      "
+                    >
+                      <Vicon v-if="!streaming" name="video"></Vicon>
+                      <Vicon v-else name="video-slash"></Vicon>
+                      {{ streaming ? 'Shutdown' : 'Init Cam' }}
+                    </el-button>
+                    <!-- <el-button
                   type="danger"
                   plain
                   style="width: 40%; padding-left: 0; padding-right: 0"
@@ -60,93 +65,148 @@
                   <i class="el-icon-remove-outline"></i>
                   Shutdown
                 </el-button> -->
-              </el-form-item>
-            </el-form>
-            <h2>Test Settings:</h2>
-            <el-form
-              :model="testSettings"
-              label-width="120px"
-              label-position="left"
-              style="margin: 5%"
-            >
-              <el-form-item label="Models:">
-                <el-select
-                  v-model="testSettings.model"
-                  multiple
-                  collapse-tags
-                  style="width: 100%"
+                  </el-form-item>
+                </el-form>
+              </el-tab-pane>
+              <el-tab-pane label="File">
+                <el-upload drag action="" accept="video/*">
+                  <i class="el-icon-upload"></i>
+                  <div class="el-upload__text">
+                    Drag file here, or
+                    <em>click</em>
+                    to upload
+                  </div>
+                </el-upload>
+              </el-tab-pane>
+              <el-tab-pane label="Dataset">
+                <el-form
+                  :model="camSettings"
+                  label-width="90px"
+                  label-position="left"
+                  style="margin: 3%"
+                  size="mini"
                 >
-                  <el-option
-                    v-for="item in modelList"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="Language:">
-                <el-select v-model="testSettings.language" style="width: 100%">
-                  <el-option
-                    v-for="item in langList"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="Transcript:">
-                <el-input
-                  v-model="testSettings.transcript"
-                  type="textarea"
-                  :autosize="{ minRows: 5, maxRows: 5 }"
-                  resize="none"
-                ></el-input>
-              </el-form-item>
-            </el-form>
+                  <el-form-item label="Dataset:">
+                    <el-select v-model="datasetSelection.datasetName">
+                      <el-option
+                        v-for="item in datasetList"
+                        :key="item"
+                        :label="item"
+                        :value="item"
+                      ></el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="Video ID:">
+                    <el-input v-model="datasetSelection.videoID"></el-input>
+                  </el-form-item>
+                  <el-form-item label="Clip ID:">
+                    <el-input v-model="datasetSelection.clipID"></el-input>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button type="primary">
+                      <i class="el-icon-check"></i>
+                      Select
+                    </el-button>
+                  </el-form-item>
+                </el-form>
+              </el-tab-pane>
+            </el-tabs>
+            <h3>Test Settings:</h3>
+            <el-card>
+              <el-form
+                :model="testSettings"
+                label-width="100px"
+                label-position="left"
+                style="margin: 3%"
+                size="mini"
+              >
+                <el-form-item label="Models:">
+                  <el-select
+                    v-model="testSettings.model"
+                    multiple
+                    collapse-tags
+                    style="width: 100%"
+                  >
+                    <el-option
+                      v-for="item in modelList"
+                      :key="item"
+                      :label="item"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="Language:">
+                  <el-select
+                    v-model="testSettings.language"
+                    style="width: 100%"
+                  >
+                    <el-option
+                      v-for="item in langList"
+                      :key="item"
+                      :label="item"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="Transcript:">
+                  <el-input
+                    v-model="testSettings.transcript"
+                    type="textarea"
+                    :autosize="{ minRows: 5, maxRows: 5 }"
+                    resize="none"
+                  ></el-input>
+                </el-form-item>
+              </el-form>
+            </el-card>
           </div>
         </el-col>
         <el-col :xs="24" :sm="24" :md="24" :lg="16" :xl="16">
           <div class="cam-view">
-            <h2>Camera View:</h2>
-            <video
-              ref="cameraView"
-              width="100%"
-              poster="@/assets/poster.jpg"
-              style="margin: 0% 2%"
-              autoplay
-              controls
-            ></video>
-            <div align="center" class="cam-buttons">
-              <el-button
-                type="primary"
-                plain
-                :disabled="!streaming"
-                @click="recording == false ? RecordBtn() : stopCam()"
-              >
-                <Vicon v-if="!recording" name="dot-circle" scale="0.8"></Vicon>
-                <Vicon v-else name="stop" scale="0.8"></Vicon>
-                {{ recording == false ? 'Record' : 'Finish' }}
-              </el-button>
-              <el-button
-                type="primary"
-                plain
-                :disabled="streaming || recording || blob == null"
-                @click="playing == false ? startPlayback() : stopPlayback()"
-              >
-                <Vicon v-if="!playing" name="play" scale="0.75"></Vicon>
-                <Vicon v-else name="stop" scale="0.8"></Vicon>
-                {{ playing == false ? 'Playback' : 'Stop' }}
-              </el-button>
-              <el-button
-                type="primary"
-                style="padding: 9px 30px !important"
-                :icon="resultLoading ? 'el-icon-loading' : 'el-icon-check'"
-                :disabled="streaming || recording || blob == null"
-                @click="onSubmit"
-              >
-                Go
-              </el-button>
-            </div>
+            <h3>Camera View:</h3>
+            <el-card>
+              <video
+                ref="cameraView"
+                width="100%"
+                poster="@/assets/poster.jpg"
+                autoplay
+                controls
+              ></video>
+              <div align="center" class="cam-buttons">
+                <el-button
+                  type="primary"
+                  plain
+                  :disabled="!streaming"
+                  @click="recording == false ? RecordBtn() : stopCam()"
+                >
+                  <Vicon
+                    v-if="!recording"
+                    name="dot-circle"
+                    scale="0.8"
+                  ></Vicon>
+                  <Vicon v-else name="stop" scale="0.8"></Vicon>
+                  {{ recording == false ? 'Record' : 'Finish' }}
+                </el-button>
+                <el-button
+                  type="primary"
+                  plain
+                  :disabled="streaming || recording || blob == null"
+                  @click="playing == false ? startPlayback() : stopPlayback()"
+                >
+                  <Vicon v-if="!playing" name="play" scale="0.75"></Vicon>
+                  <Vicon v-else name="stop" scale="0.8"></Vicon>
+                  {{ playing == false ? 'Playback' : 'Stop' }}
+                </el-button>
+                <el-button
+                  type="primary"
+                  style="padding: 9px 30px !important"
+                  :icon="resultLoading ? 'el-icon-loading' : 'el-icon-check'"
+                  :disabled="streaming || recording || blob == null"
+                  @click="onSubmit"
+                >
+                  Go
+                </el-button>
+              </div>
+            </el-card>
           </div>
         </el-col>
       </el-row>
@@ -160,7 +220,26 @@
         :gutter="20"
         style="margin: 0% 1%"
       >
-        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
+        <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+          <el-card>
+            <h3 style="text-align: center">Tracked Video</h3>
+            <video
+              ref="resultView"
+              width="100%"
+              poster="@/assets/poster.jpg"
+              autoplay
+              :src="resultVideo"
+              controls
+            ></video>
+          </el-card>
+        </el-col>
+        <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+          <el-card>
+            <h3 style="text-align: center">Audio Spectrogram</h3>
+            <img :src="resultImage" width="100%" />
+          </el-card>
+        </el-col>
+        <!-- <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6">
           <el-card shadow="hover">
             <div ref="featureT" style="width: 100%; height: 300px"></div>
           </el-card>
@@ -179,6 +258,14 @@
           <el-card shadow="hover">
             <div ref="featureM" style="width: 100%; height: 300px"></div>
           </el-card>
+        </el-col> -->
+        <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+          <el-card>
+            <div
+              ref="resultChart"
+              style="width: 100%; height: 300px; align: center"
+            ></div>
+          </el-card>
         </el-col>
       </el-row>
     </el-row>
@@ -196,7 +283,8 @@
       return {
         deviceList: [],
         modelList: [],
-        langList: ['Chinese', 'English'],
+        datasetList: [],
+        langList: ['English', 'Chinese'],
         camSettings: {
           cam: '',
           mic: '',
@@ -205,6 +293,12 @@
           model: [],
           transcript: '',
           language: 'Chinese',
+        },
+        inputMode: 1,
+        datasetSelection: {
+          datasetName: '',
+          videoID: '',
+          clipID: '',
         },
         query: null,
         textArea: '',
@@ -245,12 +339,15 @@
         file: null, // used for submission
         rec_url: '', // url of the blob
         resultsShow: false,
-        charts: {
-          featureM: null,
-          featureT: null,
-          featureA: null,
-          featureV: null,
-        },
+        resultImage: '',
+        resultVideo: '',
+        resultChart: null,
+        // charts: {
+        // featureM: null,
+        // featureT: null,
+        // featureA: null,
+        // featureV: null,
+        // },
       }
     },
     computed: {
@@ -284,17 +381,27 @@
       this.fetchSettings()
     },
     mounted() {},
+    beforeMount() {
+      window.addEventListener('resize', this.handleResize)
+    },
     beforeDestroy() {
       if (this.streaming || this.recording) {
         this.stopCam()
       }
-      for (let key in this.charts) {
-        if (this.charts[key] != null) {
-          this.charts[key].dispose()
-        }
+      window.removeEventListener('resize', this.handleResize)
+      // for (let key in this.charts) {
+      //   if (this.charts[key] != null) {
+      //     this.charts[key].dispose()
+      //   }
+      // }
+      if (this.resultChart != null) {
+        this.resultChart.dispose()
       }
     },
     methods: {
+      handleResize() {
+        this.resultChart.resize()
+      },
       async fetchSettings() {
         this.settingsLoading = true
         if (
@@ -339,10 +446,12 @@
             type: 'error',
           })
         }
-        let { trained } = await getAllSettings()
+        let { datasets, trained } = await getAllSettings()
         this.modelList = trained
         if (this.modelList == '') this.modelList = ['None']
         this.testSettings.model.push(this.modelList[0])
+        this.datasetList = datasets
+        this.datasetSelection.datasetName = this.datasetList[0]
         this.settingsLoading = false
       },
       async initCam() {
@@ -478,48 +587,57 @@
         this.query.append('model', this.testSettings.model)
         this.query.append('transcript', this.testSettings.transcript)
         this.query.append('language', this.testSettings.language)
-        let { result } = await runLive(this.query)
+        let { result, video, audio } = await runLive(this.query)
+        console.log(result)
         this.testResults = result
-        for (let key in this.testResults) {
-          this.testResults[key].forEach((model) => {
-            for (let label in model.probs) {
-              model.probs[label] = parseFloat(model.probs[label]).toFixed(4)
-            }
-          })
+        this.resultVideo = video
+        this.resultImage = audio
+        var models = []
+        var preds = []
+        this.testResults.forEach((item) => {
+          models.push(item.model)
+          preds.push(item.prediction)
+        })
+        console.log(models)
+        console.log(preds)
+        if (this.resultChart && this.resultChart.dispose) {
+          this.resultChart.dispose()
         }
-        for (let key in this.testResults) {
-          let data = [['Model']]
-          for (let key in this.testResults['M'][0].probs) {
-            data[0].push(key)
-          }
-          this.testResults[key].forEach((model) => {
-            let y = []
-            y.push(model.model)
-            for (let label in model.probs) {
-              y.push(model.probs[label])
-            }
-            data.push(y)
-          })
+        this.resultChart = echarts.init(this.$refs['resultChart'])
+        this.plotResult(this.resultChart, 'Predictions', models, preds)
+        // for (let key in this.testResults) {
+        //   let data = [['Model']]
+        //   for (let key in this.testResults['M'][0].probs) {
+        //     data[0].push(key)
+        //   }
+        // this.testResults[key].forEach((model) => {
+        //   let y = []
+        //   y.push(model.model)
+        //   for (let label in model.probs) {
+        //     y.push(model.probs[label])
+        //   }
+        //   data.push(y)
+        // })
 
-          let name = 'feature' + key
-          if (this.charts[name] && this.charts[name].dispose) {
-            this.charts[name].dispose()
-          }
-          this.charts[name] = echarts.init(this.$refs[name])
-          let title = 'Feature_' + key
-          this.plotResult(this.charts[name], title, data)
-        }
+        //   let name = 'feature' + key
+        //   if (this.charts[name] && this.charts[name].dispose) {
+        //     this.charts[name].dispose()
+        //   }
+        //   this.charts[name] = echarts.init(this.$refs[name])
+        //   let title = 'Feature_' + key
+        //   this.plotResult(this.charts[name], title, data)
+        // }
 
         this.resultLoading = false
       },
-      plotResult(instance, title, data) {
-        if (data.length == 1) {
+      plotResult(instance, title, category, data) {
+        if (data.length == 0) {
           // No data
           instance.setOption({
             title: {
               text: title,
               x: 'center',
-              y: 'bottom',
+              y: 'top',
             },
             graphic: {
               type: 'text',
@@ -533,69 +651,128 @@
             },
           })
         } else {
-          let series = []
-          for (let i in data[0]) {
-            series.push({ type: 'bar' })
-          }
-          series.pop()
           instance.setOption({
             title: {
               text: title,
               x: 'center',
+              y: 'top',
+            },
+            legend: {
+              x: 'center',
               y: 'bottom',
             },
-            legend: {},
             tooltip: {
               confine: true,
-            },
-            toolbox: {
-              bottom: '1%',
-              right: '1%',
-              feature: {
-                dataView: {
-                  show: true,
-                  title: 'Table',
-                  readOnly: true,
-                  lang: [' ', 'Close', ''],
-                  optionToContent: function (opt) {
-                    var data = opt.dataset[0].source
-                    var table =
-                      '<table style="width:100%;text-align:center"><tbody>'
-                    for (let i in data) {
-                      table += '<th>'
-                      for (let j in data[i]) {
-                        if (i == 0) table += '<th>' + data[i][j] + '</th>'
-                        else table += '<td>' + data[i][j] + '</td>'
-                      }
-                      table += '</tr>'
-                    }
-                    table += '</tbody></table>'
-                    return table
-                  },
-                },
-              },
-            },
-            dataset: {
-              source: data,
             },
             grid: {},
             xAxis: {
               // name: 'Model',
-              type: 'category',
+              // type: 'category',
+              data: category,
             },
             yAxis: {
               // name: 'Prob',
-              axisPointer: {
-                show: true,
-                type: 'line',
-                snap: true,
-                triggerTooltip: false,
-              },
+              // axisPointer: {
+              //   show: true,
+              //   type: 'line',
+              //   snap: true,
+              //   triggerTooltip: false,
+              // },
             },
-            series: series,
+            series: [
+              {
+                name: 'preds',
+                type: 'bar',
+                data: data,
+              },
+            ],
           })
         }
       },
+      // plotResult(instance, title, data) {
+      //   if (data.length == 1) {
+      //     // No data
+      //     instance.setOption({
+      //       title: {
+      //         text: title,
+      //         x: 'center',
+      //         y: 'bottom',
+      //       },
+      //       graphic: {
+      //         type: 'text',
+      //         left: 'center',
+      //         top: 'middle',
+      //         style: {
+      //           fill: '#606266',
+      //           text: 'No Data',
+      //           font: '16px Microsoft YaHei',
+      //         },
+      //       },
+      //     })
+      //   } else {
+      //     let series = []
+      //     for (let i in data[0]) {
+      //       series.push({ type: 'bar' })
+      //     }
+      //     series.pop()
+      //     instance.setOption({
+      //       title: {
+      //         text: title,
+      //         x: 'center',
+      //         y: 'bottom',
+      //       },
+      //       legend: {},
+      //       tooltip: {
+      //         confine: true,
+      //       },
+      //       toolbox: {
+      //         bottom: '1%',
+      //         right: '1%',
+      //         feature: {
+      //           dataView: {
+      //             show: true,
+      //             title: 'Table',
+      //             readOnly: true,
+      //             lang: [' ', 'Close', ''],
+      //             optionToContent: function (opt) {
+      //               var data = opt.dataset[0].source
+      //               var table =
+      //                 '<table style="width:100%;text-align:center"><tbody>'
+      //               for (let i in data) {
+      //                 table += '<th>'
+      //                 for (let j in data[i]) {
+      //                   if (i == 0) table += '<th>' + data[i][j] + '</th>'
+      //                   else table += '<td>' + data[i][j] + '</td>'
+      //                 }
+      //                 table += '</tr>'
+      //               }
+      //               table += '</tbody></table>'
+      //               return table
+      //             },
+      //           },
+      //         },
+      //       },
+      //       dataset: {
+      //         source: data,
+      //       },
+      //       grid: {},
+      //       xAxis: {
+      //         // name: 'Model',
+      //         type: 'category',
+      //       },
+      //       yAxis: {
+      //         // name: 'Prob',
+      //         axisPointer: {
+      //           show: true,
+      //           type: 'line',
+      //           snap: true,
+      //           triggerTooltip: false,
+      //         },
+      //       },
+      //       series: series,
+      //     })
+      //   }
+      // },
       // async fetchTranscript() {
       //   let { transcript } = await getTranscript(this.rec_url)
       //   this.testSettings.transcript = transcript
@@ -613,7 +790,7 @@
     .top-row {
       margin: 0% 5%;
       .cam-buttons {
-        margin: 15px 0px;
+        margin: 15px 0px 0px 0px;
         .el-button + .el-button {
           margin-left: 30px !important;
         }
