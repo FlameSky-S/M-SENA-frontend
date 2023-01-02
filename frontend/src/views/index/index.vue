@@ -30,23 +30,31 @@
         <el-card
           class="mid"
           shadow="never"
-          @click.native="setCarousel('manage')"
+          @click.native="setCarousel('label')"
         >
-          <Vicon name="manage" scale="3"></Vicon>
-          <p>Easy Management</p>
+          <Vicon name="labels" scale="3"></Vicon>
+          <p>Data Labeling</p>
         </el-card>
       </el-col>
+      <el-col :xs="11" :sm="10" :md="10" :lg="5" :xl="5">
+        <el-card class="mid" shadow="never" @click.native="setCarousel('doc')">
+          <Vicon name="docs" scale="3"></Vicon>
+          <p>Feature Extraction</p>
+        </el-card>
+      </el-col>
+
       <el-col :xs="11" :sm="10" :md="10" :lg="5" :xl="5">
         <el-card
           class="mid"
           shadow="never"
-          @click.native="setCarousel('label')"
+          @click.native="setCarousel('manage')"
         >
-          <Vicon name="labels" scale="3"></Vicon>
-          <p>Auto Labeling</p>
+          <Vicon name="manage" scale="3"></Vicon>
+          <p>Model Training</p>
         </el-card>
       </el-col>
-      <el-col :xs="11" :sm="10" :md="10" :lg="5" :xl="5" :offset="offset2">
+
+      <el-col :xs="11" :sm="10" :md="10" :lg="5" :xl="5">
         <el-card
           class="mid"
           shadow="never"
@@ -54,12 +62,6 @@
         >
           <Vicon name="analysis" scale="3"></Vicon>
           <p>Visual Analysis</p>
-        </el-card>
-      </el-col>
-      <el-col :xs="11" :sm="10" :md="10" :lg="5" :xl="5">
-        <el-card class="mid" shadow="never" @click.native="setCarousel('doc')">
-          <Vicon name="docs" scale="3"></Vicon>
-          <p>Fully Documented</p>
         </el-card>
       </el-col>
     </el-row>
@@ -75,7 +77,7 @@
           <el-carousel-item key="manage" name="manage">
             <div align="center" style="height: 100%">
               <el-row>
-                <h3>Easy Management</h3>
+                <h3>Feature Extraction</h3>
                 <el-image
                   :src="require('@/assets/EasyManagement.png')"
                 ></el-image>
@@ -87,7 +89,7 @@
           <el-carousel-item key="label" name="label">
             <div align="center" style="height: 100%">
               <el-row>
-                <h3>Auto Labeling</h3>
+                <h3>Data Labeling</h3>
                 <el-image
                   :src="require('@/assets/AutoLabeling.png')"
                 ></el-image>
@@ -117,7 +119,7 @@
           <el-carousel-item key="doc" name="doc">
             <div align="center" style="height: 100%">
               <el-row>
-                <h3>Fully Documented</h3>
+                <h3>Model Training</h3>
                 <el-image
                   :src="require('@/assets/FullyDocumented.png')"
                 ></el-image>

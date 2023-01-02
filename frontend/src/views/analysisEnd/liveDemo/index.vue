@@ -657,10 +657,10 @@
               x: 'center',
               y: 'top',
             },
-            legend: {
-              x: 'center',
-              y: 'bottom',
-            },
+            // legend: {
+            //   x: 'center',
+            //   y: 'bottom',
+            // },
             tooltip: {
               confine: true,
             },
@@ -684,6 +684,25 @@
                 name: 'preds',
                 type: 'bar',
                 data: data,
+                barWidth: 30,
+                itemStyle: {
+                  normal: {
+                    color: function (params) {
+                      var colorList = [
+                        '#5470c6',
+                        '#91cc75',
+                        '#fac858',
+                        '#ee6666',
+                        '#73c0de',
+                        '#3ba272',
+                        '#fc8452',
+                        '#9a60b4',
+                        '#ea7ccc',
+                      ]
+                      return colorList[params.dataIndex]
+                    },
+                  },
+                },
               },
             ],
           })
